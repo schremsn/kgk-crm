@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, Text, View, Button, Image } from "react-native";
-import { StackNavigator } from "react-navigation";
-import DataProvider from "../lib/dataprovider";
+import React from 'react';
+import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+import DataProvider from '../lib/dataprovider';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -9,25 +9,25 @@ export default class Home extends React.Component {
   }
 
   static navigationOptions = {
-    tabBarLabel: "Account",
+    tabBarLabel: 'Account',
     tabBarIcon: ({ tintColor }) => (
       <Image
-        source={require("../public/ic_account.png")}
+        source={require('../public/ic_account.png')}
         style={[styles.icon, { tintColor: tintColor }]}
       />
-    )
+    ),
   };
 
   onSignIn() {
-    console.log("sign in");
+    console.log('sign in');
   }
 
   onSignOut() {
-    console.log("sign  out");
+    console.log('sign  out');
   }
 
   onChangePassword() {
-    console.log("change password");
+    console.log('change password');
   }
 
   render() {
@@ -44,21 +44,21 @@ export default class Home extends React.Component {
 const styles = StyleSheet.create({
   icon: {
     width: 20,
-    height: 20
+    height: 20,
   },
   container: {
     marginTop: 22,
     flex: 1,
     padding: 10,
-    backgroundColor: "#fff",
-    alignItems: "stretch",
-    justifyContent: "center",
-    width: "100%"
+    backgroundColor: '#fff',
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    width: '100%',
   },
   item: {
     padding: 5,
     fontSize: 16,
     height: 36,
-    width: "100%"
-  }
+    width: '100%',
+  },
 });
