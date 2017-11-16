@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, Text, View, FlatList, Image } from "react-native";
-import { StackNavigator } from "react-navigation";
-import DataProvider from "../lib/dataprovider";
+import React from 'react';
+import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+import DataProvider from '../lib/dataprovider';
 const numberOfLead = 6;
 export default class Leadlist extends React.Component {
   constructor(props) {
@@ -12,17 +12,17 @@ export default class Leadlist extends React.Component {
       error: null,
       refreshing: false,
 
-      leadIndex: numberOfLead
+      leadIndex: numberOfLead,
     };
   }
   static navigationOptions = {
-    tabBarLabel: "Leads",
+    tabBarLabel: 'Leads',
     tabBarIcon: ({ tintColor }) => (
       <Image
-        source={require("../public/ic_customer.png")}
+        source={require('../public/ic_customer.png')}
         style={[styles.icon, { tintColor: tintColor }]}
       />
-    )
+    ),
   };
 
   refresh() {
@@ -31,7 +31,7 @@ export default class Leadlist extends React.Component {
     this.setState({ refreshing: false });
   }
   componentDidMount() {
-    console.log("leadlist");
+    console.log('leadlist');
     this.setState({ refreshing: true });
     this.getLeads();
     this.setState({ refreshing: false });
@@ -42,11 +42,11 @@ export default class Leadlist extends React.Component {
     dataprovider
       .getLeads()
       .then(data => {
-        console.log("got leads: ");
+        console.log('got leads: ');
         this.setState({ leadList: data });
       })
       .catch(err => {
-        console.log("error leads: " + err);
+        console.log('error leads: ' + err);
       });
   }
   getLeadsBeginIndex() {
@@ -54,14 +54,14 @@ export default class Leadlist extends React.Component {
     dataprovider
       .getLeadsBeginIndex(this.state.leadIndex)
       .then(data => {
-        console.log("got leads: ");
+        console.log('got leads: ');
         this.setState({
           leadList: this.state.leadList.concat(data),
-          leadIndex: this.state.index + numberOfLead
+          leadIndex: this.state.index + numberOfLead,
         });
       })
       .catch(err => {
-        console.log("error leads: " + err);
+        console.log('error leads: ' + err);
       });
   }
 
@@ -70,8 +70,8 @@ export default class Leadlist extends React.Component {
       <View
         style={{
           height: 1,
-          width: "100%",
-          backgroundColor: "#607D8B"
+          width: '100%',
+          backgroundColor: '#607D8B',
         }}
       />
     );
@@ -111,13 +111,13 @@ const styles = StyleSheet.create({
     marginTop: 22,
     flex: 1,
     padding: 10,
-    backgroundColor: "#fff",
-    alignItems: "stretch",
-    justifyContent: "flex-start"
+    backgroundColor: '#fff',
+    alignItems: 'stretch',
+    justifyContent: 'flex-start',
   },
   item: {
     padding: 5,
     fontSize: 16,
-    height: 36
-  }
+    height: 36,
+  },
 });

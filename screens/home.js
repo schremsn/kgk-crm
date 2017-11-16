@@ -1,8 +1,8 @@
-import React from "react";
-import { StyleSheet, Text, View, FlatList, Image } from "react-native";
-import { StackNavigator } from "react-navigation";
-import DataProvider from "../lib/dataprovider";
-import SignInScreen from "./signin";
+import React from 'react';
+import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+import DataProvider from '../lib/dataprovider';
+import SignInScreen from './signin';
 
 let that = null;
 
@@ -14,25 +14,25 @@ export default class Home extends React.Component {
       data: [],
       error: null,
       refreshing: true,
-      signedin: true
+      signedin: true,
     };
 
     that = this;
   }
 
   static navigationOptions = {
-    tabBarLabel: "Home",
+    tabBarLabel: 'Home',
     // Note: By default the icon is only shown on iOS. Search the showIcon option below.
     tabBarIcon: ({ tintColor }) => (
       <Image
-        source={require("../public/ic_home.png")}
+        source={require('../public/ic_home.png')}
         style={[styles.icon, { tintColor: tintColor }]}
       />
-    )
+    ),
   };
 
   componentDidMount() {
-    console.log("home mounted");
+    console.log('home mounted');
   }
 
   isSignedIn() {
@@ -44,12 +44,12 @@ export default class Home extends React.Component {
     dataprovider
       .getActivities()
       .then(data => {
-        console.log("got activities: " + data);
+        console.log('got activities: ' + data);
         that.setState({ data: data });
         that.setState({ signedin: true });
       })
       .catch(err => {
-        console.log("error activities: " + err);
+        console.log('error activities: ' + err);
       });
   }
 
@@ -71,8 +71,8 @@ export default class Home extends React.Component {
       <View
         style={{
           height: 1,
-          width: "100%",
-          backgroundColor: "#607D8B"
+          width: '100%',
+          backgroundColor: '#607D8B',
         }}
       />
     );
@@ -82,14 +82,14 @@ export default class Home extends React.Component {
     if (!this.isSignedIn()) {
       return <SignInScreen done={this.getActivities} />;
     } else if (this.state.data.length == 0) {
-      console.log("render home if");
+      console.log('render home if');
       return (
         <View style={styles.container}>
           <Text style={styles.mess}>Nothing to do</Text>
         </View>
       );
     } else {
-      console.log("render home else");
+      console.log('render home else');
       return (
         <View style={styles.container}>
           <FlatList
@@ -109,25 +109,25 @@ const styles = StyleSheet.create({
     marginTop: 22,
     flex: 1,
     padding: 10,
-    backgroundColor: "#fff",
-    alignItems: "stretch",
-    justifyContent: "center",
-    width: "100%"
+    backgroundColor: '#fff',
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    width: '100%',
   },
   item: {
     padding: 5,
     fontSize: 16,
     height: 36,
-    width: "100%"
+    width: '100%',
   },
   icon: {
     width: 20,
-    height: 26
+    height: 26,
   },
   mess: {
     fontSize: 20,
-    fontWeight: "bold",
-    alignItems: "center",
-    justifyContent: "center"
-  }
+    fontWeight: 'bold',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
