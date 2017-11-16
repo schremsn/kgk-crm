@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "babel-eslint": "^8.0.2",
+    "eslint": "^4.11.0",
     "jest-expo": "^21.0.2",
+    "prettier-eslint": "^8.2.1",
     "react-native-scripts": "1.5.0",
     "react-test-renderer": "16.0.0-alpha.12"
   },
@@ -19,19 +22,14 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "babel-eslint": "^8.0.1",
-    "eslint": "^4.10.0",
+    "@expo/react-native-action-sheet": "^1.0.1",
     "eslint-plugin-react": "^7.4.0",
     "expo": "^21.0.0",
     "flow": "^0.2.3",
     "global": "^4.3.2",
-    "jslint": "^0.11.0",
-    "prettier-eslint": "^8.2.1",
     "react": "16.0.0-alpha.12",
-    "react-databinding": "^1.1.1",
     "react-devtools": "^2.5.2",
     "react-native": "^0.48.4",
-    "react-native-advanced-forms": "^1.0.1",
     "react-native-odoo": "^0.5.0",
     "react-navigation": "^1.0.0-beta.19",
     "react-redux": "^5.0.6",
