@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import DataProvider from '../lib/dataprovider';
-import SignInScreen from './signin';
+import styles from './stylesheet'
 
 let that = null;
 
@@ -56,12 +56,12 @@ export default class Home extends React.Component {
   renderActivity(item) {
     return (
       <View>
-        <Text style={styles.item}>{item.display_name}</Text>
-        <Text style={styles.item}>{item.description}</Text>
-        <Text style={styles.item}>{item.body}</Text>
-        <Text style={styles.item}>{item.create_date}</Text>
-        <Text style={styles.item}>{item.message_type}</Text>
-        <Text style={styles.item}>{item.channel_id}</Text>
+        <Text style={styles.itemHome}>{item.display_name}</Text>
+        <Text style={styles.itemHome}>{item.description}</Text>
+        <Text style={styles.itemHome}>{item.body}</Text>
+        <Text style={styles.itemHome}>{item.create_date}</Text>
+        <Text style={styles.itemHome}>{item.message_type}</Text>
+        <Text style={styles.itemHome}>{item.channel_id}</Text>
       </View>
     );
   }
@@ -79,9 +79,7 @@ export default class Home extends React.Component {
   };
 
   render() {
-    if (!this.isSignedIn()) {
-      return <SignInScreen done={this.getActivities} />;
-    } else if (this.state.data.length == 0) {
+    if (this.state.data.length == 0) {
       console.log('render home if');
       return (
         <View style={styles.container}>
@@ -103,31 +101,3 @@ export default class Home extends React.Component {
     }
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 22,
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#fff',
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  item: {
-    padding: 5,
-    fontSize: 16,
-    height: 36,
-    width: '100%',
-  },
-  icon: {
-    width: 20,
-    height: 26,
-  },
-  mess: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

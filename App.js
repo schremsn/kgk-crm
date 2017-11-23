@@ -1,57 +1,84 @@
-import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  FlatList,
-  NativeModules,
-  RTCEventEmitter
-} from "react-native";
-import { TabNavigator } from "react-navigation";
+import CustomerList from './screens/customerlist';
+import CustomerDetail from './screens/customerdetail';
+import Leadlist from './screens/leadlist';
+import LeadDetail from './screens/leaddetail';
+import Home from './screens/home';
+import Account from './screens/account';
 
-//import { DataProvider } from './lib/dataprovider';
-const DataProvider = require("./lib/dataprovider.js").default;
+import React from 'react';
+import { StyleSheet, NativeModules, RTCEventEmitter } from 'react-native';
+import { TabNavigator, StackNavigator } from 'react-navigation';
 
-import CustomerList from "./screens/customerlist";
-import LeadList from "./screens/leadlist";
-import Home from "./screens/home";
-import Account from "./screens/account";
+// import { DataProvider } from './lib/dataprovider';
+const DataProvider = require('./lib/dataprovider.js').default;
+
+const CustomerStack = StackNavigator({
+  Customer: {
+    screen: CustomerList,
+    navigationOptions: {
+      header: null,
+
+    },
+  },
+  CustomerDetail: {
+    screen: CustomerDetail,
+    navigationOptions: {
+      title: 'Customer Detail'
+    },
+  },
+});
+
+const LeadStack = StackNavigator({
+  Lead: {
+    screen: Leadlist,
+    navigationOptions: {
+      header: null,
+
+    },
+  },
+  LeadDetail: {
+    screen: LeadDetail,
+    navigationOptions: {
+      title: 'Customer Detail'
+    },
+  },
+});
+
 
 const TabApp = TabNavigator(
   {
     Home: {
-      screen: Home
+      screen: Home,
     },
-    CustomerList: {
-      screen: CustomerList
+    CustomerStack: {
+      screen: CustomerStack,
     },
-    LeadList: {
-      screen: LeadList
+    LeadStack: {
+      screen: LeadStack,
     },
     Account: {
-      screen: Account
-    }
+      screen: Account,
+    },
   },
   {
     lazy: true,
-    tabBarPosition: "bottom",
+    tabBarPosition: 'bottom',
     animationEnabled: true,
     tabBarOptions: {
-      activeTintColor: "yellow",
+      activeTintColor: 'yellow',
       showIcon: true,
-      tabBarIcon: { focused: true, tintColor: "blue" },
+      tabBarIcon: { focused: true, tintColor: 'blue' },
       labelStyle: {
-        fontSize: 10
+        fontSize: 10,
       },
       tabStyle: {
-        height: 50
+        height: 48,
       },
       style: {
-        backgroundColor: "blue"
-      }
-    }
-  }
+        backgroundColor: 'blue',
+      },
+    },
+  },
 );
 
 export default class App extends React.Component {
@@ -60,24 +87,24 @@ export default class App extends React.Component {
 
     this.dataprovider = new DataProvider();
     this.dataprovider
-      .login("admin", "zaq12wsx")
-      .then(result => {
-        console.log("login: " + result);
+      .login('admin', 'zaq12wsx')
+      .then((result) => {
+        console.log(`login: ${result}`);
       })
-      .catch(err => {
-        console.log("login err:" + err);
+      .catch((err) => {
+        console.log(`login err:${err}`);
       });
 
     this.state = {
       loading: false,
       data: [],
       error: null,
-      refreshing: true
+      refreshing: true,
     };
   }
 
   componentWillMount() {
-    console.log("mounted");
+    console.log('mounted');
   }
 
   getData() {
@@ -88,30 +115,29 @@ export default class App extends React.Component {
   login() {
     this.status = new Date().toString();
     this.dataprovider
-      .login({ username: "admin", password: "zaq12wsx" })
-      .then(data => {
-        console.log("log in data: " + data);
+      .login({ username: 'admin', password: 'zaq12wsx' })
+      .then((data) => {
+        console.log(`log in data: ${data}`);
       })
-      .catch(err => {
-        console.log("login error: " + err);
+      .catch((err) => {
+        console.log(`login error: ${err}`);
       });
   }
 
   getLeads() {
     this.dataprovider
       .getLeads()
-      .then(data => {
-        console.log("got leads: " + data);
-        this.setState({ data: data });
+      .then((data) => {
+        console.log(`got leads: ${data}`);
+        this.setState({ data });
       })
-      .catch(err => {
-        console.log("error leads: " + err);
+      .catch((err) => {
+        console.log(`error leads: ${err}`);
       });
   }
 
   onRefresh() {
-    console.log("button click");
-    //console.log(this);
+    console.log('button click');
     that.getCustomers();
     that.status = new Date().toString();
   }
@@ -120,18 +146,3 @@ export default class App extends React.Component {
     return <TabApp />;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: "#fff",
-    alignItems: "flex-start",
-    justifyContent: "flex-start"
-  },
-  item: {
-    padding: 5,
-    fontSize: 16,
-    height: 36
-  }
-});
