@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import DataProvider from '../lib/dataprovider';
+import styles from './stylesheet'
 const numberOfLead = 6;
 export default class Leadlist extends React.Component {
   constructor(props) {
@@ -79,11 +80,18 @@ export default class Leadlist extends React.Component {
 
   renderLead(item) {
     return (
-      <View>
-        <Text style={styles.item}>{item.name}</Text>
-        <Text style={styles.item}>{item.contact_name}</Text>
-        <Text style={styles.item}>{item.title_action}</Text>
-      </View>
+      <TouchableOpacity
+        onPress={() => {
+          this.props.navigation.navigate('LeadDetail', { lead: item });
+        }}
+      >
+        <View style={styles.itemLead}>
+          <Text style={styles.itemLeadName}>Name: {item.name}</Text>
+          <Text style={styles.itemContactName}>Contact Name: {item.contact_name}</Text>
+          <Text >{item.title_action}</Text>
+        </View>
+      </TouchableOpacity>
+
     );
   }
 
@@ -104,20 +112,3 @@ export default class Leadlist extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  icon: { width: 20, height: 20 },
-  container: {
-    marginTop: 22,
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#fff',
-    alignItems: 'stretch',
-    justifyContent: 'flex-start',
-  },
-  item: {
-    padding: 5,
-    fontSize: 16,
-    height: 36,
-  },
-});

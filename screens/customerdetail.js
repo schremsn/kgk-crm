@@ -11,36 +11,16 @@ import {
 } from 'react-native';
 import Form from 'react-native-advanced-forms';
 import DataProvider from '../lib/dataprovider';
-
-let that = null;
+import styles from './stylesheet'
 
 export default class CustomerDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalVisible: props.visible,
-    };
-    that = this;
-  }
-
-  setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
-  }
-
-  onComponentDidMount() {
-    console.log('customerdetail mount');
-  }
-
-  onRequestClose() {
-    console.log('request close detail');
-    that.setState({ modalVisible: false });
-    that.props.onClose();
-  }
-
-  onSave() {
-    console.log('save');
-    that.setState({ modalVisible: false });
-    that.props.onClose();
+      cus: [
+        {}
+      ]
+    }
   }
 
   onChange() {
@@ -55,103 +35,99 @@ export default class CustomerDetail extends React.Component {
     console.log('validate');
   }
 
+  getCustomer(id) {
+    let dataprovider = DataProvider.getInstance();
+    dataprovider.getCustomer(id)
+      .then(data => {
+        this.setState({ cus: data })
+        console.log(this.state.cus[0].name);
+      })
+      .catch((err) => {
+        console.log(`error customer: ${err}`);
+      });
+  }
+
+  componentDidMount() {
+    console.log("detail did mount")
+    this.getCustomer(this.props.navigation.state.params.customerId);
+    console.log(this.state.cus.name);
+  }
   render() {
-    console.log(this.props.customer);
     return (
-      <View>
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={this.onRequestClose}
-        >
-          <ScrollView>
-            <Form
-              ref="form"
-              onChange={this.onChange}
-              onSubmit={this.onSubmit}
-              validate={this.validate}
-            >
-              <Form.Layout style={styles.row}>
-                <Form.Field name="Name" label="Name" style={styles.field}>
-                  <Form.TextField value={this.props.customer.name} />
-                </Form.Field>
-              </Form.Layout>
-              <Form.Layout style={styles.row}>
-                <Form.Field name="Street" label="Street" style={styles.field}>
-                  <Form.TextField value={this.props.customer.street} />
-                </Form.Field>
-              </Form.Layout>
-              <Form.Layout style={styles.row}>
-                <Form.Field name="Street2" label="Street2" style={styles.field}>
-                  <Form.TextField value={this.props.customer.street2} />
-                </Form.Field>
-              </Form.Layout>
-              <Form.Layout style={styles.row}>
-                <Form.Field name="City" label="City" style={styles.field}>
-                  <Form.TextField value={this.props.customer.city} />
-                </Form.Field>
-              </Form.Layout>
-              <Form.Layout style={styles.row}>
-                <Form.Field name="Zip" label="Postal code" style={styles.field}>
-                  <Form.TextField value={this.props.customer.zip} />
-                </Form.Field>
-              </Form.Layout>
-              <Form.Layout style={styles.row}>
-                <Form.Field name="State" label="Province" style={styles.field}>
-                  <Form.TextField value={this.props.customer.state} />
-                </Form.Field>
-              </Form.Layout>
-              <Form.Layout style={styles.row}>
-                <Form.Field name="Mobile" label="Mobile" style={styles.field}>
-                  <Form.TextField value={this.props.customer.mobile} />
-                </Form.Field>
-              </Form.Layout>
-              <Form.Layout style={styles.row}>
-                <Form.Field name="Phone" label="Phone" style={styles.field}>
-                  <Form.TextField value={this.props.customer.phone} />
-                </Form.Field>
-              </Form.Layout>
-              <Form.Layout style={styles.row}>
-                <Form.Field name="Email" label="Email" style={styles.field}>
-                  <Form.TextField value={this.props.customer.Email} />
-                </Form.Field>
-              </Form.Layout>
-              <Form.Layout style={styles.row}>
-                <Form.Field name="Website" label="Website" style={styles.field}>
-                  <Form.TextField value={this.props.customer.website} />
-                </Form.Field>
-              </Form.Layout>
-            </Form>
-          </ScrollView>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              alignItems: 'flex-start',
-              maxHeight: 30,
-            }}
+      <View style={styles.container}>
+        <ScrollView>
+          <Form
+            onChange={this.onChange}
+            onSubmit={this.onSubmit}
+            validate={this.validate}
           >
-            <Button title="Save" onPress={this.onSave} style={{ minWidth: '50%' }} />
-            <Button title="Menu" onPress={this.onSave} style={{ width: '50%' }} />
-          </View>
-        </Modal>
+            <Form.Layout style={styles.row}>
+              <Form.Field name="Name" label="Name" style={styles.field}>
+                <Form.TextField value={this.state.cus[0]['name']} />
+              </Form.Field>
+            </Form.Layout>
+            <Form.Layout style={styles.row}>
+              <Form.Field name="Street" label="Street" style={styles.field}>
+                <Form.TextField value={this.state.cus[0]['street']} />
+              </Form.Field>
+            </Form.Layout>
+            <Form.Layout style={styles.row}>
+              <Form.Field name="Street2" label="Street2" style={styles.field}>
+                <Form.TextField value={this.state.cus[0]['street2']} />
+              </Form.Field>
+            </Form.Layout>
+            <Form.Layout style={styles.row}>
+              <Form.Field name="City" label="City" style={styles.field}>
+                <Form.TextField value={this.state.cus[0]['city']} />
+              </Form.Field>
+            </Form.Layout>
+            <Form.Layout style={styles.row}>
+              <Form.Field name="Zip" label="Postal code" style={styles.field}>
+                <Form.TextField value={this.state.cus[0]['zip']} />
+              </Form.Field>
+            </Form.Layout>
+            <Form.Layout style={styles.row}>
+              <Form.Field name="State" label="Province" style={styles.field}>
+                <Form.TextField value={this.state.cus[0]['state']} />
+              </Form.Field>
+            </Form.Layout>
+            <Form.Layout style={styles.row}>
+              <Form.Field name="Mobile" label="Mobile" style={styles.field}>
+                <Form.TextField value={this.state.cus[0]['mobile']} />
+              </Form.Field>
+            </Form.Layout>
+            <Form.Layout style={styles.row}>
+              <Form.Field name="Phone" label="Phone" style={styles.field}>
+                <Form.TextField value={this.state.cus[0]['phone']} />
+              </Form.Field>
+            </Form.Layout>
+            <Form.Layout style={styles.row}>
+              <Form.Field name="Email" label="Email" style={styles.field}>
+                <Form.TextField value={this.state.cus[0]['email']} />
+              </Form.Field>
+            </Form.Layout>
+            <Form.Layout style={styles.row}>
+              <Form.Field name="Website" label="Website" style={styles.field}>
+                <Form.TextField value={this.state.cus[0]['website']} />
+              </Form.Field>
+            </Form.Layout>
+          </Form>
+        </ScrollView>
+
+        <View>
+          <Button style={{ width: 20 }}
+            onPress={() => console.log("press")}
+            title="Save"
+            color="#841584"
+          />
+          <Button
+            onPress={() => console.log("press")}
+            title="Menu"
+            color="#841584"
+          />
+        </View>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#fff',
-    alignItems: 'stretch',
-    justifyContent: 'flex-start',
-  },
-  item: {
-    padding: 5,
-    fontSize: 16,
-    height: 36,
-  },
-});
