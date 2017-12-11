@@ -2,7 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import DataProvider from '../lib/dataprovider';
-import styles from './stylesheet'
+import styles from './stylesheet';
+import SignInScreen from './signin';
 
 let that = null;
 
@@ -14,7 +15,7 @@ export default class Home extends React.Component {
       data: [],
       error: null,
       refreshing: true,
-      signedin: true,
+      signedin: false,
     };
 
     that = this;
@@ -31,9 +32,6 @@ export default class Home extends React.Component {
     ),
   };
 
-  componentDidMount() {
-    console.log('home mounted');
-  }
 
   isSignedIn() {
     return this.state.signedin;
@@ -56,12 +54,12 @@ export default class Home extends React.Component {
   renderActivity(item) {
     return (
       <View>
-        <Text style={styles.itemHome}>{item.display_name}</Text>
-        <Text style={styles.itemHome}>{item.description}</Text>
-        <Text style={styles.itemHome}>{item.body}</Text>
-        <Text style={styles.itemHome}>{item.create_date}</Text>
-        <Text style={styles.itemHome}>{item.message_type}</Text>
-        <Text style={styles.itemHome}>{item.channel_id}</Text>
+        <Text style={styles.headerHome}>{item.title_action}</Text>
+        <Text style={styles.itemHome}>{item.name}</Text>
+        <Text style={styles.itemHome}>{item.contact_name}</Text>
+        <Text style={styles.itemHome}>{item.date_action}</Text>
+        <Text style={styles.itemHome}>{item.city}</Text>
+        <Text style={styles.itemHome}>{item.phone}</Text> 
       </View>
     );
   }
@@ -79,7 +77,12 @@ export default class Home extends React.Component {
   };
 
   render() {
-    if (this.state.data.length == 0) {
+    if( !this.isSignedIn() ) {
+      return(
+          <SignInScreen done = {this.getActivities}/>
+      )
+    }
+    else if (this.state.data.length == 0) {
       console.log('render home if');
       return (
         <View style={styles.container}>
