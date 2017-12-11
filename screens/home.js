@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, TouchableHighlight } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import DataProvider from '../lib/dataprovider';
 import styles from './stylesheet';
 import SignInScreen from './signin';
+
+import { Card, CardTitle, CardContent, CardAction,CardButton, CardImage } from 'react-native-material-cards'
 
 let that = null;
 
@@ -16,6 +18,10 @@ export default class Home extends React.Component {
       error: null,
       refreshing: true,
       signedin: false,
+      numToday: 0,
+      numWeek: 0,
+      numOverdue: 0,
+      detail: false,
     };
 
     that = this;
@@ -43,12 +49,47 @@ export default class Home extends React.Component {
       .getActivities()
       .then(data => {
         console.log('got activities: ' + data);
+        that.setActionCount(data);
         that.setState({ data: data });
         that.setState({ signedin: true });
       })
       .catch(err => {
         console.log('error activities: ' + err);
       });
+  }
+
+  setActionCount(data) {
+    let numToday = 0;
+    let numWeek = 0;
+    let numOverdue = 0;
+
+    tmpDate = new Date();
+    today = new Date(tmpDate.getFullYear(), tmpDate.getMonth(), tmpDate.getDate());
+    nextWeek = new Date(tmpDate.getFullYear(), tmpDate.getMonth(), tmpDate.getDate() + 7);
+
+    for ( let item in data) {
+      activity = data[item]
+      strDate = activity['date_action'];
+      dateDue = new Date( strDate );
+
+      if( dateDue > today && dateDue < nextWeek) {
+        numWeek++;
+      }
+      else if( dateDue < today ) {
+        numOverdue++;
+      }
+      else {
+        numToday++;
+      }
+    } 
+
+    that.setState({numWeek: numWeek});
+    that.setState({numTday: numToday});
+    that.setState({numOverdue: numOverdue});
+  }
+
+  dashboard() {
+    that.setState({detail: false});
   }
 
   renderActivity(item) {
@@ -76,6 +117,48 @@ export default class Home extends React.Component {
     );
   };
 
+
+  renderStatus() {
+    return(
+      <View style={styles.container}>
+        <Text style = {styles.HeaderHome}>To do</Text>
+        <Card style = {{ backgroundColor: 'lightblue' } }>
+          <CardTitle title='Today' />
+          <CardContent text={this.state.numToday}/>
+          <CardAction seperator={false} inColumn={false}>
+            <CardButton
+              onPress={() => {that.setState({detail: true})}}
+              title='Details'
+              color='blue'
+            />
+          </CardAction>
+        </Card>
+        <Card style = {{ backgroundColor: 'grey' } }>
+          <CardTitle title='Next 7 days' />
+          <CardContent text={this.state.numWeek}/>
+          <CardAction seperator={false} inColumn={false}>
+            <CardButton
+              onPress={() => {that.setState({detail: true})}}
+              title='Details'
+              color='blue'
+            />
+          </CardAction>
+        </Card>
+        <Card style ={ { backgroundColor: 'orange' } }>
+          <CardTitle title='Overdue' />
+          <CardContent text={this.state.numOverdue}/>
+          <CardAction seperator={false} inColumn={false}>
+            <CardButton
+              onPress={() => {that.setState({detail: true})}}
+              title='Details'
+              color='blue'
+            />
+          </CardAction>
+        </Card>
+      </View>
+    );
+  }
+
   render() {
     if( !this.isSignedIn() ) {
       return(
@@ -83,14 +166,13 @@ export default class Home extends React.Component {
       )
     }
     else if (this.state.data.length == 0) {
-      console.log('render home if');
       return (
         <View style={styles.container}>
           <Text style={styles.mess}>Nothing to do</Text>
         </View>
       );
-    } else {
-      console.log('render home else');
+    } 
+    else if( this.state.detail ) {
       return (
         <View style={styles.container}>
           <FlatList
@@ -99,8 +181,20 @@ export default class Home extends React.Component {
             keyExtractor={(item, index) => index}
             renderItem={({ item }) => this.renderActivity(item)}
           />
+          <View>
+            <TouchableHighlight
+              style={styles.newCustomerbutton}
+              underlayColor="#ff7043"
+              onPress={this.dashboard}
+            >
+              <Text style={{ fontSize: 40, color: 'white' }}>&#60;</Text>
+            </TouchableHighlight>
+          </View>
         </View>
       );
+    }
+    else {
+      return this.renderStatus()
     }
   }
 }
