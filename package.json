@@ -5,6 +5,10 @@
   "devDependencies": {
     "babel-eslint": "^8.0.2",
     "eslint": "^4.11.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.5.1",
     "jest-expo": "^21.0.2",
     "prettier-eslint": "^8.2.1",
     "react-native-scripts": "1.5.0",
@@ -16,21 +20,22 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "node node_modules/jest/bin/jest.js --watch"
+    "test": "node node_modules/jest/bin/jest.js --watch",
+    "lint": "eslint --fix *.js"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@expo/react-native-action-sheet": "^1.0.1",
-    "eslint-plugin-react": "^7.4.0",
     "expo": "^21.0.0",
     "flow": "^0.2.3",
     "global": "^4.3.2",
+    "native-base": "^2.3.5",
     "react": "16.0.0-alpha.12",
     "react-devtools": "^2.5.2",
     "react-native": "^0.48.4",
     "react-native-advanced-forms": "^1.0.5",
+    "react-native-clean-form": "^0.4.2",
     "react-native-material-cards": "^1.0.7",
     "react-native-odoo": "^0.5.0",
     "react-navigation": "^1.0.0-beta.19",
