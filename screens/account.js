@@ -10,12 +10,6 @@ export default class Home extends React.Component {
 
   static navigationOptions = {
     tabBarLabel: 'Account',
-    tabBarIcon: ({ tintColor }) => (
-      <Image
-        source={require('../public/ic_account.png')}
-        style={[styles.icon, { tintColor: tintColor }]}
-      />
-    ),
   };
 
   onSignIn() {

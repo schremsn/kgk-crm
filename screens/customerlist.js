@@ -13,8 +13,10 @@ import {
 import { StackNavigator } from 'react-navigation';
 import DataProvider from '../lib/dataprovider';
 import styles from './stylesheet'
+
 let that = null;
 const numberOfCustomer = 6;
+
 export default class CustomerList extends React.Component {
   constructor(props) {
     super(props);
@@ -33,12 +35,6 @@ export default class CustomerList extends React.Component {
 
   static navigationOptions = {
     tabBarLabel: 'Customer',
-    tabBarIcon: ({ tintColor }) => (
-      <Image
-        source={require('../public/ic_customer.png')}
-        style={[styles.icon, { tintColor: tintColor }]}
-      />
-    ),
   };
 
   componentDidMount() {
@@ -77,7 +73,7 @@ export default class CustomerList extends React.Component {
       });
   }
 
-  newCustomer() { }
+  createCustomer() { }
 
   onPressItem(customer) {
     console.log('press item: ' + customer.id);
@@ -98,7 +94,20 @@ export default class CustomerList extends React.Component {
       });
   }
 
-  onSearch() { }
+  /**
+   * search for customers based on the entered search term
+   */
+  onSearch() {
+    let dataprovider = DataProvider.getInstance();
+    dataprovider.searchCustomer(that.state.searchTerm)
+      .then(data => {
+        console.log(data.length);
+        that.setState({ list: data });
+      })
+      .catch(err => {
+        console.log('error customer search: ' + err);
+      });
+  }
 
   closeDetails(action, data) {
     that.setState({ detail: false });
@@ -110,7 +119,6 @@ export default class CustomerList extends React.Component {
       <View>
         <TouchableOpacity
           onPress={() => {
-            console.log("customer" + item.id)
             navigate('CustomerDetail', { customerId: item.id });
           }}
         >
@@ -155,14 +163,15 @@ export default class CustomerList extends React.Component {
           style={{
             flex: 1,
             flexDirection: 'row',
-            alignItems: 'flex-start',
+            alignItems: 'flex-end',
             maxHeight: 35,
+            minHeight: 35,
           }}
         >
           <TextInput
-            placeHolder="Customer search"
-            onChangeText={text => this.setState({ password: text })}
-            style={{ width: '80%' }}
+            placeholder="search for name or city"
+            onChangeText={text => this.setState({ searchTerm: text })}
+            style={{ height: 40, width: '80%', borderStyle: 'solid', borderColor: 'red' }}
           />
           <Button title="Search" onPress={this.onSearch} style={{ width: '20%' }} />
         </View>

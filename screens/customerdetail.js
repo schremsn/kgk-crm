@@ -9,37 +9,52 @@ import {
   Button,
   TextInput,
 } from 'react-native';
-import Form from 'react-native-advanced-forms';
+import { Container, ActionSheet, Content, Form, Item, Input, Label, CheckBox } from 'native-base';
+
 import DataProvider from '../lib/dataprovider';
-import styles from './stylesheet'
+import styles from './stylesheet';
+
+let that = null;
 
 export default class CustomerDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       cus: [
-        {}
-      ]
+        {},
+      ],
+    };
+
+    that = this;
+  }
+
+
+  /**
+   * helper method to filter out json false values for empty (null) field - should only be called for non-boolean fields
+   * @param {any} data
+   * @return {any} value
+   */
+  getValue(data) {
+    let value = '';
+    if (data == null) {
+      value = '';
+    } else if (data == false) {
+      value = '';
+    } else {
+      value = data;
     }
+    return value;
   }
 
-  onChange() {
-    console.log('form changed');
-  }
-
-  onSubmit() {
-    console.log('submit)');
-  }
-
-  validate() {
-    console.log('validate');
-  }
-
+  /**
+   * retrieve customer by id
+   * @param {number} id
+   */
   getCustomer(id) {
-    let dataprovider = DataProvider.getInstance();
+    const dataprovider = DataProvider.getInstance();
     dataprovider.getCustomer(id)
-      .then(data => {
-        this.setState({ cus: data })
+      .then((data) => {
+        this.setState({ cus: data });
         console.log(this.state.cus[0].name);
       })
       .catch((err) => {
@@ -47,86 +62,92 @@ export default class CustomerDetail extends React.Component {
       });
   }
 
-  componentDidMount() {
-    console.log("detail did mount")
-    this.getCustomer(this.props.navigation.state.params.customerId);
-    console.log(this.state.cus.name);
-  }
-  render() {
-    return (
-      <View style={styles.container}>
-        <ScrollView>
-          <Form
-            onChange={this.onChange}
-            onSubmit={this.onSubmit}
-            validate={this.validate}
-          >
-            <Form.Layout style={styles.row}>
-              <Form.Field name="Name" label="Name" style={styles.field}>
-                <Form.TextField value={this.state.cus[0]['name']} />
-              </Form.Field>
-            </Form.Layout>
-            <Form.Layout style={styles.row}>
-              <Form.Field name="Street" label="Street" style={styles.field}>
-                <Form.TextField value={this.state.cus[0]['street']} />
-              </Form.Field>
-            </Form.Layout>
-            <Form.Layout style={styles.row}>
-              <Form.Field name="Street2" label="Street2" style={styles.field}>
-                <Form.TextField value={this.state.cus[0]['street2']} />
-              </Form.Field>
-            </Form.Layout>
-            <Form.Layout style={styles.row}>
-              <Form.Field name="City" label="City" style={styles.field}>
-                <Form.TextField value={this.state.cus[0]['city']} />
-              </Form.Field>
-            </Form.Layout>
-            <Form.Layout style={styles.row}>
-              <Form.Field name="Zip" label="Postal code" style={styles.field}>
-                <Form.TextField value={this.state.cus[0]['zip']} />
-              </Form.Field>
-            </Form.Layout>
-            <Form.Layout style={styles.row}>
-              <Form.Field name="State" label="Province" style={styles.field}>
-                <Form.TextField value={this.state.cus[0]['state']} />
-              </Form.Field>
-            </Form.Layout>
-            <Form.Layout style={styles.row}>
-              <Form.Field name="Mobile" label="Mobile" style={styles.field}>
-                <Form.TextField value={this.state.cus[0]['mobile']} />
-              </Form.Field>
-            </Form.Layout>
-            <Form.Layout style={styles.row}>
-              <Form.Field name="Phone" label="Phone" style={styles.field}>
-                <Form.TextField value={this.state.cus[0]['phone']} />
-              </Form.Field>
-            </Form.Layout>
-            <Form.Layout style={styles.row}>
-              <Form.Field name="Email" label="Email" style={styles.field}>
-                <Form.TextField value={this.state.cus[0]['email']} />
-              </Form.Field>
-            </Form.Layout>
-            <Form.Layout style={styles.row}>
-              <Form.Field name="Website" label="Website" style={styles.field}>
-                <Form.TextField value={this.state.cus[0]['website']} />
-              </Form.Field>
-            </Form.Layout>
-          </Form>
-        </ScrollView>
 
+  componentDidMount() {
+    this.getCustomer(this.props.navigation.state.params.customerId);
+  }
+
+  /**
+   * show actionsheet menu for customer
+   */
+  showMenu() {
+    const BUTTONS = ['Edit', 'New', 'Log activity', 'New note', 'New contact', 'New opportunity', 'Cancel'];
+    // const DESTRUCTIVE_INDEX = 3;
+    const CANCEL_INDEX = 6;
+
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: CANCEL_INDEX,
+        // destructiveButtonIndex: DESTRUCTIVE_INDEX,
+        title: 'Customer menu',
+      },
+      (buttonIndex) => {
+        that.setState({ clicked: BUTTONS[buttonIndex] });
+      },
+    );
+  }
+
+
+  render() {
+    const customer = this.state.cus[0];
+
+    return (
+      <Container>
+        <Content>
+          <Form>
+            <Item>
+              <Label>Is company</Label>
+              <CheckBox checked={customer.is_company} />
+            </Item>
+            <Item stackedLabel>
+              <Label>Customer name</Label>
+              <Input value={customer.name} />
+            </Item>
+            <Item stackedLabel>
+              <Label>Street</Label>
+              <Input value={this.getValue(customer.street)} />
+            </Item>
+            <Item stackedLabel>
+              <Label>Street 2</Label>
+              <Input value={this.getValue(customer.street2)} />
+            </Item>
+            <Item stackedLabel>
+              <Label>City</Label>
+              <Input value={this.getValue(customer.city)} />
+            </Item>
+            <Item stackedLabel>
+              <Label>Province</Label>
+              <Input value={this.getValue(customer.state)} />
+            </Item>
+            <Item stackedLabel>
+              <Label>Telephone</Label>
+              <Input value={this.getValue(customer.phone)} />
+            </Item>
+            <Item stackedLabel>
+              <Label>Mobile</Label>
+              <Input value={this.getValue(customer.mobile)} />
+            </Item>
+            <Item stackedLabel>
+              <Label>Email</Label>
+              <Input value={this.getValue(customer.email)} />
+            </Item>
+            <Item stackedLabel>
+              <Label>Website</Label>
+              <Input value={this.getValue(customer.website)} />
+            </Item>
+          </Form>
+        </Content>
         <View>
-          <Button style={{ width: 20 }}
-            onPress={() => console.log("press")}
-            title="Save"
-            color="#841584"
-          />
-          <Button
-            onPress={() => console.log("press")}
-            title="Menu"
-            color="#841584"
-          />
+          <TouchableHighlight
+            style={styles.newCustomerbutton}
+            underlayColor="#ff7043"
+            onPress={this.showMenu}
+          >
+            <Text style={{ fontSize: 30, color: 'white' }}>&#8801;</Text>
+          </TouchableHighlight>
         </View>
-      </View>
+      </Container>
     );
   }
 }

@@ -15,8 +15,22 @@ export default class SignInScreen extends React.Component {
     that = this;
   }
 
+  /**
+   * create a new dataprovider instance and login using userename password
+   */
   onSignIn() {
+    const dataprovider = new DataProvider();
+    dataprovider.login(that.state.username, that.state.password)
+      .then(data => {
+        console.log('succesful login');
+        //wipe password after login
+        that.state.password = '';
+      })
+      .catch(err => {
+        console.log('login error: ' + err);
+      })
     that.setState({ modalVisible: false });
+
     that.props.done();
   }
 

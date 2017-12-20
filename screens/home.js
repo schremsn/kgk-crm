@@ -5,7 +5,7 @@ import DataProvider from '../lib/dataprovider';
 import styles from './stylesheet';
 import SignInScreen from './signin';
 
-import { Card, CardTitle, CardContent, CardAction,CardButton, CardImage } from 'react-native-material-cards'
+import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
 
 let that = null;
 
@@ -29,13 +29,6 @@ export default class Home extends React.Component {
 
   static navigationOptions = {
     tabBarLabel: 'Home',
-    // Note: By default the icon is only shown on iOS. Search the showIcon option below.
-    tabBarIcon: ({ tintColor }) => (
-      <Image
-        source={require('../public/ic_home.png')}
-        style={[styles.icon, { tintColor: tintColor }]}
-      />
-    ),
   };
 
 
@@ -44,9 +37,8 @@ export default class Home extends React.Component {
   }
 
   getActivities() {
-    let dataprovider = DataProvider.getInstance();
-    dataprovider
-      .getActivities()
+    const dataprovider = DataProvider.getInstance();
+    dataprovider.getActivities()
       .then(data => {
         console.log('got activities: ' + data);
         that.setActionCount(data);
@@ -67,29 +59,29 @@ export default class Home extends React.Component {
     today = new Date(tmpDate.getFullYear(), tmpDate.getMonth(), tmpDate.getDate());
     nextWeek = new Date(tmpDate.getFullYear(), tmpDate.getMonth(), tmpDate.getDate() + 7);
 
-    for ( let item in data) {
+    for (let item in data) {
       activity = data[item]
       strDate = activity['date_action'];
-      dateDue = new Date( strDate );
+      dateDue = new Date(strDate);
 
-      if( dateDue > today && dateDue < nextWeek) {
+      if (dateDue > today && dateDue < nextWeek) {
         numWeek++;
       }
-      else if( dateDue < today ) {
+      else if (dateDue < today) {
         numOverdue++;
       }
       else {
         numToday++;
       }
-    } 
+    }
 
-    that.setState({numWeek: numWeek});
-    that.setState({numTday: numToday});
-    that.setState({numOverdue: numOverdue});
+    that.setState({ numWeek: numWeek });
+    that.setState({ numTday: numToday });
+    that.setState({ numOverdue: numOverdue });
   }
 
   dashboard() {
-    that.setState({detail: false});
+    that.setState({ detail: false });
   }
 
   renderActivity(item) {
@@ -100,7 +92,7 @@ export default class Home extends React.Component {
         <Text style={styles.itemHome}>{item.contact_name}</Text>
         <Text style={styles.itemHome}>{item.date_action}</Text>
         <Text style={styles.itemHome}>{item.city}</Text>
-        <Text style={styles.itemHome}>{item.phone}</Text> 
+        <Text style={styles.itemHome}>{item.phone}</Text>
       </View>
     );
   }
@@ -119,37 +111,37 @@ export default class Home extends React.Component {
 
 
   renderStatus() {
-    return(
+    return (
       <View style={styles.container}>
-        <Text style = {styles.HeaderHome}>To do</Text>
-        <Card style = {{ backgroundColor: 'lightblue' } }>
+        <Text style={styles.HeaderHome}>To do</Text>
+        <Card style={{ backgroundColor: 'lightblue' }}>
           <CardTitle title='Today' />
-          <CardContent text={this.state.numToday}/>
+          <CardContent text={this.state.numToday} />
           <CardAction seperator={false} inColumn={false}>
             <CardButton
-              onPress={() => {that.setState({detail: true})}}
+              onPress={() => { that.setState({ detail: true }) }}
               title='Details'
               color='blue'
             />
           </CardAction>
         </Card>
-        <Card style = {{ backgroundColor: 'grey' } }>
+        <Card style={{ backgroundColor: 'grey' }}>
           <CardTitle title='Next 7 days' />
-          <CardContent text={this.state.numWeek}/>
+          <CardContent text={this.state.numWeek} />
           <CardAction seperator={false} inColumn={false}>
             <CardButton
-              onPress={() => {that.setState({detail: true})}}
+              onPress={() => { that.setState({ detail: true }) }}
               title='Details'
               color='blue'
             />
           </CardAction>
         </Card>
-        <Card style ={ { backgroundColor: 'orange' } }>
+        <Card style={{ backgroundColor: 'orange' }}>
           <CardTitle title='Overdue' />
-          <CardContent text={this.state.numOverdue}/>
+          <CardContent text={this.state.numOverdue} />
           <CardAction seperator={false} inColumn={false}>
             <CardButton
-              onPress={() => {that.setState({detail: true})}}
+              onPress={() => { that.setState({ detail: true }) }}
               title='Details'
               color='blue'
             />
@@ -160,9 +152,9 @@ export default class Home extends React.Component {
   }
 
   render() {
-    if( !this.isSignedIn() ) {
-      return(
-          <SignInScreen done = {this.getActivities}/>
+    if (!this.isSignedIn()) {
+      return (
+        <SignInScreen done={this.getActivities} />
       )
     }
     else if (this.state.data.length == 0) {
@@ -171,8 +163,8 @@ export default class Home extends React.Component {
           <Text style={styles.mess}>Nothing to do</Text>
         </View>
       );
-    } 
-    else if( this.state.detail ) {
+    }
+    else if (this.state.detail) {
       return (
         <View style={styles.container}>
           <FlatList

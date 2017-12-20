@@ -1,9 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+
 import DataProvider from '../lib/dataprovider';
-import styles from './stylesheet'
+import styles from './stylesheet';
+
 const numberOfLead = 6;
+
 export default class Leadlist extends React.Component {
   constructor(props) {
     super(props);
@@ -18,12 +20,6 @@ export default class Leadlist extends React.Component {
   }
   static navigationOptions = {
     tabBarLabel: 'Leads',
-    tabBarIcon: ({ tintColor }) => (
-      <Image
-        source={require('../public/ic_customer.png')}
-        style={[styles.icon, { tintColor: tintColor }]}
-      />
-    ),
   };
 
   refresh() {
@@ -32,24 +28,29 @@ export default class Leadlist extends React.Component {
     this.setState({ refreshing: false });
   }
   componentDidMount() {
-    console.log('leadlist');
     this.setState({ refreshing: true });
     this.getLeads();
     this.setState({ refreshing: false });
   }
 
-  getLeads() {
+  /**
+   * retrieve leads with optional starting index for pagination
+   * @param {number} index
+   */
+  getLeads(index = 0) {
     let dataprovider = DataProvider.getInstance();
     dataprovider
       .getLeads()
       .then(data => {
         console.log('got leads: ');
         this.setState({ leadList: data });
+        leadIndex: this.state.index + numberOfLead,
       })
       .catch(err => {
         console.log('error leads: ' + err);
       });
   }
+
   getLeadsBeginIndex() {
     let dataprovider = DataProvider.getInstance();
     dataprovider
@@ -102,7 +103,7 @@ export default class Leadlist extends React.Component {
           refreshing={this.state.refreshing}
           onRefresh={() => this.refresh()}
           onEndReachedThreshold={this.state.LeadIndex}
-          onEndReached={() => this.getLeadsBeginIndex()}
+          onEndReached={() => this.getLeads(this.state.leadIndex)}
           data={this.state.leadList}
           ItemSeparatorComponent={this.FlatListItemSeparator}
           keyExtractor={(item, index) => index}

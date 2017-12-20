@@ -1,111 +1,118 @@
 import React from 'react';
 import {
-    StyleSheet,
-    Text,
-    View,
-    Modal,
-    TouchableHighlight,
-    ScrollView,
-    Button,
-    TextInput,
+  StyleSheet,
+  Text,
+  View,
+  TouchableHighlight,
 } from 'react-native';
-import Form from 'react-native-advanced-forms';
+import { Container, ActionSheet, Content, Form, Item, Input, Label} from 'native-base';
+
 import DataProvider from '../lib/dataprovider';
-import styles from './stylesheet'
+import styles from './stylesheet';
+
+let that = null;
+
 export default class CustomerDetail extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            lead: {}
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      lead: {},
+    };
+
+    that = this;
+  }
+
+  componentDidMount() {
+    this.setState({
+      lead: this.props.navigation.state.params.lead,
+    });
+  }
+  /**
+  * helper method to filter out json false values for empty (null) field - should only be called for non-boolean fields
+  * @param {any} data
+  * @return {any} value
+   */
+  getValue(data) {
+    let value = '';
+    if (data == null) {
+      value = '';
+    } else if (data == false) {
+      value = '';
+    } else {
+      value = data;
     }
+    return value;
+  }
 
-    componentDidMount() {
-        console.log(this.props.navigation.state.params.lead);
-        this.setState({
-            lead: this.props.navigation.state.params.lead
-        });
-    }
+  /**
+  * show actionsheet menu for customer
+  */
+  showMenu() {
+    const BUTTONS = ['Edit', 'New', 'Convert to opportunity', 'Log activity', 'Mark won', 'Mark lost', 'Cancel'];
+    // const DESTRUCTIVE_INDEX = 3;
+    const CANCEL_INDEX = 7;
 
-    onChange() {
-        console.log('form changed');
-    }
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: CANCEL_INDEX,
+        // destructiveButtonIndex: DESTRUCTIVE_INDEX,
+        title: 'Lead  menu',
+      },
+      (buttonIndex) => {
+        that.setState({ clicked: BUTTONS[buttonIndex] });
+        console.log(`menu: ${  buttonIndex}`);
+      },
+    );
+  }
 
-    onSubmit() {
-        console.log('submit)');
-    }
+  render() {
+    const lead = this.state.lead;
 
-    validate() {
-        console.log('validate');
-    }
-
-
-    render() {
-        return (
-            <View>
-                <ScrollView>
-                    <Form
-                        onChange={this.onChange}
-                        onSubmit={this.onSubmit}
-                        validate={this.validate}
-                    >
-                        <Form.Layout style={styles.row}>
-                            <Form.Field name="Name" label="Name" style={styles.field}>
-                                <Form.TextField value={this.state.lead.name} />
-                            </Form.Field>
-                        </Form.Layout>
-                        <Form.Layout style={styles.row}>
-                            <Form.Field name="Contact Name" label="Contact Name" style={styles.field}>
-                                <Form.TextField value={this.state.contact_name} />
-                            </Form.Field>
-                        </Form.Layout>
-                        <Form.Layout style={styles.row}>
-                            <Form.Field name="City" label="City" style={styles.field}>
-                                <Form.TextField value={this.state.lead.city} />
-                            </Form.Field>
-                        </Form.Layout>
-                        <Form.Layout style={styles.row}>
-                            <Form.Field name="Phone" label="Phone" style={styles.field}>
-                                <Form.TextField value={this.state.lead.phone} />
-                            </Form.Field>
-                        </Form.Layout>
-                        <Form.Layout style={styles.row}>
-                            <Form.Field name="Partner Name" label="Partner Name" style={styles.field}>
-                                <Form.TextField value={this.state.lead.partner_name} />
-                            </Form.Field>
-                        </Form.Layout>
-
-                        <Form.Layout style={styles.row}>
-                            <Form.Field name="Email From" label="Email From" style={styles.field}>
-                                <Form.TextField value={this.state.lead.email_from} />
-                            </Form.Field>
-                        </Form.Layout>
-                        <Form.Layout style={styles.row}>
-                            <Form.Field name="Title Action" label="Title Action" style={styles.field}>
-                                <Form.TextField value={this.state.lead.title_action} />
-                            </Form.Field>
-                        </Form.Layout>
-                        <Form.Layout style={styles.row}>
-                            <Form.Field name="Type" label="Type" style={styles.field}>
-                                <Form.TextField value={this.state.lead.type} />
-                            </Form.Field>
-                        </Form.Layout>
+    return (
+            <Container>
+                <Content>
+                    <Form>
+                        <Item>
+                            <Label>{lead.type}</Label>
+                        </Item>
+                        <Item stackedLabel>
+                            <Label>Name</Label>
+                            <Input value={this.getValue(lead.name)} />
+                        </Item>
+                        <Item stackedLabel>
+                            <Label>Action</Label>
+                            <Input value={this.getValue(lead.title_action)} />
+                        </Item>
+                        <Item stackedLabel>
+                            <Label>Contact</Label>
+                            <Input value={this.getValue(lead.contact_name)} />
+                        </Item>
+                        <Item stackedLabel>
+                            <Label>Phone</Label>
+                            <Input value={this.getValue(lead.phone)} />
+                        </Item>
+                        <Item stackedLabel>
+                            <Label>Email</Label>
+                            <Input value={this.getValue(lead.email_from)} />
+                        </Item>
+                        <Item stackedLabel>
+                            <Label>City</Label>
+                            <Input value={this.getValue(lead.city)} />
+                        </Item>
                     </Form>
-                </ScrollView>
-                <Button
-                    onPress={() => console.log("press")}
-                    title="Save"
-                    color="#841584"
-                    accessibilityLabel="Learn more about this purple button"
-                />
-                <Button
-                    onPress={() => console.log("press")}
-                    title="Menu"
-                    color="#841584"
-                    accessibilityLabel="Learn more about this purple button"
-                />
-            </View>
-        );
-    }
+                </Content>
+                <View>
+                    <TouchableHighlight
+                        style={styles.newCustomerbutton}
+                        underlayColor="#ff7043"
+                        onPress={this.showMenu}
+                    >
+                        <Text style={{ fontSize: 30, color: 'white' }}>&#8801;</Text>
+                    </TouchableHighlight>
+                </View>
+            </Container>
+    );
+  }
 }
 
