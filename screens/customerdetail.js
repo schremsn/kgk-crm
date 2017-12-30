@@ -71,6 +71,8 @@ export default class CustomerDetail extends React.Component {
    * show actionsheet menu for customer
    */
   showMenu() {
+    const { navigate } = that.props.navigation;
+
     const BUTTONS = ['Edit', 'New', 'Log activity', 'New note', 'New contact', 'New opportunity', 'Cancel'];
     // const DESTRUCTIVE_INDEX = 3;
     const CANCEL_INDEX = 6;
@@ -83,7 +85,9 @@ export default class CustomerDetail extends React.Component {
         title: 'Customer menu',
       },
       (buttonIndex) => {
-        that.setState({ clicked: BUTTONS[buttonIndex] });
+        if (buttonIndex === 3) {
+          navigate('Note', { customerId: that.state.cus[0].id });
+        }
       },
     );
   }

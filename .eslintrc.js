@@ -9,15 +9,11 @@ module.exports = {
     "rules": {
 
         "react/jsx-filename-extension": ["off"],
-
         "linebreak-style": ["off"],
-
         "no-undef": ["error"],
-
         "react/sort-comp": ["off"],
-
-        "react/prefer-stateless-function": ["off"]
-
+        "react/prefer-stateless-function": ["off"],
+        "class-methods-use-this": ["off"]
     },
 
     "globals": {

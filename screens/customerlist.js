@@ -43,11 +43,10 @@ export default class CustomerList extends React.Component {
   }
 
   getCustomers() {
-    let dataprovider = DataProvider.getInstance();
+    const dataprovider = DataProvider.getInstance();
     dataprovider
       .getCustomers(numberOfCustomer)
       .then(data => {
-        console.log('got customers: ');
         this.setState({
           list: data,
           customerIndex: numberOfCustomer,
@@ -62,7 +61,7 @@ export default class CustomerList extends React.Component {
     dataprovider
       .getCustomersBeginIndex(this.state.customerIndex)
       .then(data => {
-        console.log('got customers: ');
+        console.log('got customers: index ');
         this.setState({
           list: this.state.list.concat(data),
           customerIndex: this.state.customerIndex + numberOfCustomer,
@@ -75,43 +74,26 @@ export default class CustomerList extends React.Component {
 
   createCustomer() { }
 
-  onPressItem(customer) {
-    console.log('press item: ' + customer.id);
-    this.getCustomer(customer.id);
-  }
-
-  getCustomer(id) {
-    let dataprovider = DataProvider.getInstance();
-    dataprovider
-      .getCustomer(id)
-      .then(data => {
-
-        this.setState({ customer: data, detail: true });
-        return data;
-      })
-      .catch(err => {
-        console.log('error customer: ' + err);
-      });
-  }
 
   /**
    * search for customers based on the entered search term
    */
   onSearch() {
-    let dataprovider = DataProvider.getInstance();
+    const dataprovider = DataProvider.getInstance();
     dataprovider.searchCustomer(that.state.searchTerm)
-      .then(data => {
+      .then((data) => {
         console.log(data.length);
         that.setState({ list: data });
       })
-      .catch(err => {
-        console.log('error customer search: ' + err);
+      .catch((err) => {
+        console.log(`error customer search: ${err}`);
       });
   }
 
   closeDetails(action, data) {
     that.setState({ detail: false });
   }
+
   renderCustomer(item) {
     const { navigate } = this.props.navigation;
 

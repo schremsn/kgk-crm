@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Modal, TextInput, ScrollView } from 'react-native';
+import { Alert, Text, View, Button, Modal, TextInput, ScrollView } from 'react-native';
+
 import DataProvider from '../lib/dataprovider';
 
 let that = null;
@@ -21,17 +22,24 @@ export default class SignInScreen extends React.Component {
   onSignIn() {
     const dataprovider = new DataProvider();
     dataprovider.login(that.state.username, that.state.password)
-      .then(data => {
-        console.log('succesful login');
-        //wipe password after login
+      .then((data) => {
+        // wipe password after login
         that.state.password = '';
+        that.setState({ modalVisible: false });
+        that.props.done();
       })
-      .catch(err => {
-        console.log('login error: ' + err);
-      })
-    that.setState({ modalVisible: false });
+      .catch((err) => {
+        Alert.alert(
+          'Login error',
+          'Username or password are incorrect.',
+          [
+            { text: 'Retry' },
+          ],
+        );
 
-    that.props.done();
+        that.setState({ username: '' });
+        that.setState({ password: '' });
+      });
   }
 
   onClose() {
@@ -52,13 +60,15 @@ export default class SignInScreen extends React.Component {
             <TextInput
               style={{ height: 40 }}
               placeholder="User name"
-              autofocus
+              autofocus={true}
+              value={this.state.username}
               onChangeText={text => this.setState({ username: text })}
             />
             <TextInput
               style={{ height: 40 }}
               placeholder="Password"
               secureTextEntry
+              value={this.state.password}
               onChangeText={text => this.setState({ password: text })}
             />
           </ScrollView>

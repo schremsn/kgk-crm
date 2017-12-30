@@ -8,13 +8,17 @@ import Leadlist from './screens/leadlist';
 import LeadDetail from './screens/leaddetail';
 import Home from './screens/home';
 import Account from './screens/account';
+import CustomerNote from './screens/note';
+import ConvertLead from './screens/convertlead';
+import SelectCustomer from './screens/selectcustomer';
+import LogActivity from './screens/logactivity';
 
 
 const CustomerStack = StackNavigator({
   Customer: {
     screen: CustomerList,
     navigationOptions: {
-      header: null
+      header: null,
 
     }
   },
@@ -22,6 +26,12 @@ const CustomerStack = StackNavigator({
     screen: CustomerDetail,
     navigationOptions: {
       title: 'Customer Detail',
+    },
+  },
+  Note: {
+    screen: CustomerNote,
+    navigationOptions: {
+      title: 'Note',
     },
   },
 });
@@ -36,25 +46,43 @@ const LeadStack = StackNavigator({
   LeadDetail: {
     screen: LeadDetail,
     navigationOptions: {
-      title: 'Lead Detail'
-    }
-  }
+      title: 'Lead Detail',
+    },
+  },
+  Convert: {
+    screen: ConvertLead,
+    navigationOptions: {
+      title: 'Convert lead',
+    },
+  },
+  SelectCustomer: {
+    screen: SelectCustomer,
+    navigationOptions: {
+      title: 'Select customer',
+    },
+  },
+  LogActivty: {
+    screen: LogActivity,
+    navigationOptions: {
+      title: 'Log activity',
+    },
+  },
 });
 
 const TabApp = TabNavigator(
   {
     Home: {
-      screen: Home
-    },
-    CustomerStack: {
-      screen: CustomerStack
+      screen: Home,
     },
     LeadStack: {
-      screen: LeadStack
+      screen: LeadStack,
+    },
+    CustomerStack: {
+      screen: CustomerStack,
     },
     Account: {
-      screen: Account
-    }
+      screen: Account,
+    },
   },
   {
     lazy: true,

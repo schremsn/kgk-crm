@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableHighlight } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { Text, View, FlatList, TouchableHighlight } from 'react-native';
+import { Card, CardTitle, CardContent, CardAction, CardButton } from 'react-native-material-cards';
+
 import DataProvider from '../lib/dataprovider';
 import styles from './stylesheet';
 import SignInScreen from './signin';
+import ReferenceData from '../data/referencedata';
+import i18n from './translation/i18n';
 
-import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
 
 let that = null;
 
@@ -31,22 +33,81 @@ export default class Home extends React.Component {
     tabBarLabel: 'Home',
   };
 
+  async componentWillMount() {
+    await Expo.Font.loadAsync({
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+      'Ionicons': require('@expo/vector-icons/fonts/Ionicons.ttf'),
+    });
+
+    i18n.defaultLocale = 'en-US';
+    i18n.locale = 'vn-VN';
+  }
 
   isSignedIn() {
     return this.state.signedin;
   }
 
   getActivities() {
+    console.log(i18n.locale);
     const dataprovider = DataProvider.getInstance();
     dataprovider.getActivities()
-      .then(data => {
-        console.log('got activities: ' + data);
+      .then((data) => {
         that.setActionCount(data);
+      })
+      .then(() => {
         that.setState({ data: data });
         that.setState({ signedin: true });
       })
-      .catch(err => {
-        console.log('error activities: ' + err);
+      .catch((err) => {
+        console.log(`error activities:  ${err}`);
+      });
+  }
+
+  /**
+   * load data for dashboard and also reference data
+   */
+  loadData() {
+    that.loadUserInfo();
+    that.getActivities();
+    that.loadLeadTags();
+  }
+
+  loadLeadTags() {
+    const dataprovider = DataProvider.getInstance();
+    dataprovider.getLeadTags()
+      .then((data) => {
+        ReferenceData.getInstance().setLeadTags(data);
+      })
+      .catch((err) => {
+        console.log(`error tags ${err}`);
+      });
+  }
+
+  loadUserInfo() {
+    const dataprovider = DataProvider.getInstance();
+    dataprovider.getUserInfo()
+      .then((data) => {
+        ReferenceData.getInstance().setUserInfo(data);
+      })
+      .then(() => {
+        that.loadCompanyInfo();
+      })
+      .catch((err) => {
+        console.log(`error user ${err}`);
+      });
+  }
+
+  loadCompanyInfo() {
+    const id = ReferenceData.getInstance().getUserCompany();
+    const dataprovider = DataProvider.getInstance();
+
+    dataprovider.getCompanyInfo(id)
+      .then((data) => {
+        ReferenceData.getInstance().setCompanyInfo(data);
+      })
+      .catch((err) => {
+        console.log(`error company ${err}`);
       });
   }
 
@@ -55,9 +116,9 @@ export default class Home extends React.Component {
     let numWeek = 0;
     let numOverdue = 0;
 
-    tmpDate = new Date();
-    today = new Date(tmpDate.getFullYear(), tmpDate.getMonth(), tmpDate.getDate());
-    nextWeek = new Date(tmpDate.getFullYear(), tmpDate.getMonth(), tmpDate.getDate() + 7);
+    const tmpDate = new Date();
+    const today = new Date(tmpDate.getFullYear(), tmpDate.getMonth(), tmpDate.getDate());
+    const nextWeek = new Date(tmpDate.getFullYear(), tmpDate.getMonth(), tmpDate.getDate() + 7);
 
     for (let item in data) {
       activity = data[item]
@@ -154,10 +215,10 @@ export default class Home extends React.Component {
   render() {
     if (!this.isSignedIn()) {
       return (
-        <SignInScreen done={this.getActivities} />
+        <SignInScreen done={this.loadData} />
       )
     }
-    else if (this.state.data.length == 0) {
+    else if (this.state.data.length === 0) {
       return (
         <View style={styles.container}>
           <Text style={styles.mess}>Nothing to do</Text>

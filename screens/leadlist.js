@@ -1,25 +1,28 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
+import { Text, View, FlatList, TextInput, TouchableHighlight, Button } from 'react-native';
+import { Toast } from 'native-base';
 
 import DataProvider from '../lib/dataprovider';
 import styles from './stylesheet';
+import i18n from './translation/i18n';
 
-const numberOfLead = 6;
+let that = null;
 
 export default class Leadlist extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
       leadList: [],
-      error: null,
       refreshing: false,
-
-      leadIndex: numberOfLead,
     };
+
+    this.offset = 0;
+
+    that = this;
   }
+
   static navigationOptions = {
-    tabBarLabel: 'Leads',
+    tabBarLabel: 'Lead',
   };
 
   refresh() {
@@ -27,6 +30,7 @@ export default class Leadlist extends React.Component {
     this.getLeads();
     this.setState({ refreshing: false });
   }
+
   componentDidMount() {
     this.setState({ refreshing: true });
     this.getLeads();
@@ -38,32 +42,36 @@ export default class Leadlist extends React.Component {
    * @param {number} index
    */
   getLeads(index = 0) {
-    let dataprovider = DataProvider.getInstance();
-    dataprovider
-      .getLeads()
-      .then(data => {
-        console.log('got leads: ');
-        this.setState({ leadList: data });
-        leadIndex: this.state.index + numberOfLead,
+    console.log(`getleads  ${index}`);
+    const dataprovider = DataProvider.getInstance();
+    dataprovider.getLeads(index)
+      .then((data) => {
+        that.setState({ leadList: that.state.leadList.concat(data) });
+        that.offset = index + data.length;
+        console.log(`new index  ${that.offset}`);
       })
-      .catch(err => {
-        console.log('error leads: ' + err);
+      .catch((err) => {
+        console.log(`error leads: ${err}`);
+        Toast.show({
+          text: `error loading leads: ${err}`,
+          position: 'bottom',
+          buttonText: 'Retry',
+        });
       });
   }
 
-  getLeadsBeginIndex() {
-    let dataprovider = DataProvider.getInstance();
-    dataprovider
-      .getLeadsBeginIndex(this.state.leadIndex)
-      .then(data => {
-        console.log('got leads: ');
-        this.setState({
-          leadList: this.state.leadList.concat(data),
-          leadIndex: this.state.index + numberOfLead,
-        });
+  /**
+   * search for leads
+   */
+  onSearch() {
+    const dataprovider = DataProvider.getInstance();
+    dataprovider.searchLead(that.state.searchTerm)
+      .then((data) => {
+        console.log(data.length);
+        that.setState({ list: data });
       })
-      .catch(err => {
-        console.log('error leads: ' + err);
+      .catch((err) => {
+        console.log(`error customer search: ${err}`);
       });
   }
 
@@ -80,18 +88,23 @@ export default class Leadlist extends React.Component {
   };
 
   renderLead(item) {
+    let col = styles.leadColor;
+    if (item.type.toUpperCase() === 'opportunity'.toUpperCase()) {
+      col = styles.opportunityColor;
+    }
+
     return (
-      <TouchableOpacity
+      <TouchableHighlight
         onPress={() => {
-          this.props.navigation.navigate('LeadDetail', { lead: item });
+          this.props.navigation.navigate('LeadDetail', { leadId: item.id });
         }}
       >
         <View style={styles.itemLead}>
-          <Text style={styles.itemLeadName}>Name: {item.name}</Text>
+          <Text style={col}>Name: {item.name}</Text>
           <Text style={styles.itemContactName}>Contact Name: {item.contact_name}</Text>
-          <Text >{item.title_action}</Text>
+          <Text >{item.id}</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
 
     );
   }
@@ -99,16 +112,42 @@ export default class Leadlist extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'flex-end',
+            maxHeight: 35,
+            minHeight: 35,
+          }}
+        >
+          <TextInput
+            placeholder={i18n.t('customerSearchPlaceHolder')}
+            onChangeText={text => this.setState({ searchTerm: text })}
+            style={{ height: 40, width: '80%', borderStyle: 'solid', borderColor: 'red' }}
+          />
+          <Button title={i18n.t('search')} onPress={this.onSearch} style={{ width: '20%' }} />
+        </View>
         <FlatList
           refreshing={this.state.refreshing}
           onRefresh={() => this.refresh()}
-          onEndReachedThreshold={this.state.LeadIndex}
-          onEndReached={() => this.getLeads(this.state.leadIndex)}
+          initialNumToRender={10}
+          onEndReachedThreshold={5}
+          onEndReached={() => this.getLeads(this.offset)}
           data={this.state.leadList}
           ItemSeparatorComponent={this.FlatListItemSeparator}
           keyExtractor={(item, index) => index}
           renderItem={({ item }) => this.renderLead(item)}
         />
+        <View>
+          <TouchableHighlight
+            style={styles.newCustomerbutton}
+            underlayColor="#ff7043"
+            onPress={this.newCustomer}
+          >
+            <Text style={{ fontSize: 50, color: 'white' }}>+</Text>
+          </TouchableHighlight>
+        </View>
       </View>
     );
   }
