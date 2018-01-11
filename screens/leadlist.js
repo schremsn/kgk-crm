@@ -42,20 +42,23 @@ export default class Leadlist extends React.Component {
    * @param {number} index
    */
   getLeads(index = 0) {
-    console.log(`getleads  ${index}`);
+    console.log('getleads');
     const dataprovider = DataProvider.getInstance();
     dataprovider.getLeads(index)
       .then((data) => {
         that.setState({ leadList: that.state.leadList.concat(data) });
         that.offset = index + data.length;
-        console.log(`new index  ${that.offset}`);
       })
       .catch((err) => {
         console.log(`error leads: ${err}`);
+        dataprovider.sleep(2000);
+        this.getLeads(index);
+        
         Toast.show({
           text: `error loading leads: ${err}`,
           position: 'bottom',
           buttonText: 'Retry',
+          type: 'danger',
         });
       });
   }
@@ -101,8 +104,8 @@ export default class Leadlist extends React.Component {
       >
         <View style={styles.itemLead}>
           <Text style={col}>Name: {item.name}</Text>
+          <Text>Company: {item.partner_name}</Text>
           <Text style={styles.itemContactName}>Contact Name: {item.contact_name}</Text>
-          <Text >{item.id}</Text>
         </View>
       </TouchableHighlight>
 
@@ -122,7 +125,7 @@ export default class Leadlist extends React.Component {
           }}
         >
           <TextInput
-            placeholder={i18n.t('customerSearchPlaceHolder')}
+            placeholder={i18n.t('lead_search')}
             onChangeText={text => this.setState({ searchTerm: text })}
             style={{ height: 40, width: '80%', borderStyle: 'solid', borderColor: 'red' }}
           />

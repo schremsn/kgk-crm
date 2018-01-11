@@ -1,9 +1,11 @@
 import React from 'react';
-import { TextInput, Button } from 'react-native';
-import { Container, Content, Form, Item, Input, Label, Picker } from 'native-base';
+import { View, TextInput, Button, Text } from 'react-native';
+import { Container, Picker, Content, Form, Label, Item, Input } from 'native-base';
 
 import DataProvider from '../lib/dataprovider';
 import styles from './stylesheet';
+import ReferenceData from '../data/referencedata';
+import i18n from './translation/i18n';
 
 let that = null;
 
@@ -12,33 +14,21 @@ export default class LogActivity extends React.Component {
     super(props);
 
     this.state = {
-      activityTypes: [],
-      summary: {},
-      description: {},
-      type: {},
+      activityTypes: ReferenceData.getInstance().getActivityTypes(),
+      summary: undefined,
+      description: undefined,
+      type: ReferenceData.getInstance().getActivityTypes()[0].id,
     };
 
     that = this;
   }
 
-  /**
-   * load the activity types used in the picker
-   */
-  onComponentDidMount() {
-    console.log('log mounted');
-    const dataprovider = DataProvider.getInstance();
-    dataprovider.getActivityTypes()
-      .then((data) => {
-        this.setState({ activityTypes: data });
-      })
-      .catch((err) => {
-        console.log(`error getting activity types: ${err}`);
-      });
+  onValueChange(selection) {
+    that.setState({ type: selection });
   }
 
-  onValueChange(selection) {
-    console.log(selection);
-    that.setState({ type: selection });
+  componentWillMount() {
+    console.log('log activity');
   }
 
   /**
@@ -49,22 +39,22 @@ export default class LogActivity extends React.Component {
     const leadId = that.props.navigation.state.params.leadId;
     const description = that.state.description;
     const name = that.state.summary;
-    const lead = {
-      id: leadId,
-      note: description,
+    const activity = {
+      lead_id: leadId,
       title_action: name,
+      note: description,
       next_activity_id: that.state.type,
     };
 
-    dataprovider.logActivity(lead)
+    dataprovider.logActivity(activity)
       .then((data) => {
         console.log(`logged activity: ${data}`);
+        that.props.navigation.goBack();
       })
       .catch((err) => {
         console.log(`log error: ${err}`);
+        console.log(err);
       });
-
-    that.props.navigation.goBack();
   }
 
   /**
@@ -80,9 +70,10 @@ export default class LogActivity extends React.Component {
   cancel() {
     that.setState({ summary: '' });
     that.setState({ description: '' });
+    that.setState({ type: '' });
     that.props.navigation.goBack();
   }
-
+  
   render() {
     return (
       <Container>
@@ -91,30 +82,30 @@ export default class LogActivity extends React.Component {
             <Picker
               mode="dropdown"
               placeholder="Select action"
+              selectedValue={this.state.type}
               note={false}
               onValueChange={(value) => { this.onValueChange(value); }}
             >
-              {this.state.list.map((activityTypes) => {
-                return <Picker.Item key={activityTypes.id} label={activityTypes.name} value={activityTypes.id} />;
+              {this.state.activityTypes.map((types) => {
+                return <Picker.Item key={types.id} label={types.name} value={types.id} />;
             })}
 
             </Picker>
-            <Item stackLabel>
+            <Item stackedLabel>
               <Label>Summary</Label>
-              <Input onChangeText={(value) => { this.setState({summary: value}); }} />
+              <Input onChangeText={(value) => { this.setState({ summary: value }); }} />
             </Item>
-            <Item stackLabel>
+            <Item stackedLabel>
               <Label>Description</Label>
-              <TextInput numberOfLines={5} onChangeText={(value) => { this.setState({description: value}); }} />
+              <Input onChangeText={(value) => { this.setState({ description: value }); }} />
             </Item>
-            <Item>
-              <Button title="Log activity" onPress={this.logActivity()} />
-              <Button title="Log and schedule new activity" onPress={this.logAndSchedule()} />
-              <Button title="Cancel" onPress={this.cancel()} />
-            </Item>
+            <Button title="Log activity" onPress={this.logActivity} />
+            <Button title="Log and schedule new activity" onPress={this.logAndSchedule} />
+            <Button title="Cancel" onPress={this.cancel} />
           </Form>
         </Content>
       </Container>
     );
   }
+  
 }

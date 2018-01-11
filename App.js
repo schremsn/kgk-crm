@@ -19,8 +19,7 @@ const CustomerStack = StackNavigator({
     screen: CustomerList,
     navigationOptions: {
       header: null,
-
-    }
+    },
   },
   CustomerDetail: {
     screen: CustomerDetail,
@@ -61,7 +60,7 @@ const LeadStack = StackNavigator({
       title: 'Select customer',
     },
   },
-  LogActivty: {
+  LogActivity: {
     screen: LogActivity,
     navigationOptions: {
       title: 'Log activity',
@@ -93,13 +92,13 @@ const TabApp = TabNavigator(
       showIcon: true,
       tabBarIcon: { focused: true, tintColor: 'blue' },
       labelStyle: {
-        fontSize: 10
+        fontSize: 10,
       },
       tabStyle: {
-        height: 48
+        height: 48,
       },
       style: {
-        backgroundColor: 'blue'
+        backgroundColor: 'blue',
       }
     }
   }

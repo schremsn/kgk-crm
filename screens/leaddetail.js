@@ -120,11 +120,10 @@ export default class CustomerDetail extends React.Component {
    * navigate to the logactvity screen or display message if it's a lead
    */
   logActivity() {
-    const lead = this.state.lead[0];
+    const lead = that.state.lead[0];
 
     if (lead.type.toUpperCase() === 'opportunity'.toUpperCase()) {
-      console.log(`lead type: ${lead.type}`);
-      that.props.navigation.navigate('LogActvity', { leadId: lead.id });
+      that.props.navigation.navigate('LogActivity', { leadId: lead.id });
     }
     else {
       Toast.show({
@@ -161,7 +160,6 @@ export default class CustomerDetail extends React.Component {
    * @param {array} tags
    */
   getTags(tags) {
-    console.log(tags);
     let tagText = '';
     if ((tags !== undefined) && (tags.length > 0)) {
       const tagInfo = ReferenceData.getInstance().getLeadTags();
@@ -246,7 +244,7 @@ export default class CustomerDetail extends React.Component {
       i18n.t('convert_to_opportunity'),
       i18n.t('log_activity'),
       i18n.t('mark_won'),
-      i18n.t('Mark_lost'),
+      i18n.t('mark_lost'),
       i18n.t('save'),
       i18n.t('cancel')];
     const CANCEL_INDEX = 6;
@@ -304,8 +302,11 @@ export default class CustomerDetail extends React.Component {
               <Input
                 value={this.getValue(lead.name)}
                 onChangeText={text => this.updateValue('name', text)}
-                selection={[0, 0]}
               />
+            </Item>
+            <Item stackedLabel>
+              <Label>Company</Label>
+              <Input value={this.getValue(lead.partner_name)} onChangeText={text => this.updateValue('partner_name', text)} />
             </Item>
             <Item stackedLabel>
               <Label>{i18n.t('action')}</Label>
@@ -336,7 +337,6 @@ export default class CustomerDetail extends React.Component {
               <Input
                 value={this.getValue(lead.street)}
                 onChangeText={text => this.updateValue('street', text)}
-                selection={[1, 2]}
               />
             </Item>
             <Item stackedLabel>

@@ -12,7 +12,7 @@ export default class ReferenceData {
     }
   }
   states = [];
-  actionTypes = [];
+  activityTypes = [];
   leadTags = new Map();
   userInfo = [];
   companyUnfo = [];
@@ -41,12 +41,12 @@ export default class ReferenceData {
     return this.leadTags.get(id);
   }
 
-  setActionType(types) {
-    this.actionTypes = types;
+  setActivityTypes(types) {
+    this.activityTypes = types;
   }
 
-  getActionTypes() {
-    return this.actionTypes;
+  getActivityTypes() {
+    return this.activityTypes;
   }
 
   setStates(states) {
@@ -67,6 +67,10 @@ export default class ReferenceData {
     }
     
     return this.userInfo;
+  }
+
+  getUserLocal() {
+    return this.getUserInfo().lang;
   }
 
   setCompanyInfo(info) {
