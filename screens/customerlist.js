@@ -37,7 +37,7 @@ export default class CustomerList extends React.Component {
     tabBarLabel: 'Customer',
   };
 
-  componentDidMount() {
+  componentWillMount() {
     console.log('customerlist');
     this.getCustomers();
   }

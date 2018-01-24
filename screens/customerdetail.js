@@ -63,7 +63,7 @@ export default class CustomerDetail extends React.Component {
   }
 
 
-  componentDidMount() {
+  componentWillMount() {
     this.getCustomer(this.props.navigation.state.params.customerId);
   }
 

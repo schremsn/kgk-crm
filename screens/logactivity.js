@@ -81,7 +81,7 @@ export default class LogActivity extends React.Component {
           <Form>
             <Picker
               mode="dropdown"
-              placeholder="Select action"
+              placeholder={i18n.t('select_action')}
               selectedValue={this.state.type}
               note={false}
               onValueChange={(value) => { this.onValueChange(value); }}
@@ -99,9 +99,9 @@ export default class LogActivity extends React.Component {
               <Label>Description</Label>
               <Input onChangeText={(value) => { this.setState({ description: value }); }} />
             </Item>
-            <Button title="Log activity" onPress={this.logActivity} />
-            <Button title="Log and schedule new activity" onPress={this.logAndSchedule} />
-            <Button title="Cancel" onPress={this.cancel} />
+            <Button title={i18n.t('log_activity')} onPress={this.logActivity} />
+            <Button title={i18n.t('log_schedule')} onPress={this.logAndSchedule} />
+            <Button title={i18n.t('cancel')} onPress={this.cancel} />
           </Form>
         </Content>
       </Container>

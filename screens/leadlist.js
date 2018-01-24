@@ -31,7 +31,7 @@ export default class Leadlist extends React.Component {
     this.setState({ refreshing: false });
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.setState({ refreshing: true });
     this.getLeads();
     this.setState({ refreshing: false });
@@ -74,8 +74,15 @@ export default class Leadlist extends React.Component {
         that.setState({ list: data });
       })
       .catch((err) => {
-        console.log(`error customer search: ${err}`);
+        console.log(`error lead search: ${err}`);
       });
+  }
+
+  /**
+   * navigate to leadcreate screen
+   */
+  newLead() {
+    that.props.navigation.navigate('LeadCreate');
   }
 
   FlatListItemSeparator = () => {
@@ -146,7 +153,7 @@ export default class Leadlist extends React.Component {
           <TouchableHighlight
             style={styles.newCustomerbutton}
             underlayColor="#ff7043"
-            onPress={this.newCustomer}
+            onPress={this.newLead}
           >
             <Text style={{ fontSize: 50, color: 'white' }}>+</Text>
           </TouchableHighlight>

@@ -14,7 +14,7 @@ import i18n from './translation/i18n';
 
 let that = null;
 
-export default class CustomerDetail extends React.Component {
+export default class LeadDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -134,21 +134,6 @@ export default class CustomerDetail extends React.Component {
     }
   }
 
-  /**
-   * save lead to database
-   * @param {lead} lead
-   */
-  saveLead(lead) {
-    const dataprovider = DataProvider.getInstance();
-    dataprovider.updateLead(lead)
-      .then((data) => {
-        console.log(`saved lead ${data}`);
-      })
-      .catch((err) => {
-        console.log(`error saving ${err}`);
-      });
-  }
-
   updateValue(field, value) {
     console.log( value);
     this.setState({ isDirty: true });
@@ -162,9 +147,9 @@ export default class CustomerDetail extends React.Component {
   getTags(tags) {
     let tagText = '';
     if ((tags !== undefined) && (tags.length > 0)) {
-      const tagInfo = ReferenceData.getInstance().getLeadTags();
+      const refData = ReferenceData.getInstance();
       tags.forEach((tagid) => {
-        tagText = tagText.concat(tagInfo.get(tagid));
+        tagText = tagText.concat(refData.lookupTagname(tagid));
         tagText = tagText.concat(',');
       });
     }
@@ -181,7 +166,6 @@ export default class CustomerDetail extends React.Component {
       const dataprovider = DataProvider.getInstance();
       dataprovider.markLeadWon(lead.id)
         .then((data) => {
-          console.log(`won: ${data}`);
           that.props.navigation.goBack();
         })
         .catch((err) => {
@@ -207,7 +191,6 @@ export default class CustomerDetail extends React.Component {
       const dataprovider = DataProvider.getInstance();
       dataprovider.markLeadLost(lead.id)
         .then((data) => {
-          console.log(`lost: ${data}`);
           that.props.navigation.goBack();
         })
         .catch((err) => {
@@ -221,6 +204,13 @@ export default class CustomerDetail extends React.Component {
         duration: 2000,
       });
     }
+  }
+
+  /**
+   * navigate to leadcreate screen
+   */
+  createLead() {
+    that.props.navigation.navigate('LeadCreate');
   }
 
   /**
@@ -259,6 +249,7 @@ export default class CustomerDetail extends React.Component {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0: // New
+            that.createLead();
             break;
           case 1: // convert lead to oppurtunity
             that.convertLead();

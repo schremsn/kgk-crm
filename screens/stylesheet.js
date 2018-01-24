@@ -21,7 +21,7 @@ export default StyleSheet.create({
   },
   itemLeadName: {
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   itemLeadContactName: {
     fontSize: 20,
@@ -55,7 +55,6 @@ export default StyleSheet.create({
     height: 100,
     width: '100%',
     flexDirection: 'row',
-    padding: 10,
   },
   itemCustomerCity: {},
   itemCustomerMobile: {},

@@ -38,7 +38,7 @@ export default class Home extends React.Component {
     tabBarLabel: 'Home',
   };
 
-  componentDidMount() {
+  componentWillMount() {
     this.startup()
       .then(() => {
         this.setState({ fontLoaded: true });
@@ -48,17 +48,14 @@ export default class Home extends React.Component {
       });
   }
 
+  /**
+   * load fonts and icons
+   */
   async startup() {
-    /*
-    const load = Font.loadAsync({
-      Roboto: require('native-base/Fonts/Roboto.ttf'),
-      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
-      Ionicons: require('@expo/vector-icons/fonts/Ionicons.ttf'),
-    });
-    */
     const load = Font.loadAsync({ Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf')});
     const load2 = Font.loadAsync({ Ionicons: require('@expo/vector-icons/fonts/Ionicons.ttf') });
-    return Promise.all(load, load2);
+    const load3 = Font.loadAsync({ Roboto: require('native-base/Fonts/Roboto.ttf') });
+    return Promise.all(load, load2, load3);
   }
 
   isSignedIn() {
@@ -89,7 +86,7 @@ export default class Home extends React.Component {
       })
       .catch((err) => {
         let temp = i18n.t('err_reference_data');
-        temp = temp.concat(`${err}`);
+        temp = temp.concat(`: ${err}`);
         console.log(temp);
         Toast.show({
           text: temp,
@@ -108,8 +105,9 @@ export default class Home extends React.Component {
     const load3 = that.loadLeadTags();
     const load4 = that.loadActivityTypes();
     const load5 = that.retrieveDashboard();
+    const load6 = that.getLeadStages();
 
-    return Promise.all(load1, load2, load3, load4, load5);
+    return Promise.all(load1, load2, load3, load4, load5, load6);
   }
 
   /**
@@ -182,6 +180,22 @@ export default class Home extends React.Component {
   }
 
   /**
+   * load all defined lead stages
+   */
+  getLeadStages() {
+    const dataprovider = DataProvider.getInstance();
+    return dataprovider.getLeadStages()
+      .then((data) => {
+        ReferenceData.getInstance().setLeadStages(data);
+        return data;
+      })
+      .catch((err) => {
+        console.log(`error stages ${err}`);
+        return err;
+      });
+  }
+
+  /**
    * load user info such as locale, default company
    */
   loadUserInfo() {
@@ -217,9 +231,18 @@ export default class Home extends React.Component {
       });
   }
 
-
-  dashboard() {
+  /**
+   * switch back to dashboard
+   */
+  onDashboard() {
     that.setState({ detail: false });
+  }
+
+  /**
+   * display list of next actvities
+   */
+  onActivities() {
+    that.setState({ detail: true });
   }
 
   renderActivity(item) {
@@ -330,7 +353,7 @@ export default class Home extends React.Component {
             <TouchableHighlight
               style={styles.newCustomerbutton}
               underlayColor="#ff7043"
-              onPress={this.dashboard}
+              onPress={this.onDashboard}
             >
               <Text style={{ fontSize: 40, color: 'white' }}>&#60;</Text>
             </TouchableHighlight>

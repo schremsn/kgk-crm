@@ -13,9 +13,12 @@ export default class ReferenceData {
   }
   states = [];
   activityTypes = [];
-  leadTags = new Map();
+  leadTags = [];
+  leadTagsMap = new Map();
   userInfo = [];
   companyUnfo = [];
+  leadStages = [];
+  leadStagesMap = new Map();
 
   static getInstance() {
     if (!instance) {
@@ -24,11 +27,20 @@ export default class ReferenceData {
     return instance;
   }
 
+  /**
+   * save both the array and map
+   * @param {array} tags
+   */
   setLeadTags(tags) {
+    this.leadTags = tags;
+    // add the selection for none
+    if (Array.isArray) {
+      this.leadTags.push({ id: 0, name: 'none' });
+    }
     // convert the array to a map
     if (Array.isArray(tags)) {
       tags.forEach((tag) => {
-        this.leadTags.set(tag.id, tag.name);
+        this.leadTagsMap.set(tag.id, tag.name);
       });
     }
   }
@@ -38,7 +50,25 @@ export default class ReferenceData {
   }
 
   lookupTagname(id) {
-    return this.leadTags.get(id);
+    return this.leadTagsMap.get(id);
+  }
+
+  setLeadStages(stages) {
+    this.leadStages = stages;
+    // convert array in to map
+    if (Array.isArray(stages)) {
+      stages.forEach((stage) => {
+        this.leadStagesMap.set(stage.id, stage.name);
+      });
+    }
+  }
+
+  getLeadStages() {
+    return this.leadStages;
+  }
+
+  lookupStageName(id) {
+    return this.leadStagesMap.get(id);
   }
 
   setActivityTypes(types) {

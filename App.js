@@ -12,6 +12,10 @@ import CustomerNote from './screens/note';
 import ConvertLead from './screens/convertlead';
 import SelectCustomer from './screens/selectcustomer';
 import LogActivity from './screens/logactivity';
+import LeadCreate from './screens/leadcreate';
+import Stages from './screens/stages';
+import Products from './screens/products';
+import i18n from './screens/translation/i18n';
 
 
 const CustomerStack = StackNavigator({
@@ -24,46 +28,69 @@ const CustomerStack = StackNavigator({
   CustomerDetail: {
     screen: CustomerDetail,
     navigationOptions: {
-      title: 'Customer Detail',
+      title: i18n.t('customer_detail'),
     },
   },
   Note: {
     screen: CustomerNote,
     navigationOptions: {
-      title: 'Note',
+      title: i18n.t('note'),
+    },
+  },
+});
+
+const ProductStack = StackNavigator({
+  Product: {
+    screen: Products,
+    navigationOptions: {
+      header: null,
     },
   },
 });
 
 const LeadStack = StackNavigator({
+  Stages: {
+    screen: Stages,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  /*
   Lead: {
     screen: Leadlist,
     navigationOptions: {
       header: null,
     },
   },
+  */
   LeadDetail: {
     screen: LeadDetail,
     navigationOptions: {
-      title: 'Lead Detail',
+      title: i18n.t('lead_detail'),
     },
   },
   Convert: {
     screen: ConvertLead,
     navigationOptions: {
-      title: 'Convert lead',
+      title: i18n.t('convert_lead'),
     },
   },
   SelectCustomer: {
     screen: SelectCustomer,
     navigationOptions: {
-      title: 'Select customer',
+      title: i18n.t('select_customer'),
     },
   },
   LogActivity: {
     screen: LogActivity,
     navigationOptions: {
-      title: 'Log activity',
+      title: i18n.t('log_activity'),
+    },
+  },
+  LeadCreate: {
+    screen: LeadCreate,
+    navigationOptions: {
+      title: i18n.t('new_lead'),
     },
   },
 });
@@ -76,8 +103,13 @@ const TabApp = TabNavigator(
     LeadStack: {
       screen: LeadStack,
     },
+    /*
     CustomerStack: {
       screen: CustomerStack,
+    },
+    */
+    Product: {
+      screen: ProductStack,
     },
     Account: {
       screen: Account,

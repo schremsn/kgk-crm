@@ -12,8 +12,19 @@ export default {
   meetings: 'Meetings',
   this_month: 'This month',
   last_month: 'Last month',
+  name: 'Name',
+  company: 'Company',
+  phone: 'Phone',
+  mobile: 'Mobile',
+  email: 'Email',
+  street: 'Street',
+  street2: 'Street 2',
+  city: 'City',
+  postal_code: 'Postal code',
+  province: 'Province',
+  notes: 'Notes',
 
-  // leadsdetail screen
+  // leads
   only_leads: 'Only leads can be converted',
   log_only_leads: 'You can log an activity only for an opportunity',
   win_only_opportunity: 'Only an opportunity can be marked as won',
@@ -24,14 +35,31 @@ export default {
   mark_won: 'Mark won',
   mark_lost: 'Mark lost',
   lead_menu: 'Lead menu',
-  name: 'Name',
   action: 'Action',
   lead_search: 'Search for name, city',
   log_activity: 'Log activity',
+  contact: 'Contact',
+  position: 'Position',
+  lead_created: 'Lead was created',
+  select_tag: 'Select tag',
+  tags: 'Tags',
+  
+
+  // logsctivity screen
+  select_action: 'Select action',
+  log_schedule: 'Log and schedule new activity',
 
   // home screen
   activities_done: 'Activities done',
   nothing_to_do: 'Nothing to do',
   err_reference_data: 'Error loading reference data',
+
+  // navigation
+  customer_detail: 'Customer detail',
+  note: 'Note',
+  lead_detail: 'Lead detail',
+  convert_lead: 'Convert lead',
+  select_customer: 'Select customer',
+  new_lead: 'New lead',
 
 };
