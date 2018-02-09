@@ -34,7 +34,7 @@ export default class ReferenceData {
   setLeadTags(tags) {
     this.leadTags = tags;
     // add the selection for none
-    if (Array.isArray) {
+    if (Array.isArray(tags)) {
       this.leadTags.push({ id: 0, name: 'none' });
     }
     // convert the array to a map

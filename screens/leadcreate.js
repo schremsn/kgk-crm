@@ -34,6 +34,10 @@ export default class LeadCreate extends React.Component {
     this.lead.set(field, value);
   }
 
+  /**
+   * update the selected stage
+   * @param {number} value
+   */
   onValueChange(value) {
     that.setState({ tag: value });
     that.lead.set('tag', value);
@@ -43,10 +47,14 @@ export default class LeadCreate extends React.Component {
    * event handler to save lead
    */
   onSave() {
+    // if stage was passed to screen set it on lead
+    if (that.props.navigation.state.params.stageid) {
+      that.lead.set('stage_id', that.props.navigation.state.params.stageid);
+    }
     const dataprovider = DataProvider.getInstance();
     dataprovider.createLead(that.lead)
       .then((data) => {
-        console.log(`saved lead ${data}`);
+        console.log(`save lead ${data}`);
         Toast.show({
           text: i18n.t('lead_created'),
           position: 'bottom',

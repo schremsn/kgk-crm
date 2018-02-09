@@ -7,6 +7,7 @@ import styles from './stylesheet';
 import FlatListItemSeparator from './components/listseparator';
 import i18n from './translation/i18n';
 import ReferenceData from '../data/referencedata';
+import Util from '../common/util';
 
 let that = null;
 
@@ -16,6 +17,7 @@ export default class Stages extends React.Component {
     this.state = {
       stages: ReferenceData.getInstance().getLeadStages(),
       leads: [],
+      counts: new Map(),
       refreshing: false,
     };
 
@@ -31,18 +33,33 @@ export default class Stages extends React.Component {
   /**
    * load leads before screen is displayed
    */
-  componentDidMount() {
+  componentWillMount() {
     this.getLeads();
+    this.getPipeline();
   }
 
   /**
    * refresh the display
    */
   refresh() {
-    console.log('refresh');
     this.setState({ refreshing: true });
-    this.getLeads();
+    this.getPipeline();
     this.setState({ refreshing: false });
+  }
+
+  /**
+   * get the lead counts per stage
+   */
+  getPipeline() {
+    const dataprovider = DataProvider.getInstance();
+    dataprovider.pipelineCount()
+      .then((data) => {
+        this.setState({ counts: data });
+      })
+      .catch((err) => {
+        console.log(`Get pipeline ${err}`);
+        console.log(err);
+      });
   }
 
   /**
@@ -59,8 +76,20 @@ export default class Stages extends React.Component {
       });
   }
 
+  /**
+   * displays a list of leads based on the selected stage
+   * @param {number} stage
+   */
   selectStage(stage) {
-    console.log(stage);
+    that.props.navigation.navigate('LeadList', { stage: stage });
+  }
+
+  /**
+   * return the count for the stage id
+   * @param {number} id
+   */
+  getCount(id) {
+    return this.state.counts[id];
   }
 
   renderStage(item) {
@@ -72,11 +101,11 @@ export default class Stages extends React.Component {
       >
         <View>
           <Card>
-            <CardItem>
+            <CardItem style={{ backgroundColor: 'dodgerblue' }}>
               <Text style={styles.itemLeadName}>{item.name}</Text>
             </CardItem>
-            <CardItem>
-              <Text>{this.state.leads.length}</Text>
+            <CardItem style={{ backgroundColor: 'dodgerblue' }}>
+              <Text>{this.getCount(item.id)}</Text>
             </CardItem>
           </Card>
         </View>

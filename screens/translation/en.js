@@ -23,6 +23,8 @@ export default {
   postal_code: 'Postal code',
   province: 'Province',
   notes: 'Notes',
+  customer: 'Customer',
+  product: 'Product',
 
   // leads
   only_leads: 'Only leads can be converted',
@@ -43,6 +45,11 @@ export default {
   lead_created: 'Lead was created',
   select_tag: 'Select tag',
   tags: 'Tags',
+  opportunities: 'Opportunities',
+  lead: 'Lead',
+  leads: 'Leads',
+  pipeline: 'Pipeline',
+  contact_name: 'Contact',
   
 
   // logsctivity screen

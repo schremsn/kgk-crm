@@ -14,7 +14,7 @@ import SelectCustomer from './screens/selectcustomer';
 import LogActivity from './screens/logactivity';
 import LeadCreate from './screens/leadcreate';
 import Stages from './screens/stages';
-import Products from './screens/products';
+import ProductList from './screens/productlist';
 import i18n from './screens/translation/i18n';
 
 
@@ -40,8 +40,8 @@ const CustomerStack = StackNavigator({
 });
 
 const ProductStack = StackNavigator({
-  Product: {
-    screen: Products,
+  ProductList: {
+    screen: ProductList,
     navigationOptions: {
       header: null,
     },
@@ -52,17 +52,15 @@ const LeadStack = StackNavigator({
   Stages: {
     screen: Stages,
     navigationOptions: {
-      header: null,
+      title: i18n.t('pipeline'),
     },
   },
-  /*
-  Lead: {
+  LeadList: {
     screen: Leadlist,
     navigationOptions: {
-      header: null,
+      title: i18n.t('leads'),
     },
   },
-  */
   LeadDetail: {
     screen: LeadDetail,
     navigationOptions: {

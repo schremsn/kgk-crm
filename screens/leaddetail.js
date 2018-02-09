@@ -11,6 +11,7 @@ import DataProvider from '../lib/dataprovider';
 import styles from './stylesheet';
 import ReferenceData from '../data/referencedata';
 import i18n from './translation/i18n';
+import Util from '../common/util';
 
 let that = null;
 
@@ -25,15 +26,21 @@ export default class LeadDetail extends React.Component {
     that = this;
   }
 
+  static navigationOptions = {
+    tabBarLabel: i18n.t('Lead'),
+  };
+
   /**
    * retrieve the lead details when the screen is loaded
    */
-  componentDidMount() {
+  componentWillMount() {
     this.getLead(this.props.navigation.state.params.leadId);
   }
 
-  componentWillUnmount() {
-    this.updateLead();
+
+  componentDidMount() {
+    console.log('mount');
+    // this.contact.selection = { start: 0, end: 1 };
   }
 
   /**
@@ -66,37 +73,7 @@ export default class LeadDetail extends React.Component {
         console.log(`error getting lead: ${err}`);
       });
   }
- 
-  /**
-  * helper method to filter out json false values for empty (null) field - should only be called for non-boolean fields
-  * @param {any} data
-  * @return {any} value
-   */
-  getValue(data) {
-    let value = '';
-    if (data == null) {
-      value = '';
-    } else if (data === false) {
-      value = '';
-    } else {
-      value = data;
-    }
-    return value;
-  }
 
-  /**
-   * helper method to capitalize the first letter
-   * @param {string} data
-   */
-  convertCase(data) {
-    let result = data;
-    if (typeof (data) === 'string' && data.length > 0) {
-      const first = data.substring(0, 1);
-      result = first.toUpperCase();
-      result = result.concat(data.substring(1));
-    }
-    return result;
-  }
 
   /**
    * navigate to the convertlead screen or exit if it's is already and opportunity
@@ -286,65 +263,65 @@ export default class LeadDetail extends React.Component {
         <Content>
           <Form>
             <Item>
-              <Label style={col}>{this.convertCase(lead.type)}</Label>
+              <Label style={col}>{Util.convertCase(lead.type)}</Label>
             </Item>
             <Item stackedLabel>
               <Label>{i18n.t('name')}</Label>
               <Input
-                value={this.getValue(lead.name)}
-                onChangeText={text => this.updateValue('name', text)}
+                value={Util.getValue(lead.name)}
+                onChangeText={text => Util.updateValue('name', text)}
               />
             </Item>
             <Item stackedLabel>
               <Label>Company</Label>
-              <Input value={this.getValue(lead.partner_name)} onChangeText={text => this.updateValue('partner_name', text)} />
+              <Input value={Util.getValue(lead.partner_name)} onChangeText={text => Util.updateValue('partner_name', text)} />
             </Item>
             <Item stackedLabel>
               <Label>{i18n.t('action')}</Label>
-              <Input value={this.getValue(lead.title_action)} />
+              <Input value={Util.getValue(lead.title_action)} />
             </Item>
             <Item stackedLabel>
               <Label>Contact</Label>
-              <Input value={this.getValue(lead.contact_name)} onChangeText={text => this.updateValue('contact_name', text)} />
+              <Input value={Util.getValue(lead.contact_name)} onChangeText={text => Util.updateValue('contact_name', text)} />
             </Item>
             <Item stackedLabel>
               <Label>Position</Label>
-              <Input value={this.getValue(lead.function)} onChangeText={text => this.updateValue('function', text)} />
+              <Input value={Util.getValue(lead.function)} onChangeText={text => Util.updateValue('function', text)} />
             </Item>
             <Item stackedLabel>
               <Label>Phone</Label>
-              <Input value={this.getValue(lead.phone)} onChangeText={text => this.updateValue('phone', text)} />
+              <Input value={Util.getValue(lead.phone)} onChangeText={text => Util.updateValue('phone', text)} />
             </Item>
             <Item stackedLabel>
               <Label>Mobile</Label>
-              <Input value={this.getValue(lead.mobile)} onChangeText={text => this.updateValue('mobile', text)} />
+              <Input value={Util.getValue(lead.mobile)} onChangeText={text => Util.updateValue('mobile', text)} />
             </Item>
             <Item stackedLabel>
               <Label>Email</Label>
-              <Input value={this.getValue(lead.email_from)} onChangeText={text => this.updateValue('email_from', text)} />
+              <Input value={Util.getValue(lead.email_from)} onChangeText={text => Util.updateValue('email_from', text)} />
             </Item>
             <Item stackedLabel>
               <Label>Street</Label>
               <Input
-                value={this.getValue(lead.street)}
-                onChangeText={text => this.updateValue('street', text)}
+                value={Util.getValue(lead.street)}
+                onChangeText={text => Util.updateValue('street', text)}
               />
             </Item>
             <Item stackedLabel>
               <Label>Street 2</Label>
-              <Input value={this.getValue(lead.street2)} onChangeText={text => this.updateValue('street2', text)} />
+              <Input value={Util.getValue(lead.street2)} onChangeText={text => Util.updateValue('street2', text)} />
             </Item>
             <Item stackedLabel>
               <Label>City</Label>
-              <Input value={this.getValue(lead.city)} onChangeText={text => this.updateValue('city', text)} />
+              <Input value={Util.getValue(lead.city)} onChangeText={text => Util.updateValue('city', text)} />
             </Item>
             <Item stackedLabel>
               <Label>Postal code</Label>
-              <Input value={this.getValue(lead.zip)} onChangeText={text => this.updateValue('zip', text)} />
+              <Input value={Util.getValue(lead.zip)} onChangeText={text => Util.updateValue('zip', text)} />
             </Item>
             <Item stackedLabel>
               <Label>Province</Label>
-              <Input value={this.getState(lead.state_id)} onChangeText={text => this.updateValue('state_id', text)} />
+              <Input value={this.getState(lead.state_id)} onChangeText={text => Util.updateValue('state_id', text)} />
             </Item>
             <Item stackedLabel>
               <Label>Tags</Label>
@@ -352,7 +329,7 @@ export default class LeadDetail extends React.Component {
             </Item>
             <View style={{ padding: 15 }}>
               <Text>Notes</Text>
-              <TextInput numberOfLines={3} keyboardType="default" value={this.getValue(lead.description)} onChangeText={text => this.updateValue('description', text)} />
+              <TextInput numberOfLines={3} keyboardType="default" value={Util.getValue(lead.description)} onChangeText={text => Util.updateValue('description', text)} />
             </View>
           </Form>
         </Content>

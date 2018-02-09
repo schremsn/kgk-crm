@@ -5,6 +5,7 @@ import { Toast } from 'native-base';
 import DataProvider from '../lib/dataprovider';
 import styles from './stylesheet';
 import i18n from './translation/i18n';
+import FlatListItemSeparator from './components/listseparator';
 
 let that = null;
 
@@ -14,52 +15,53 @@ export default class Leadlist extends React.Component {
     this.state = {
       leadList: [],
       refreshing: false,
+      stage: [],
     };
 
     this.offset = 0;
 
     that = this;
   }
-
-  static navigationOptions = {
-    tabBarLabel: 'Lead',
+  
+  static navigationOptions = ({ navigation }) => {
+    const temp = navigation.state.params.stage.name;
+    return { headerTitle: temp, tabBarLabel: i18n.t('lead') };
   };
 
+  /**
+   * refresh the data after pull down
+   */
   refresh() {
     this.setState({ refreshing: true });
-    this.getLeads();
+    this.getLeads(this.state.stage.id);
     this.setState({ refreshing: false });
   }
 
   componentWillMount() {
+    const stageId = this.props.navigation.state.params.stage.id;
     this.setState({ refreshing: true });
-    this.getLeads();
+    this.setState({ stage: stageId });
+    this.getLeads(stageId);
     this.setState({ refreshing: false });
   }
 
   /**
    * retrieve leads with optional starting index for pagination
+   * @param {number} stageid
    * @param {number} index
    */
-  getLeads(index = 0) {
-    console.log('getleads');
+  getLeads(stageid, index = 0) {
+    if (stageid === undefined) {
+      return;
+    }
     const dataprovider = DataProvider.getInstance();
-    dataprovider.getLeads(index)
+    dataprovider.getLeadbyStage(stageid, index)
       .then((data) => {
         that.setState({ leadList: that.state.leadList.concat(data) });
         that.offset = index + data.length;
       })
       .catch((err) => {
         console.log(`error leads: ${err}`);
-        dataprovider.sleep(2000);
-        this.getLeads(index);
-        
-        Toast.show({
-          text: `error loading leads: ${err}`,
-          position: 'bottom',
-          buttonText: 'Retry',
-          type: 'danger',
-        });
       });
   }
 
@@ -82,20 +84,9 @@ export default class Leadlist extends React.Component {
    * navigate to leadcreate screen
    */
   newLead() {
-    that.props.navigation.navigate('LeadCreate');
+    that.props.navigation.navigate('LeadCreate', { stageid: that.state.stage.id });
   }
 
-  FlatListItemSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: '100%',
-          backgroundColor: '#607D8B',
-        }}
-      />
-    );
-  };
 
   renderLead(item) {
     let col = styles.leadColor;
@@ -110,9 +101,11 @@ export default class Leadlist extends React.Component {
         }}
       >
         <View style={styles.itemLead}>
-          <Text style={col}>Name: {item.name}</Text>
-          <Text>Company: {item.partner_name}</Text>
-          <Text style={styles.itemContactName}>Contact Name: {item.contact_name}</Text>
+          <Text style={col}>{item.name}</Text>
+          <Text>{i18n.t('customer')}: {item.partner_name}</Text>
+          <Text style={styles.itemContactName}>{i18n.t('contact_name')}: {item.contact_name}</Text>
+          <Text>{i18n.t('city')}: {item.city}</Text>
+          <Text>{i18n.t('phone')}: {item.phone}</Text>
         </View>
       </TouchableHighlight>
 
@@ -141,11 +134,10 @@ export default class Leadlist extends React.Component {
         <FlatList
           refreshing={this.state.refreshing}
           onRefresh={() => this.refresh()}
-          initialNumToRender={10}
-          onEndReachedThreshold={5}
-          onEndReached={() => this.getLeads(this.offset)}
+          onEndReachedThreshold={1}
+          onEndReached={() => this.getLeads(this.state.stage.id, this.offset)}
           data={this.state.leadList}
-          ItemSeparatorComponent={this.FlatListItemSeparator}
+          ItemSeparatorComponent={FlatListItemSeparator}
           keyExtractor={(item, index) => index}
           renderItem={({ item }) => this.renderLead(item)}
         />
