@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "modilecrm",
+    "name": "mobilecrm",
     "version": "1.0.0",
-    "slug": "modilecrm",
-    "sdkVersion": "21.0.0",
+    "slug": "mobilecrm",
+    "sdkVersion": "25.0.0",
 
     "ios": {
-      "bundleIdentifier": "com.schremsn.modilecrm"
+      "bundleIdentifier": "com.schremsn.mobilecrm"
     },
     "android": {
-      "package": "com.schremsn.modilecrm"
+      "package": "com.schremsn.mobilecrm"
     }
   }
 }
