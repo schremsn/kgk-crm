@@ -60,6 +60,10 @@ export default {
   activities_done: 'Activities done',
   nothing_to_do: 'Nothing to do',
   err_reference_data: 'Error loading reference data',
+  commission: 'Commission',
+
+  // product screens
+  product_information: 'Product information',
 
   // navigation
   customer_detail: 'Customer detail',
@@ -68,5 +72,6 @@ export default {
   convert_lead: 'Convert lead',
   select_customer: 'Select customer',
   new_lead: 'New lead',
+  product_detail: 'Product detail',
 
 };

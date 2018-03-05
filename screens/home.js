@@ -238,6 +238,13 @@ export default class Home extends React.Component {
     that.setState({ detail: false });
   }
 
+  /** 
+   * display commision screen
+  */
+  onCommission() {
+    that.props.navigation.navigate('CommissionOverview');
+  }
+
   /**
    * display list of next actvities
    */
@@ -292,6 +299,20 @@ export default class Home extends React.Component {
               <Text style={{ color: 'red' }}>{i18n.t('overdue')}: {this.state.numOverdue}</Text>
             </CardItem>
             <CardItem button onPress={this.onActivities} style={{ backgroundColor: 'dodgerblue' }}>
+              <Text style={{ textAlign: 'center', width: '100%' }}>{i18n.t('details')}</Text>
+            </CardItem>
+          </Card>
+          <Card>
+            <CardItem header style={{ backgroundColor: 'forestgreen' }}>
+              <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{i18n.t('commission')}</Text>
+            </CardItem>
+            <CardItem style={{ backgroundColor: 'forestgreen' }}>
+              <Text>{i18n.t('this_month')}: VND 1.000.000</Text>
+            </CardItem>
+            <CardItem style={{ backgroundColor: 'forestgreen' }}>
+              <Text>{i18n.t('last_month')}: VND 1.200.000</Text>
+            </CardItem>
+            <CardItem button onPress={this.onCommission} style={{ backgroundColor: 'forestgreen' }}>
               <Text style={{ textAlign: 'center', width: '100%' }}>{i18n.t('details')}</Text>
             </CardItem>
           </Card>

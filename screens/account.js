@@ -9,7 +9,7 @@ export default class Home extends React.Component {
   }
 
   static navigationOptions = {
-    tabBarLabel: 'Account',
+    tabBarLabel: 'More',
   };
 
   onSignIn() {

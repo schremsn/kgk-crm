@@ -15,33 +15,42 @@ import LogActivity from './screens/logactivity';
 import LeadCreate from './screens/leadcreate';
 import Stages from './screens/stages';
 import ProductList from './screens/productlist';
+import CommissionOverview from './screens/commissionoverview';
+import ProductDetail from './screens/productdetail';
+import WebViewer from './screens/webview';
 import i18n from './screens/translation/i18n';
 
-
-const CustomerStack = StackNavigator({
-  Customer: {
-    screen: CustomerList,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  CustomerDetail: {
-    screen: CustomerDetail,
-    navigationOptions: {
-      title: i18n.t('customer_detail'),
-    },
-  },
-  Note: {
-    screen: CustomerNote,
-    navigationOptions: {
-      title: i18n.t('note'),
-    },
-  },
-});
 
 const ProductStack = StackNavigator({
   ProductList: {
     screen: ProductList,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  ProductDetail: {
+    screen: ProductDetail,
+    navigationOptions: {
+      title: i18n.t('product_detail'),
+    },
+  },
+  Web: {
+    screen: WebViewer,
+    navigationOptions: {
+      title: i18n.t('product_detail'),
+    },
+  },
+});
+
+const HomeStack = StackNavigator({
+  Home: {
+    screen: Home,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  CommissionOverview: {
+    screen: CommissionOverview,
     navigationOptions: {
       header: null,
     },
@@ -93,10 +102,19 @@ const LeadStack = StackNavigator({
   },
 });
 
+const MoreStack = StackNavigator({
+  Account: {
+    screen: Account,
+    navigationOptions: {
+      header: null,
+    },
+  },
+});
+
 const TabApp = TabNavigator(
   {
     Home: {
-      screen: Home,
+      screen: HomeStack,
     },
     LeadStack: {
       screen: LeadStack,
@@ -109,8 +127,8 @@ const TabApp = TabNavigator(
     Product: {
       screen: ProductStack,
     },
-    Account: {
-      screen: Account,
+    More: {
+      screen: MoreStack,
     },
   },
   {

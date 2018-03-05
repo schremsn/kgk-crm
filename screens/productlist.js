@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, FlatList, TouchableHighlight } from 'react-native';
-import { Thumbnail, Card, CardItem, Toast } from 'native-base';
+import { Thumbnail, Card, CardItem } from 'native-base';
 
 import DataProvider from '../lib/dataprovider';
 import styles from './stylesheet';
@@ -54,7 +54,7 @@ export default class ProductList extends React.Component {
     return (
       <TouchableHighlight
         onPress={() => {
-          this.props.navigation.navigate('ProductDetail', { productId: item.id });
+          this.props.navigation.navigate('ProductDetail', { product: item });
         }}
       >
         <Card>
