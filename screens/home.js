@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, FlatList, TouchableHighlight } from 'react-native';
+import { Text, RefreshControl } from 'react-native';
 import { Container, Content, Card, CardItem, Toast } from 'native-base';
 import { Font, AppLoading } from 'expo';
 
@@ -16,18 +16,17 @@ export default class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
       signedin: false,
       numToday: 0,
       numWeek: 0,
       numOverdue: 0,
       doneThis: 0,
       doneLast: 0,
-      meetingToday: 0,
-      meetingWeek: 0,
-      detail: false,
+      numMessages: 0,
       fontLoaded: false,
-      detail: false,
+      refreshing: false,
+      wonThis: 0,
+      wonLast: 0,
     };
 
     i18n.defaultLocale = 'en-US';
@@ -73,6 +72,7 @@ export default class Home extends React.Component {
       })
       .catch((err) => {
         console.log(`error activities:  ${err}`);
+        console.log(err);
       });
   }
 
@@ -106,8 +106,9 @@ export default class Home extends React.Component {
     const load4 = that.loadActivityTypes();
     const load5 = that.retrieveDashboard();
     const load6 = that.getLeadStages();
+    const load7 = that.getMessages();
 
-    return Promise.all(load1, load2, load3, load4, load5, load6);
+    return Promise.all(load1, load2, load3, load4, load5, load6, load7);
   }
 
   /**
@@ -122,6 +123,7 @@ export default class Home extends React.Component {
       })
       .catch((err) => {
         console.log(`error action types:  ${err}`);
+        console.log(err);
         return err;
       });
   }
@@ -143,6 +145,20 @@ export default class Home extends React.Component {
       });
   }
 
+  getMessages() {
+    const dataprovider = DataProvider.getInstance();
+    return dataprovider.getMessages()
+      .then((data) => {
+        this.setState({ numMessages: data.length });
+        return data;
+      })
+      .catch((err) => {
+        console.log(`error messages ${err}`);
+        console.log(err);
+        return err;
+      });
+  }
+
   /**
    * set state for the numbers in the dashboard
    * @param {array} data
@@ -153,14 +169,17 @@ export default class Home extends React.Component {
     }
     const activity = data.activity;
     const done = data.done;
-    const meeting = data.meeting;
+    const won = data.won;
+    // const meeting = data.meeting;
     this.setState({ numToday: activity.today });
     this.setState({ numWeek: activity.next_7_days });
     this.setState({ numOverdue: activity.overdue });
     this.setState({ doneThis: done.this_month });
     this.setState({ doneLast: done.last_month });
-    this.setState({ meetingToday: meeting.today });
-    this.setState({ meetingWeek: meeting.next_7_days });
+    this.setState({ wonThis: won.this_month });
+    this.setState({ wonLast: won.last_month });
+    // this.setState({ meetingToday: meeting.today });
+    // this.setState({ meetingWeek: meeting.next_7_days });
   }
 
   /**
@@ -231,14 +250,17 @@ export default class Home extends React.Component {
       });
   }
 
-  /**
-   * switch back to dashboard
-   */
-  onDashboard() {
-    that.setState({ detail: false });
+  /** 
+   * reload the data for the dashboard
+  */
+  onRefreshData() {
+    that.setState({ refreshing: true });
+    that.loadData();
+    that.retrieveDashboard();
+    that.setState({ refreshing: false });
   }
 
-  /** 
+  /**
    * display commision screen
   */
   onCommission() {
@@ -246,36 +268,18 @@ export default class Home extends React.Component {
   }
 
   /**
-   * display list of next actvities
-   */
+   * display messages
+  */
+  onMessages() {
+    that.props.navigation.navigate('MessageList');
+  }
+
+  /**
+   * display activities screen
+  */
   onActivities() {
-    that.setState({ detail: true });
+    that.props.navigation.navigate('Activities');
   }
-
-  renderActivity(item) {
-    return (
-      <View>
-        <Text style={styles.headerHome}>{item.title_action}</Text>
-        <Text style={styles.itemHome}>{item.name}</Text>
-        <Text style={styles.itemHome}>{item.contact_name}</Text>
-        <Text style={styles.itemHome}>{item.date_action}</Text>
-        <Text style={styles.itemHome}>{item.city}</Text>
-        <Text style={styles.itemHome}>{item.phone}</Text>
-      </View>
-    );
-  }
-
-  FlatListItemSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: '100%',
-          backgroundColor: '#607D8B',
-        }}
-      />
-    );
-  };
 
 
   /**
@@ -284,7 +288,15 @@ export default class Home extends React.Component {
   renderStatus() {
     return (
       <Container style={{ padding: 5 }}>
-        <Content>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefreshData}
+              title="Loading..."
+            />
+          }
+        >
           <Card>
             <CardItem header style={{ backgroundColor: 'dodgerblue' }}>
               <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{i18n.t('activities')}</Text>
@@ -318,13 +330,13 @@ export default class Home extends React.Component {
           </Card>
           <Card>
             <CardItem header style={{ backgroundColor: 'silver' }}>
-              <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{i18n.t('meetings')}</Text>
+              <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{i18n.t('messages')}</Text>
             </CardItem>
             <CardItem style={{ backgroundColor: 'silver' }}>
-              <Text>{i18n.t('today')}: {this.state.meetingToday}</Text>
+              <Text>{i18n.t('new_messages')}: {this.state.numMessages}</Text>
             </CardItem>
-            <CardItem style={{ backgroundColor: 'silver' }}>
-              <Text>{i18n.t('next_7_days')}: {this.state.meetingWeek}</Text>
+            <CardItem button onPress={this.onMessages} style={{ backgroundColor: 'silver' }}>
+              <Text style={{ textAlign: 'center', width: '100%' }}>{i18n.t('details')}</Text>
             </CardItem>
           </Card>
           <Card>
@@ -336,6 +348,17 @@ export default class Home extends React.Component {
             </CardItem>
             <CardItem style={{ backgroundColor: 'orange' }}>
               <Text>{i18n.t('last_month')}: {this.state.doneLast}</Text>
+            </CardItem>
+          </Card>
+          <Card>
+            <CardItem header style={{ backgroundColor: 'dodgerblue' }}>
+              <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{i18n.t('opportunity_won')}</Text>
+            </CardItem>
+            <CardItem style={{ backgroundColor: 'dodgerblue' }}>
+              <Text>{i18n.t('this_month')}: {this.state.wonThis}</Text>
+            </CardItem>
+            <CardItem style={{ backgroundColor: 'dodgerblue' }}>
+              <Text>{i18n.t('last_month')}: {this.state.wonLast}</Text>
             </CardItem>
           </Card>
         </Content>
@@ -352,34 +375,6 @@ export default class Home extends React.Component {
     if (!this.isSignedIn()) {
       return (
         <SignInScreen done={this.signInComplete} />
-      );
-    }
-    else if (this.state.data.length === 0) {
-      return (
-        <View style={styles.container}>
-          <Text style={styles.mess}>Nothing to do</Text>
-        </View>
-      );
-    }
-    else if (this.state.detail) {
-      return (
-        <View style={styles.container}>
-          <FlatList
-            data={this.state.data}
-            ItemSeparatorComponent={this.FlatListItemSeparator}
-            keyExtractor={(item, index) => index}
-            renderItem={({ item }) => this.renderActivity(item)}
-          />
-          <View>
-            <TouchableHighlight
-              style={styles.newCustomerbutton}
-              underlayColor="#ff7043"
-              onPress={this.onDashboard}
-            >
-              <Text style={{ fontSize: 40, color: 'white' }}>&#60;</Text>
-            </TouchableHighlight>
-          </View>
-        </View>
       );
     }
     return this.renderStatus();

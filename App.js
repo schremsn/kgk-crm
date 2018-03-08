@@ -18,6 +18,8 @@ import ProductList from './screens/productlist';
 import CommissionOverview from './screens/commissionoverview';
 import ProductDetail from './screens/productdetail';
 import WebViewer from './screens/webview';
+import MessageList from './screens/messagelist';
+import Actvities from './screens/actvities';
 import i18n from './screens/translation/i18n';
 
 
@@ -52,7 +54,19 @@ const HomeStack = StackNavigator({
   CommissionOverview: {
     screen: CommissionOverview,
     navigationOptions: {
-      header: null,
+      title: i18n.t('commission'),
+    },
+  },
+  MessageList: {
+    screen: MessageList,
+    navigationOptions: {
+      title: i18n.t('messages'),
+    },
+  },
+  Activities: {
+    screen: Actvities,
+    navigationOptions: {
+      title: i18n.t('activities'),
     },
   },
 });

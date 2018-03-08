@@ -61,6 +61,9 @@ export default {
   nothing_to_do: 'Nothing to do',
   err_reference_data: 'Error loading reference data',
   commission: 'Commission',
+  messages: 'Messages',
+  new_messages: 'New messages',
+  opportunity_won: 'Opportunities won',
 
   // product screens
   product_information: 'Product information',
