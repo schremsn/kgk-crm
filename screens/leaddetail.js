@@ -27,7 +27,7 @@ export default class LeadDetail extends React.Component {
   }
 
   static navigationOptions = {
-    tabBarLabel: i18n.t('Lead'),
+    tabBarLabel: i18n.t('lead'),
   };
 
   /**
@@ -37,11 +37,6 @@ export default class LeadDetail extends React.Component {
     this.getLead(this.props.navigation.state.params.leadId);
   }
 
-
-  componentDidMount() {
-    console.log('mount');
-    // this.contact.selection = { start: 0, end: 1 };
-  }
 
   /**
    * save updated lead
@@ -75,23 +70,6 @@ export default class LeadDetail extends React.Component {
   }
 
 
-  /**
-   * navigate to the convertlead screen or exit if it's is already and opportunity
-   */
-  convertLead() {
-    const lead1 = that.state.lead[0];
-
-    if (lead1.type.toUpperCase() === 'opportunity'.toUpperCase()) {
-      Toast.show({
-        text: i18n.t('only_leads'),
-        position: 'bottom',
-        type: 'warning',
-        buttonText: i18n.t('ok'),
-      });
-      return;
-    }
-    that.props.navigation.navigate('Convert', { lead: lead1 });
-  }
 
   /**
    * navigate to the logactvity screen or display message if it's a lead
@@ -158,6 +136,10 @@ export default class LeadDetail extends React.Component {
     }
   }
 
+  addNote() {
+    console.log('add note');
+  }
+
   /**
    * mark the current opportunity as lost
    */
@@ -208,7 +190,7 @@ export default class LeadDetail extends React.Component {
   showMenu() {
     const BUTTONS = [
       i18n.t('new'),
-      i18n.t('convert_to_opportunity'),
+      i18n.t('add_note'),
       i18n.t('log_activity'),
       i18n.t('mark_won'),
       i18n.t('mark_lost'),
@@ -228,8 +210,8 @@ export default class LeadDetail extends React.Component {
           case 0: // New
             that.createLead();
             break;
-          case 1: // convert lead to oppurtunity
-            that.convertLead();
+          case 1: // add a note to lead
+            that.addNote();
             break;
           case 2: // log activity
             that.logActivity();

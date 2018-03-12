@@ -19,6 +19,7 @@ export default class LeadCreate extends React.Component {
     this.state = {
       tags: ReferenceData.getInstance().getLeadTags(),
       tag: 0,
+      customerName: '',
     };
 
     this.lead = new Map();
@@ -41,6 +42,38 @@ export default class LeadCreate extends React.Component {
   onValueChange(value) {
     that.setState({ tag: value });
     that.lead.set('tag', value);
+  }
+
+  /**
+   * navigate to the select customer screen passing call back function
+   */
+  selectCustomer() {
+    that.props.navigation.navigate('SelectCustomer', { select: that.selectedCustomer });
+  }
+
+  /**
+   * callback function for customer selection screen
+   * will retrieve the customer
+   * @param {number} customerId
+   */
+  selectedCustomer(customerId) {
+    console.log(`customerid: ${customerId}`);
+    const dataprovider = DataProvider.getInstance();
+    dataprovider.getCustomer(customerId)
+      .then((data) => {
+        that.setState({ customer: data });
+        that.setState({ customerName: data[0].name });
+      })
+      .catch((err) => {
+        console.log(`error ${err}`);
+      });
+  }
+
+  /** 
+   * navigate to the select customer screen passing call back function
+  */
+  newCustomer() {
+    that.props.navigation.navigate('NewCustomer', { select: that.selectedCustomer });
   }
 
   /**
@@ -79,48 +112,17 @@ export default class LeadCreate extends React.Component {
             </Item>
             <Item stackedLabel>
               <Label>{i18n.t('company')}</Label>
-              <Input onChangeText={text => this.updateValue('partner_name', text)} />
+              <Input value={this.state.customerName} />
             </Item>
-            <Item stackedLabel>
-              <Label>{i18n.t('contact')}</Label>
-              <Input onChangeText={text => this.updateValue('contact_name', text)} />
-            </Item>
-            <Item stackedLabel>
-              <Label>{i18n.t('position')}</Label>
-              <Input onChangeText={text => this.updateValue('function', text)} />
-            </Item>
-            <Item stackedLabel>
-              <Label>{i18n.t('phone')}</Label>
-              <Input keyboardType="numeric" onChangeText={text => this.updateValue('phone', text)} />
-            </Item>
-            <Item stackedLabel>
-              <Label>{i18n.t('mobile')}</Label>
-              <Input keyboardType="numeric" onChangeText={text => this.updateValue('mobile', text)} />
-            </Item>
-            <Item stackedLabel>
-              <Label>{i18n.t('email')}</Label>
-              <Input keyboardType="email-address" onChangeText={text => this.updateValue('email_from', text)} />
-            </Item>
-            <Item stackedLabel>
-              <Label>{i18n.t('street')}</Label>
-              <Input onChangeText={text => this.updateValue('street', text)} />
-            </Item>
-            <Item stackedLabel>
-              <Label>{i18n.t('street2')}</Label>
-              <Input onChangeText={text => this.updateValue('street2', text)} />
-            </Item>
-            <Item stackedLabel>
-              <Label>{i18n.t('city')}</Label>
-              <Input onChangeText={text => this.updateValue('city', text)} />
-            </Item>
-            <Item stackedLabel>
-              <Label>{i18n.t('postal_code')}</Label>
-              <Input onChangeText={text => this.updateValue('zip', text)} />
-            </Item>
-            <Item stackedLabel>
-              <Label>{i18n.t('province')}</Label>
-              <Input onChangeText={text => this.updateValue('state_id', text)} />
-            </Item>
+            <View style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignItems: 'flex-end',
+              }}
+            >
+              <Button title="Select" onPress={this.selectCustomer} />
+              <Button title="New" onPress={this.newCustomer} />
+            </View>
             <Item stackedLabel>
               <Label>{i18n.t('select_tag')}</Label>
             </Item>

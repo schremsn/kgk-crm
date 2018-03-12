@@ -22,7 +22,7 @@ export default class SignInScreen extends React.Component {
   onSignIn() {
     const dataprovider = new DataProvider();
     dataprovider.login(that.state.username, that.state.password)
-      .then((data) => {
+      .then(() => {
         // wipe password after login
         that.state.password = '';
         that.setState({ modalVisible: false });
@@ -30,15 +30,15 @@ export default class SignInScreen extends React.Component {
       })
       .catch((err) => {
         Alert.alert(
-          'Login error',
+          `Login error ${err}`,
           'Username or password are incorrect.',
           [
             { text: 'Retry' },
           ],
         );
 
-        that.setState({ username: '' });
-        that.setState({ password: '' });
+        // that.setState({ username: '' });
+        // that.setState({ password: '' });
       });
   }
 

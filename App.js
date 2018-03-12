@@ -114,6 +114,12 @@ const LeadStack = StackNavigator({
       title: i18n.t('new_lead'),
     },
   },
+  NewCustomer: {
+    screen: CustomerDetail ,
+    navigationOptions: {
+      title: 'New customer',
+    },
+  },
 });
 
 const MoreStack = StackNavigator({

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, RefreshControl } from 'react-native';
+import { View, Text, RefreshControl } from 'react-native';
 import { Container, Content, Card, CardItem, Toast } from 'native-base';
 import { Font, AppLoading } from 'expo';
 
@@ -34,7 +34,7 @@ export default class Home extends React.Component {
   }
 
   static navigationOptions = {
-    tabBarLabel: 'Home',
+    tabBarLabel: i18n.t('home'),
   };
 
   componentWillMount() {
@@ -61,21 +61,6 @@ export default class Home extends React.Component {
     return this.state.signedin;
   }
 
-  getActivities() {
-    const dataprovider = DataProvider.getInstance();
-    dataprovider.getActivities()
-      .then((data) => {
-        that.setState({ data: data });
-      })
-      .then(() => {
-        that.setState({ signedin: true });
-      })
-      .catch((err) => {
-        console.log(`error activities:  ${err}`);
-        console.log(err);
-      });
-  }
-
   /**
    * call back function - call after sign in was successful
    */
@@ -83,6 +68,7 @@ export default class Home extends React.Component {
     that.loadData()
       .then((data) => {
         console.log(`load reference data ${data}`);
+        that.setState({ signedin: true });
       })
       .catch((err) => {
         let temp = i18n.t('err_reference_data');
@@ -101,14 +87,13 @@ export default class Home extends React.Component {
    */
   async loadData() {
     const load1 = that.loadUserInfo();
-    const load2 = that.getActivities();
     const load3 = that.loadLeadTags();
     const load4 = that.loadActivityTypes();
     const load5 = that.retrieveDashboard();
     const load6 = that.getLeadStages();
     const load7 = that.getMessages();
 
-    return Promise.all(load1, load2, load3, load4, load5, load6, load7);
+    return Promise.all(load1, load3, load4, load5, load6, load7);
   }
 
   /**
@@ -145,6 +130,9 @@ export default class Home extends React.Component {
       });
   }
 
+  /**
+   * get messages for the users channels
+  */
   getMessages() {
     const dataprovider = DataProvider.getInstance();
     return dataprovider.getMessages()
@@ -287,7 +275,7 @@ export default class Home extends React.Component {
    */
   renderStatus() {
     return (
-      <Container style={{ padding: 5 }}>
+      <View style={styles.container}>
         <Content
           refreshControl={
             <RefreshControl
@@ -362,7 +350,7 @@ export default class Home extends React.Component {
             </CardItem>
           </Card>
         </Content>
-      </Container>
+      </View>
     );
   }
 

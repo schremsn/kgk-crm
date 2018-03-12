@@ -32,7 +32,7 @@ export default {
   win_only_opportunity: 'Only an opportunity can be marked as won',
   lost_only_opportunity: 'Only an opportunity can be marked as lost',
   new: 'New lead',
-  convert_to_opportunity: 'Convert to opportunity',
+  add_note: 'Add not',
   log_acivity: 'Log activity',
   mark_won: 'Mark won',
   mark_lost: 'Mark lost',
@@ -64,6 +64,7 @@ export default {
   messages: 'Messages',
   new_messages: 'New messages',
   opportunity_won: 'Opportunities won',
+  home: 'Home',
 
   // product screens
   product_information: 'Product information',
