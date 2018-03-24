@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, Text, TouchableHighlight } from 'react-native';
+import { View, FlatList, Text, TouchableHighlight, WebView } from 'react-native';
 import DataProvider from '../lib/dataprovider';
 import styles from './stylesheet';
 import FlatListItemSeparator from './components/listseparator';
@@ -64,11 +64,10 @@ export default class MessageList extends React.Component {
         onPress={() => this.onMessage(item)}
       >
         <View>
-          <Text>date: {item.date}</Text>
-          <Text>messagetype: {item.message_type}</Text>
-          <Text>channel: {item.channel_ids}</Text>
-          <Text>subtype: {item.subtype_id[1]}</Text>
-          <Text>{item.body}</Text>
+          <Text>Date: {item.date}</Text>
+          <Text>Email_from: {item.email_from}</Text>
+          <Text>Author: {item.author_id[1]}</Text>
+          <Text>Message: {item.body.substring(0, 40)}</Text>
         </View>
       </TouchableHighlight>
 

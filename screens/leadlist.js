@@ -104,6 +104,7 @@ export default class Leadlist extends React.Component {
           <Text style={col}>{item.name}</Text>
           <Text>{i18n.t('customer')}: {item.partner_name}</Text>
           <Text style={styles.itemContactName}>{i18n.t('contact_name')}: {item.contact_name}</Text>
+          <Text>{i18n.t('expected_closing')}: {item.date_deadline}</Text>
           <Text>{i18n.t('city')}: {item.city}</Text>
           <Text>{i18n.t('phone')}: {item.phone}</Text>
         </View>

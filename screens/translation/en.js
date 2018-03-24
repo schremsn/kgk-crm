@@ -50,6 +50,7 @@ export default {
   leads: 'Leads',
   pipeline: 'Pipeline',
   contact_name: 'Contact',
+  expected_closing: 'Expected closing',
   
 
   // logsctivity screen

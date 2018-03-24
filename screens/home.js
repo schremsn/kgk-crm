@@ -27,6 +27,7 @@ export default class Home extends React.Component {
       refreshing: false,
       wonThis: 0,
       wonLast: 0,
+      commission: [],
     };
 
     i18n.defaultLocale = 'en-US';
@@ -92,8 +93,9 @@ export default class Home extends React.Component {
     const load5 = that.retrieveDashboard();
     const load6 = that.getLeadStages();
     const load7 = that.getMessages();
+    const load8 = that.getCommissionSummary();
 
-    return Promise.all(load1, load3, load4, load5, load6, load7);
+    return Promise.all(load1, load3, load4, load5, load6, load7, load8);
   }
 
   /**
@@ -238,6 +240,38 @@ export default class Home extends React.Component {
       });
   }
 
+  /**
+   * load commission summary for user
+   */
+  getCommissionSummary() {
+    const dataprovider = DataProvider.getInstance();
+    const months = 2;
+    return dataprovider.getCommissionSummary(months)
+      .then((data) => {
+        const temp = [];
+        if (data) {
+          data.forEach((element) => {
+            temp.push(element);
+          });
+        }
+        const x = data.length;
+        for ( let i = 0; i < x; i++) {
+          temp.push({
+            end_date: '00-00-00',
+            amount: 0.0,
+            points: 0,
+          });
+        }
+
+        this.setState({ commission: temp });
+      })
+      .catch((err) => {
+        console.log(`error commission ${err}`);
+        console.log(err);
+        return err;
+      });
+  }
+
   /** 
    * reload the data for the dashboard
   */
@@ -274,6 +308,13 @@ export default class Home extends React.Component {
    * render the status dashboard
    */
   renderStatus() {
+    if (this.state.commission.length === 0) {
+      return (
+        <View>
+          <Text>Loading</Text>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <Content
@@ -307,7 +348,7 @@ export default class Home extends React.Component {
               <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{i18n.t('commission')}</Text>
             </CardItem>
             <CardItem style={{ backgroundColor: 'forestgreen' }}>
-              <Text>{i18n.t('this_month')}: VND 1.000.000</Text>
+              <Text>{i18n.t('this_month')}: {this.state.commission[0].amount}</Text>
             </CardItem>
             <CardItem style={{ backgroundColor: 'forestgreen' }}>
               <Text>{i18n.t('last_month')}: VND 1.200.000</Text>
