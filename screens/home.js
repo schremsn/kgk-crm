@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, RefreshControl } from 'react-native';
-import { Container, Content, Card, CardItem, Toast } from 'native-base';
+import { View, Text, RefreshControl, Alert } from 'react-native';
+import { Container, Content, Card, CardItem } from 'native-base';
 import { Font, AppLoading } from 'expo';
 
 import DataProvider from '../lib/dataprovider';
@@ -75,11 +75,14 @@ export default class Home extends React.Component {
         let temp = i18n.t('err_reference_data');
         temp = temp.concat(`: ${err}`);
         console.log(temp);
-        Toast.show({
-          text: temp,
-          position: 'bottom',
-          buttonText: 'Ok',
-        });
+        Alert.alert(
+          'Error loading',
+          temp,
+          [
+            { text: 'OK', onPress: () => console.log('OK Pressed') },
+          ],
+          { cancelable: false },
+        );
       });
   }
 
@@ -254,20 +257,18 @@ export default class Home extends React.Component {
             temp.push(element);
           });
         }
-        const x = data.length;
-        for ( let i = 0; i < x; i++) {
+        let x = data.length;
+        for (x; x < months; x += 1) {
           temp.push({
             end_date: '00-00-00',
             amount: 0.0,
             points: 0,
           });
         }
-
         this.setState({ commission: temp });
       })
       .catch((err) => {
         console.log(`error commission ${err}`);
-        console.log(err);
         return err;
       });
   }
@@ -310,7 +311,7 @@ export default class Home extends React.Component {
   renderStatus() {
     if (this.state.commission.length === 0) {
       return (
-        <View>
+        <View style={styles.container}>
           <Text>Loading</Text>
         </View>
       );
@@ -351,7 +352,7 @@ export default class Home extends React.Component {
               <Text>{i18n.t('this_month')}: {this.state.commission[0].amount}</Text>
             </CardItem>
             <CardItem style={{ backgroundColor: 'forestgreen' }}>
-              <Text>{i18n.t('last_month')}: VND 1.200.000</Text>
+              <Text>{i18n.t('last_month')}: this.state.commission[1].amount</Text>
             </CardItem>
             <CardItem button onPress={this.onCommission} style={{ backgroundColor: 'forestgreen' }}>
               <Text style={{ textAlign: 'center', width: '100%' }}>{i18n.t('details')}</Text>

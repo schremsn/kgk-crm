@@ -23,7 +23,15 @@ export default class ProductDetail extends React.Component {
   };
 
   componentWillMount() {
-    this.setState({ product: this.props.navigation.state.params.product });
+    const id = this.props.navigation.state.params.product.id;
+    const dataprovider = DataProvider.getInstance();
+    dataprovider.getProductDetail(id)
+      .then((data) => {
+        this.setState({ product: data });
+      })
+      .catch((err) => {
+        console.log(`error product detail ${err}`);
+      });
   }
 
   onTraining() {
