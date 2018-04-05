@@ -1,66 +1,82 @@
 import React, {Component} from 'react'
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native'
-
+import { View, Alert, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native'
 import DataProvider from '../Lib/dataprovider'
 import styles from './Styles/ProductsListScreenStyle'
 import { Images } from './DevTheme'
 import ProgressBar from '../Components/ProgressBar'
 const dataprovider = DataProvider.getInstance()
 let page = 0
-export default class ProductsListScreen extends Component {
+export default class MessagesListScreen extends Component {
   constructor () {
     super()
     this.state = {
       isLoading: true,
       isRefreshing: false,
       currentPage: 0,
-      list: []
+      messages: []
     }
     this.onRefresh = this.onRefresh.bind(this)
     this.getProductsNextPage = this.getProductsNextPage.bind(this)
   }
   static navigationOptions = {
-    title: 'Products'
+    title: 'Messages'
   };
   componentWillMount () {
-    this.getProducts()
+    this.getMessages()
   }
-  getProducts = (isRefreshed) => {
-    dataprovider.getProducts(this.state.currentPage)
+  getMessages = (isRefreshed) => {
+    dataprovider.getMessages(this.state.currentPage)
       .then((data) => {
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
         const dataSource = ds.cloneWithRows(data)
         this.setState({
-          list: data,
+          messages: data,
           dataSource,
           isLoading: false
         })
         console.log(data)
       })
-      .catch(() => {
+      .catch((err) => {
         this.setState({isLoading: false})
       })
     if (isRefreshed && this.setState({ isRefreshing: false }));
-  };
+  }
   getProductsNextPage () {
     page = page + 5
     dataprovider.getProducts(page)
       .then(res => {
-        const data = this.state.list
-        const newData = res
-        newData.map((item, index) => data.push(item))
+        const data = this.state.messages
+        res.map((item, index) => data.push(item))
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(data)
         })
-      })
-      .catch(err => {
-        console.log(err)
+      }).catch(err => {
+        Alert.alert(
+        'Get messages was error',
+        err,
+          [
+          {text: 'Try', onPress: () => console.log('OK Pressed')}
+          ],
+        { cancelable: false }
+      )
       })
   }
   onRefresh () {
     this.setState({ isRefreshing: true })
     this.getProducts('isRefreshed')
   }
+  renderMessage = (item) => (
+    <TouchableOpacity onPress={() => {
+      this.props.navigation.navigate('ProductDetailScreen', {
+        productDetail: item
+      })
+    }} style={styles.sectionHeaderContainer}>
+      <Text style={styles.sectionHeader}>Date - {item.date}</Text>
+      <Text style={styles.sectionText}>Email_from: {item.email_from}</Text>
+      <Text style={styles.sectionText}>Author: {item.author_id ? item.author_id[1] : 'Anonymous'}</Text>
+      <Text style={styles.sectionText}>Message: {item.body && item.body.substring(0, 40)}</Text>
+    </TouchableOpacity>
+  )
   render () {
     return (
       <View style={[styles.container, styles.mainContainer]}>
@@ -73,21 +89,7 @@ export default class ProductsListScreen extends Component {
               onEndReached={type => this.getProductsNextPage()}
               onEndReachedThreshold={1200}
               dataSource={this.state.dataSource}
-              renderRow={item => <TouchableOpacity onPress={() => {
-                this.props.navigation.navigate('ProductDetailScreen', {
-                  productDetail: item
-                })
-              }} style={styles.sectionHeaderContainer}>
-                <Text style={styles.sectionHeader}>{item.id} - {item.name}</Text>
-                <Text style={styles.sectionText}>Code: {item.code.toString()}</Text>
-                <Text style={styles.sectionText}>Description: {item.description.toString()}</Text>
-                <View style={styles.sectionImage}>
-                  {
-                    item.image_small && <Image style={styles.thumpImage} source={{uri: `data:image/png;base64,${item.image_small}`}} />
-                  }
-                </View>
-
-              </TouchableOpacity>}
+              renderRow={item => this.renderMessage(item)}
               renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
               renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
               refreshControl={

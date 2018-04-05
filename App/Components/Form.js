@@ -36,11 +36,11 @@ export default class Form extends Component {
 
   render () {
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <KeyboardAvoidingView behavior='padding' style={styles.container}>
         <UserInput
           value={this.props.username}
           source={usernameImg}
-          placeholder="Username"
+          placeholder='Username'
           autoCapitalize={'none'}
           returnKeyType={'done'}
           autoCorrect={false}
@@ -49,7 +49,7 @@ export default class Form extends Component {
           value={this.props.password}
           source={passwordImg}
           secureTextEntry={this.state.showPass}
-          placeholder="Password"
+          placeholder='Password'
           returnKeyType={'done'}
           autoCapitalize={'none'}
           autoCorrect={false}

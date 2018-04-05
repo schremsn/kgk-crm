@@ -14,11 +14,12 @@ import ProductsListScreen from '../Containers/ProductsListScreen'
 import ProductDetailScreen from '../Containers/ProductDetailScreen'
 import WebViewScreen from '../Containers/WebViewScreen'
 import MoreScreen from '../Containers/MoreScreen'
+import MessagesListScreen from '../Containers/MessagesListScreen'
 
 class AuthLoadingScreen extends React.Component {
   constructor () {
     super()
-     this._bootstrapAsync()
+    this._bootstrapAsync()
   }
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
@@ -51,48 +52,29 @@ const styles = StyleSheet.create({
 const ProductStack = StackNavigator({
   ProductsListScreen: { screen: ProductsListScreen },
   ProductDetailScreen: { screen: ProductDetailScreen },
-  WebViewScreen: { screen: WebViewScreen }
-}, {
-  // Default config for all screens
-  initialRouteName: 'ProductsListScreen',
-  navigationOptions: {
-    headerStyle: {
-      backgroundColor: Colors.background
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold'
-    }
-  }
+  WebViewScreen: { screen: WebViewScreen },
+  MessagesListScreen: { screen: MessagesListScreen },
+  MoreScreen: { screen: MoreScreen }
 })
 const MoreStack = StackNavigator({
-  WebViewScreen: { screen: WebViewScreen }
-}, {
-  // Default config for all screens
-  initialRouteName: 'WebViewScreen',
-  navigationOptions: {
-    headerStyle: {
-      backgroundColor: Colors.background
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold'
-    }
-  }
+  MoreScreen: { screen: MoreScreen }
 })
 
 const AppStack = TabNavigator({
   Products: { screen: ProductStack },
-  Product: { screen: ProductStack },
-  More: { screen: MoreStack }},
+  MessagesListScreen: { screen: MessagesListScreen },
+  MoreScreen: { screen: MoreScreen }
+},
   {
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state
         let iconName
         if (routeName === 'Products') {
-          iconName = `ios-information-circle${focused ? '' : '-outline'}`
-        } else if (routeName === 'More') {
+          iconName = `ios-list-box${focused ? '' : '-outline'}`
+        } else if (routeName === 'MessagesListScreen') {
+          iconName = `ios-mail${focused ? '' : '-outline'}`
+        } else if (routeName === 'MoreScreen') {
           iconName = `ios-options${focused ? '' : '-outline'}`
         }
 

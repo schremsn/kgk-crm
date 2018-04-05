@@ -38,5 +38,9 @@ export default StyleSheet.create({
   seperator: {
     marginTop: 10,
     backgroundColor: '#8E8E8E'
+  },
+  thumpImage: {
+    width: 100,
+    height: 100
   }
 })

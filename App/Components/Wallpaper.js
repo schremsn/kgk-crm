@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {StyleSheet,View, Image, Dimensions} from 'react-native'
+import {StyleSheet, View, Image, Dimensions} from 'react-native'
 
 import bgSrc from './images/wallpaper.png'
 
@@ -8,7 +8,7 @@ export default class Wallpaper extends Component {
   render () {
     return (
       <View style={styles.box}>
-        <Image style={styles.picture} source={bgSrc}/>
+        <Image style={styles.picture} source={bgSrc} />
         {this.props.children}
       </View>
     )
