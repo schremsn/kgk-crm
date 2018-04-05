@@ -1,10 +1,8 @@
 {
-  "presets": ["babel-preset-expo", "react-native", "flow"],
-  "retainLines": true,
-  
+  "presets": ["react-native"],
   "env": {
-    "development": {
-      "plugins": ["transform-react-jsx-source"]
+    "production": {
+      "plugins": ["ignite-ignore-reactotron"]
     }
   }
 }
