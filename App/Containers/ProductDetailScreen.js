@@ -47,8 +47,8 @@ export default class ProductDetailScreen extends Component {
           </View>
           <View style={styles.rowInfoContainer}>
             {
-              item.value === 'image_small'
-                ? <Image source={{ uri: `data:image/png;base64,${item.image_small}`}} style={[styles.logo, { width: 100, height: 100, marginBottom: 10}]} />
+              item.value === 'Image'
+                ? <Image source={{ uri: `data:image/png;base64,${rowData[item.name]}`}} style={{ width: 100, height: 100, marginBottom: 10}} />
                 : <Text style={styles.rowInfo}>{rowData[item.name].toString()}</Text>
             }
           </View>
@@ -69,12 +69,14 @@ export default class ProductDetailScreen extends Component {
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
-        <View style={{padding: 10}}>
-          {this.renderCard('Product Information', productDetail)}
-        </View>
-        <View style={{padding: 10}}>
-          {this.renderCard('Traning Information', null, true)}
-        </View>
+        <ScrollView>
+          <View style={{padding: 10}}>
+            {this.renderCard('Product Information', productDetail)}
+          </View>
+          <View style={{padding: 10}}>
+            {this.renderCard('Traning Information', null, true)}
+          </View>
+        </ScrollView>
       </View>
     )
   }

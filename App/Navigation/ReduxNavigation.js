@@ -2,7 +2,7 @@ import React from 'react'
 import * as ReactNavigation from 'react-navigation'
 import { connect } from 'react-redux'
 import AppNavigation from './AppNavigation'
-import { addListener } from './utils/redux';
+import { addListener } from './utils/redux'
 
 // here is our redux-aware smart component
 function ReduxNavigation (props) {

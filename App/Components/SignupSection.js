@@ -6,8 +6,7 @@ import {StyleSheet, View, Text} from 'react-native'
 export default class SignupSection extends Component {
   render () {
     return (
-      <View style={styles.container}>
-      </View>
+      <View style={styles.container} />
     )
   }
 }

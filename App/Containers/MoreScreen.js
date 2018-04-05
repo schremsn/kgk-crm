@@ -14,6 +14,7 @@ export default class MoreScreen extends Component {
   render () {
     return (
       <View style={[styles.container, styles.mainContainer]}>
+        <Text>1234</Text>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
         <View style={styles.sectionHeaderContainer}>
           <RoundedButton onPress={() => this.props.navigation.navigate('WebViewScreen')}>
