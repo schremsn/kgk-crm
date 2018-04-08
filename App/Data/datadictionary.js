@@ -8,7 +8,7 @@ export default class DD {
     'code',
     'description',
     'image_small',
-    'name'
+    'name',
   ]
   static productDetail = [
     'id',
@@ -17,7 +17,7 @@ export default class DD {
     'description_sale',
     'image_small',
     'name',
-    'information'
+    'information',
   ]
   static commissionSummary = [
     'display_name',
@@ -25,6 +25,29 @@ export default class DD {
     'end_date', 'amount',
     'points',
     'sales_agent',
-    'id'
+    'id',
+  ]
+
+  static commissionStatus = [
+    'identifier',
+    'partner',
+    'customer',
+    'product',
+    'product_category',
+    'issue',
+    'create_date',
+    'phone',
+    'mobile',
+    'notes',
+    'sales_agent',
+    'amount',
+    'update_date',
+    'detail',
+  ]
+
+  static mailChannel = [
+    'id',
+    'name',
+    'description',
   ]
 }

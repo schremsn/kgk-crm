@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { TouchableOpacity, WebView, Image, View } from 'react-native'
+import { WebView, Image, View } from 'react-native'
 
-import { Images } from './DevTheme'
+import { Images } from './../Themes'
 
 // Styles
 import styles from './Styles/ProductsListScreenStyle'

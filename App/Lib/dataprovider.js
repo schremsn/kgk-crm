@@ -9,7 +9,7 @@ import DD from '../Data/datadictionary'
  */
 let instance = null
 
-const maxRecords = 5
+const maxRecords = 10
 
 export default class DataProvider {
   constructor () {
@@ -70,11 +70,11 @@ export default class DataProvider {
           reject(error)
         } else {
           fn().then(resolve)
-                    .catch(function (e) {
-                      times--
-                      error = e
-                      setTimeout(function () { attempt() }, delay)
-                    })
+            .catch(function (e) {
+              times--
+              error = e
+              setTimeout(function () { attempt() }, delay)
+            })
         }
       }
       attempt()
@@ -305,9 +305,9 @@ export default class DataProvider {
   }
 
   /**
-  * search for customer, using smartsearch to look in name, phone and city field
-  * @param {string} searchTerm
-  */
+   * search for customer, using smartsearch to look in name, phone and city field
+   * @param {string} searchTerm
+   */
   searchCustomer (searchTerm) {
     if (typeof searchTerm !== 'string') {
       console.log('wrong search term')
@@ -333,9 +333,9 @@ export default class DataProvider {
   }
 
   /**
-  * search for lead, using smartsearch to look in name, phone and city field
-  * @param {string} searchTerm
-  */
+   * search for lead, using smartsearch to look in name, phone and city field
+   * @param {string} searchTerm
+   */
   searchLead (searchTerm) {
     if (typeof searchTerm !== 'string') {
       console.log('wrong search term')
@@ -472,7 +472,7 @@ export default class DataProvider {
       fields: DD.product,
       limit: maxRecords,
       offset: index,
-      order: 'id asc'
+      order: 'id desc'
     }
 
     return new Promise((resolve, reject) => {
@@ -516,10 +516,10 @@ export default class DataProvider {
   }
 
   /**
-  * get actvities
-  * @param {number} offset
-  * @return {Promise}
-  */
+   * get actvities
+   * @param {number} offset
+   * @return {Promise}
+   */
   getActivities (index = 0) {
     const params = {
       domain: [ ['active', '=', 'true'], ['date_deadline', '>', '1900-01-01']],
@@ -1014,6 +1014,56 @@ export default class DataProvider {
 
     return new Promise((resolve, reject) => {
       this.odoo.search_read('commission.summary', params, (err, data) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data)
+        }
+      })
+    })
+  }
+
+  /**
+   * retrieve the commission status for the user
+   * @param {number} index - offset for pagination
+   * @param {number} userId
+   */
+  getCommissionStatus (index = 0, userId = 0) {
+    let user = 0
+    if (userId === 0) {
+      user = this.getUserId()
+    }
+
+    const params = {
+      domain: [['sales_agent', '=', user]],
+      fields: DD.commissionStatus,
+      limit: maxRecords,
+      offset: index,
+      order: 'id desc'
+    }
+
+    return new Promise((resolve, reject) => {
+      this.odoo.search_read('commission.status', params, (err, data) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data)
+        }
+      })
+    })
+  }
+
+  /**
+   * retrieve mail channel info reference data
+   */
+  getMailChannels () {
+    const params = {
+      fields: DD.mailChannel,
+      order: 'id desc'
+    }
+
+    return new Promise((resolve, reject) => {
+      this.odoo.search_read('mail.channel', params, (err, data) => {
         if (err) {
           reject(err)
         } else {

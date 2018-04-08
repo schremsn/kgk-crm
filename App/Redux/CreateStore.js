@@ -3,7 +3,7 @@ import Rehydration from '../Services/Rehydration'
 import ReduxPersist from '../Config/ReduxPersist'
 import Config from '../Config/DebugConfig'
 import createSagaMiddleware from 'redux-saga'
-import ScreenTracking from './ScreenTrackingMiddleware'
+import thunk from 'redux-thunk'
 
 // creates the store
 export default (rootReducer, rootSaga) => {
@@ -12,9 +12,8 @@ export default (rootReducer, rootSaga) => {
   const middleware = []
   const enhancers = []
 
-  /* ------------- Analytics Middleware ------------- */
-  middleware.push(ScreenTracking)
-
+   /* ------------- Thunk Middleware ------------- */
+  middleware.push(thunk)
   /* ------------- Saga Middleware ------------- */
 
   const sagaMonitor = Config.useReactotron ? console.tron.createSagaMonitor() : null

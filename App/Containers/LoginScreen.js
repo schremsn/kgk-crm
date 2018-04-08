@@ -1,17 +1,11 @@
 import React, { Component } from 'react'
-import {AsyncStorage, Alert} from 'react-native'
 import { connect } from 'react-redux'
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
 import Logo from '../Components/Logo'
 import Form from '../Components/Form'
 import Wallpaper from '../Components/Wallpaper'
 import ButtonSubmit from '../Components/ButtonSubmit'
-import SignupSection from '../Components/SignupSection'
-// Styles
-import styles from './Styles/LoginScreenStyle'
-
-import DataProvider from '../Lib/dataprovider'
+import {login} from '../Redux/AuthRedux'
+import I18n from 'react-native-i18n'
 
 class LoginScreen extends Component {
   constructor (props) {
@@ -22,27 +16,14 @@ class LoginScreen extends Component {
     }
   }
   static navigationOptions = {
-    title: 'Login'
+    title: I18n.t('login')
   };
   onSignIn = () => {
-    const dataprovider = new DataProvider()
-    dataprovider.login(this.state.username, this.state.password)
-      .then((res) => {
-        console.log(res)
-        this.signInAsync(res.session_id)
-        this.props.navigation.navigate('ProductsListScreen')
-      })
-      .catch((err) => {
-        Alert.alert(
-          `Login error ${err}`,
-          'Username or password are incorrect.',
-          [
-            { text: 'Retry' }
-          ]
-        )
-      })
+    const { username, password } = this.state
+    this.props.login({username, password}, (info) => this.signInAsync(info))
   }
-  signInAsync = async (id) => {
+  signInAsync = async (info) => {
+    console.log(info)
     // await AsyncStorage.setItem('userToken', id)
     this.props.navigation.navigate('App')
   };
@@ -64,6 +45,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    login: (info, cb) => dispatch(login(info, cb))
   }
 }
 

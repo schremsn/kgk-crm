@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { Fonts, Colors, Metrics, ApplicationStyles } from '../DevTheme/'
+import { Fonts, Colors, Metrics, ApplicationStyles } from '../../Themes/'
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
@@ -42,5 +42,5 @@ export default StyleSheet.create({
   thumpImage: {
     width: 100,
     height: 100
-  }
+  },
 })

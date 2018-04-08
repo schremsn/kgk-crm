@@ -1,1 +1,20 @@
-{}
+{
+  "logOut": "Đăng xuất",
+  "description": "Mô tả",
+  "code": "Mã",
+  "loading": "Đang tải",
+  "forgotPassword": "Forgot Password",
+  "username": "Tên đăng nhập",
+  "password": "Mật khẩu",
+  "cancel": "Cancel",
+  "login": "Đăng nhập",
+  "search": "Tìm kiếm",
+  "name": "Tên",
+  "image": "Ảnh",
+  "home": "Trang chủ",
+  "products": "Sản phẩm",
+  "messages": "Tin nhắn",
+  "more": "Mở rộng",
+
+
+}

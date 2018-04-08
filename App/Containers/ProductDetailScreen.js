@@ -1,16 +1,17 @@
 import React, {Component} from 'react'
-import PropTypes from 'prop-types'
-import { View, ScrollView, Text, Image, TouchableOpacity } from 'react-native'
+import { View, ScrollView, Text, Image } from 'react-native'
+import I18n from 'react-native-i18n'
+
 import styles from './Styles/ProductDetailScreen'
-import { Images } from './DevTheme'
+import { Images } from './../Themes'
 import RoundedButton from '../../App/Components/RoundedButton'
 
 const data = [
   {name: 'id', value: 'Id'},
-  {name: 'name', value: 'Name'},
-  {name: 'code', value: 'Code'},
-  {name: 'description', value: 'Description'},
-  {name: 'image_small', value: 'Image'}]
+  {name: 'name', value: I18n.t('name')},
+  {name: 'code', value: I18n.t('code')},
+  {name: 'description', value: I18n.t('description')},
+  {name: 'image_small', value: I18n.t('image')}]
 export default class ProductDetailScreen extends Component {
   constructor () {
     super()
@@ -47,9 +48,9 @@ export default class ProductDetailScreen extends Component {
           </View>
           <View style={styles.rowInfoContainer}>
             {
-              item.value === 'Image'
-                ? <Image source={{ uri: `data:image/png;base64,${rowData[item.name]}`}} style={{ width: 100, height: 100, marginBottom: 10}} />
-                : <Text style={styles.rowInfo}>{rowData[item.name].toString()}</Text>
+              item.value === I18n.t('image')
+                ? <Image source={{uri: `data:image/png;base64,${rowData[item.name]}`}} style={{ width: 100, height: 100, marginBottom: 10}} />
+                : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
             }
           </View>
         </View>))

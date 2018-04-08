@@ -13,9 +13,9 @@ import {
 // import {Actions, ActionConst} from 'react-native-router-flux';
 
 import spinner from './images/loading.gif'
+import I18n from 'react-native-i18n'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
-const DEVICE_HEIGHT = Dimensions.get('window').height
 const MARGIN = 40
 
 export default class ButtonSubmit extends Component {
@@ -81,7 +81,7 @@ export default class ButtonSubmit extends Component {
             {this.state.isLoading ? (
               <Image source={spinner} style={styles.image} />
             ) : (
-              <Text style={styles.text}>LOGIN</Text>
+              <Text style={styles.text}>{I18n.t('login')}</Text>
             )}
           </TouchableOpacity>
           <Animated.View
