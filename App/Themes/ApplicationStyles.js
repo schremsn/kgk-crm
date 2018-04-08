@@ -13,7 +13,7 @@ const ApplicationStyles = {
     },
     backgroundImage: {
       position: 'absolute',
-      top: 0,
+      top: -5,
       left: 0,
       bottom: 0,
       right: 0

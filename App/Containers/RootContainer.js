@@ -3,6 +3,7 @@ import { View, StatusBar } from 'react-native'
 import ReduxNavigation from '../Navigation/ReduxNavigation'
 import { connect } from 'react-redux'
 import StartupActions from '../Redux/StartupRedux'
+import { initState } from '../Redux/ProductRedux'
 import ReduxPersist from '../Config/ReduxPersist'
 
 // Styles
@@ -28,7 +29,7 @@ class RootContainer extends Component {
 
 // wraps dispatch to create nicer functions to call within our component
 const mapDispatchToProps = (dispatch) => ({
-  startup: () => dispatch(StartupActions.startup())
+  startup: () => dispatch(StartupActions.startup(), initState())
 })
 
 export default connect(null, mapDispatchToProps)(RootContainer)

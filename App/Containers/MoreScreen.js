@@ -1,24 +1,24 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, Image, View } from 'react-native'
+import { Text, Image, View } from 'react-native'
 
 import { Images } from '../Themes'
 import RoundedButton from '../../App/Components/RoundedButton'
 
 // Styles
 import styles from './Styles/ProductsListScreenStyle'
+import I18n from 'react-native-i18n'
 
 export default class MoreScreen extends Component {
   static navigationOptions = {
-    title: 'More'
+    title: I18n.t('more')
   };
   render () {
     return (
       <View style={[styles.container, styles.mainContainer]}>
-        <Text>1234</Text>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
         <View style={styles.sectionHeaderContainer}>
           <RoundedButton onPress={() => this.props.navigation.navigate('WebViewScreen')}>
-            Sign out
+            {I18n.t('logOut')}
           </RoundedButton>
         </View>
       </View>

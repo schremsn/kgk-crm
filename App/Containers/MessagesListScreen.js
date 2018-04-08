@@ -1,82 +1,63 @@
 import React, {Component} from 'react'
-import { View, Alert, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native'
-import DataProvider from '../Lib/dataprovider'
-import styles from './Styles/ProductsListScreenStyle'
-import { Images } from './DevTheme'
+import {connect} from 'react-redux'
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native'
+import I18n from 'react-native-i18n'
 import ProgressBar from '../Components/ProgressBar'
-const dataprovider = DataProvider.getInstance()
-let page = 0
-export default class MessagesListScreen extends Component {
+import {getMessages} from '../Redux/MessageRedux'
+import styles from './Styles/ProductsListScreenStyle'
+import { Images } from './../Themes'
+
+class MessagesListScreen extends Component {
   constructor () {
     super()
     this.state = {
       isLoading: true,
-      isRefreshing: false,
-      currentPage: 0,
-      messages: []
+      isRefreshing: false
     }
-    this.onRefresh = this.onRefresh.bind(this)
-    this.getProductsNextPage = this.getProductsNextPage.bind(this)
   }
   static navigationOptions = {
-    title: 'Messages'
+    title: I18n.t('messages')
   };
   componentWillMount () {
     this.getMessages()
   }
   getMessages = (isRefreshed) => {
-    dataprovider.getMessages(this.state.currentPage)
-      .then((data) => {
-        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
-        const dataSource = ds.cloneWithRows(data)
-        this.setState({
-          messages: data,
-          dataSource,
-          isLoading: false
-        })
-        console.log(data)
+    this.props.getMessages(this.props.offset, (list) => {
+      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
+      const dataSource = ds.cloneWithRows(list)
+      this.setState({
+        list,
+        dataSource,
+        isLoading: false
       })
-      .catch((err) => {
-        this.setState({isLoading: false})
-      })
+    })
     if (isRefreshed && this.setState({ isRefreshing: false }));
   }
-  getProductsNextPage () {
-    page = page + 5
-    dataprovider.getProducts(page)
-      .then(res => {
-        const data = this.state.messages
-        res.map((item, index) => data.push(item))
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(data)
-        })
-      }).catch(err => {
-        Alert.alert(
-        'Get messages was error',
-        err,
-          [
-          {text: 'Try', onPress: () => console.log('OK Pressed')}
-          ],
-        { cancelable: false }
-      )
+  getMessagesNextPage = () => {
+    this.props.getMessages(this.props.offset, (list) => {
+      const data = this.state.list
+      const newData = list
+      newData.map((item, index) => data.push(item))
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(data)
       })
+    })
   }
-  onRefresh () {
+  onRefresh = () => {
     this.setState({ isRefreshing: true })
-    this.getProducts('isRefreshed')
+    this.getMessages('isRefreshed')
   }
-  renderMessage = (item) => (
-    <TouchableOpacity onPress={() => {
-      this.props.navigation.navigate('ProductDetailScreen', {
-        productDetail: item
-      })
-    }} style={styles.sectionHeaderContainer}>
+  renderMessage = (item) => {
+    const channel = this.props.mailChannels.filter(ch => {
+      return ch.id === item.channel_ids[0]
+    })[0]
+    return (<TouchableOpacity style={styles.sectionHeaderContainer}>
       <Text style={styles.sectionHeader}>Date - {item.date}</Text>
       <Text style={styles.sectionText}>Email_from: {item.email_from}</Text>
-      <Text style={styles.sectionText}>Author: {item.author_id ? item.author_id[1] : 'Anonymous'}</Text>
+      <Text style={styles.sectionText}>Channel: {channel && channel.name}</Text>
       <Text style={styles.sectionText}>Message: {item.body && item.body.substring(0, 40)}</Text>
-    </TouchableOpacity>
-  )
+    </TouchableOpacity>)
+  }
   render () {
     return (
       <View style={[styles.container, styles.mainContainer]}>
@@ -86,7 +67,7 @@ export default class MessagesListScreen extends Component {
             : <ListView
               style={styles.container}
               enableEmptySections
-              onEndReached={type => this.getProductsNextPage()}
+              onEndReached={type => this.getMessagesNextPage()}
               onEndReachedThreshold={1200}
               dataSource={this.state.dataSource}
               renderRow={item => this.renderMessage(item)}
@@ -98,7 +79,7 @@ export default class MessagesListScreen extends Component {
                   onRefresh={this.onRefresh}
                   colors={['#EA0000']}
                   tintColor='white'
-                  title='loading...'
+                  title={`${I18n.t('loading')}...`}
                   titleColor='white'
                   progressBackgroundColor='white'
                 />
@@ -109,3 +90,17 @@ export default class MessagesListScreen extends Component {
     )
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    offset: state.message.offset,
+    mailChannels: state.auth.mailChannels
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getMessages: (offset, cb) => { dispatch(getMessages(offset, cb)) }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessagesListScreen)

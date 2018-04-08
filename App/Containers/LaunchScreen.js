@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, Image, View } from 'react-native'
-import DevscreensButton from '../../ignite/DevScreens/DevscreensButton.js'
-
 import { Images } from '../Themes'
 
 // Styles
 import styles from './Styles/LaunchScreenStyles'
+import I18n from 'react-native-i18n'
 
 export default class LaunchScreen extends Component {
+  static navigationOptions = {
+    title: I18n.t('home')
+  };
   render () {
     return (
       <View style={styles.mainContainer}>
@@ -24,7 +26,6 @@ export default class LaunchScreen extends Component {
             </Text>
           </View>
 
-          <DevscreensButton />
         </ScrollView>
       </View>
     )

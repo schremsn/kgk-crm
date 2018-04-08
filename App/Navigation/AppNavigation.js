@@ -1,80 +1,96 @@
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { TabNavigator, TabBarBottom, StackNavigator, SwitchNavigator } from 'react-navigation'
-import { ActivityIndicator,
-  AsyncStorage,
-  Button,
-  StatusBar,
-  StyleSheet,
-  View } from 'react-native'
-import { Colors } from '../Containers/DevTheme'
+import I18n from 'react-native-i18n'
 
+import { Colors } from '../Themes'
+
+import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
 import LoginScreen from '../Containers/LoginScreen'
+import LaunchScreen from '../Containers/LaunchScreen'
 import ProductsListScreen from '../Containers/ProductsListScreen'
 import ProductDetailScreen from '../Containers/ProductDetailScreen'
 import WebViewScreen from '../Containers/WebViewScreen'
 import MoreScreen from '../Containers/MoreScreen'
 import MessagesListScreen from '../Containers/MessagesListScreen'
 
-class AuthLoadingScreen extends React.Component {
-  constructor () {
-    super()
-    this._bootstrapAsync()
-  }
-  // Fetch the token from storage then navigate to our appropriate place
-  _bootstrapAsync = async () => {
-    const userToken = await AsyncStorage.getItem('token')
-    console.log(userToken)
-    // This will switch to the App screen or Auth screen and this loading
-    // screen will be unmounted and thrown away.
-    this.props.navigation.navigate(userToken ? 'App' : 'Auth')
-  };
-
-  // Render any loading content that you like here
-  render () {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator />
-        <StatusBar barStyle='default' />
-      </View>
-    )
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+const HomeStack = StackNavigator({
+  LaunchScreen: { screen: LaunchScreen }
+}, {
+  initialRouteName: 'LaunchScreen',
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: Colors.background
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
   }
 })
-
 const ProductStack = StackNavigator({
   ProductsListScreen: { screen: ProductsListScreen },
   ProductDetailScreen: { screen: ProductDetailScreen },
-  WebViewScreen: { screen: WebViewScreen },
-  MessagesListScreen: { screen: MessagesListScreen },
-  MoreScreen: { screen: MoreScreen }
+  WebViewScreen: { screen: WebViewScreen }
+}, {
+  initialRouteName: 'ProductsListScreen',
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: Colors.background
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
+  }
 })
 const MoreStack = StackNavigator({
   MoreScreen: { screen: MoreScreen }
+}, {
+  initialRouteName: 'MoreScreen',
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: Colors.background
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
+  }
+})
+const MessagesStack = StackNavigator({
+  MessagesListScreen: { screen: MessagesListScreen }
+}, {
+  initialRouteName: 'MessagesListScreen',
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: Colors.background
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
+  }
 })
 
 const AppStack = TabNavigator({
+  Home: { screen: HomeStack },
   Products: { screen: ProductStack },
-  MessagesListScreen: { screen: MessagesListScreen },
-  MoreScreen: { screen: MoreScreen }
+  Messages: { screen: MessagesStack },
+  More: { screen: MoreStack }
 },
   {
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state
         let iconName
-        if (routeName === 'Products') {
+        if (routeName === 'Home') {
+          iconName = `ios-home${focused ? '' : '-outline'}`
+        } else if (routeName === 'Products') {
           iconName = `ios-list-box${focused ? '' : '-outline'}`
-        } else if (routeName === 'MessagesListScreen') {
+        } else if (routeName === 'Messages') {
           iconName = `ios-mail${focused ? '' : '-outline'}`
-        } else if (routeName === 'MoreScreen') {
+        } else if (routeName === 'More') {
           iconName = `ios-options${focused ? '' : '-outline'}`
         }
 
@@ -89,8 +105,7 @@ const AppStack = TabNavigator({
     },
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
-    animationEnabled: false,
-    swipeEnabled: false
+    lazy: false,
   })
 const AuthStack = StackNavigator(
   { LoginScreen: LoginScreen },

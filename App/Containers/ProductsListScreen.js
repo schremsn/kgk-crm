@@ -1,66 +1,63 @@
 import React, {Component} from 'react'
+import { connect } from 'react-redux'
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native'
-
-import DataProvider from '../Lib/dataprovider'
+import I18n from 'react-native-i18n'
 import styles from './Styles/ProductsListScreenStyle'
-import { Images } from './DevTheme'
+import { Images } from './../Themes'
 import ProgressBar from '../Components/ProgressBar'
-const dataprovider = DataProvider.getInstance()
-let page = 0
-export default class ProductsListScreen extends Component {
+import {getProducts} from '../Redux/ProductRedux'
+class ProductsListScreen extends Component {
   constructor () {
     super()
     this.state = {
       isLoading: true,
-      isRefreshing: false,
-      currentPage: 0,
-      list: []
+      isRefreshing: false
     }
-    this.onRefresh = this.onRefresh.bind(this)
-    this.getProductsNextPage = this.getProductsNextPage.bind(this)
   }
   static navigationOptions = {
-    title: 'Products'
+    title: I18n.t('products')
   };
   componentWillMount () {
-    this.getProducts()
+    this.getProductList()
   }
-  getProducts = (isRefreshed) => {
-    dataprovider.getProducts(this.state.currentPage)
-      .then((data) => {
-        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
-        const dataSource = ds.cloneWithRows(data)
-        this.setState({
-          list: data,
-          dataSource,
-          isLoading: false
-        })
-        console.log(data)
+  getProductList = (isRefreshed) => {
+    this.props.getProducts(this.props.offset, (list) => {
+      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
+      const dataSource = ds.cloneWithRows(list)
+      this.setState({
+        list,
+        dataSource,
+        isLoading: false
       })
-      .catch(() => {
-        this.setState({isLoading: false})
-      })
+    })
     if (isRefreshed && this.setState({ isRefreshing: false }));
   };
-  getProductsNextPage () {
-    page = page + 5
-    dataprovider.getProducts(page)
-      .then(res => {
-        const data = this.state.list
-        const newData = res
-        newData.map((item, index) => data.push(item))
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(data)
-        })
+  getProductListNextPage = () => {
+    this.props.getProducts(this.props.offset, (list) => {
+      const data = this.state.list
+      const newData = list
+      newData.map((item, index) => data.push(item))
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(data)
       })
-      .catch(err => {
-        console.log(err)
-      })
+    })
   }
-  onRefresh () {
+  onRefresh = () => {
     this.setState({ isRefreshing: true })
-    this.getProducts('isRefreshed')
+    this.getProductList('isRefreshed')
   }
+  renderProduct = (item) => (
+    <TouchableOpacity onPress={() => { this.props.navigation.navigate('ProductDetailScreen', {productDetail: item}) }} style={styles.sectionHeaderContainer}>
+      <Text style={styles.sectionHeader}>{item.id} - {item.name}</Text>
+      <Text style={styles.sectionText}>{I18n.t('code')}: {item.code}</Text>
+      <Text style={styles.sectionText}>{I18n.t('description')}: {item.description}</Text>
+      <View style={styles.sectionImage}>
+        {
+          item.image_small && <Image style={styles.thumpImage} source={{uri: `data:image/png;base64,${item.image_small}`}} />
+        }
+      </View>
+    </TouchableOpacity>
+  );
   render () {
     return (
       <View style={[styles.container, styles.mainContainer]}>
@@ -70,24 +67,10 @@ export default class ProductsListScreen extends Component {
             : <ListView
               style={styles.container}
               enableEmptySections
-              onEndReached={type => this.getProductsNextPage()}
+              onEndReached={type => this.getProductListNextPage()}
               onEndReachedThreshold={1200}
               dataSource={this.state.dataSource}
-              renderRow={item => <TouchableOpacity onPress={() => {
-                this.props.navigation.navigate('ProductDetailScreen', {
-                  productDetail: item
-                })
-              }} style={styles.sectionHeaderContainer}>
-                <Text style={styles.sectionHeader}>{item.id} - {item.name}</Text>
-                <Text style={styles.sectionText}>Code: {item.code.toString()}</Text>
-                <Text style={styles.sectionText}>Description: {item.description.toString()}</Text>
-                <View style={styles.sectionImage}>
-                  {
-                    item.image_small && <Image style={styles.thumpImage} source={{uri: `data:image/png;base64,${item.image_small}`}} />
-                  }
-                </View>
-
-              </TouchableOpacity>}
+              renderRow={item => this.renderProduct(item)}
               renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
               renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
               refreshControl={
@@ -96,7 +79,7 @@ export default class ProductsListScreen extends Component {
                   onRefresh={this.onRefresh}
                   colors={['#EA0000']}
                   tintColor='white'
-                  title='loading...'
+                  title={`${I18n.t('loading')}...`}
                   titleColor='white'
                   progressBackgroundColor='white'
                 />
@@ -107,3 +90,16 @@ export default class ProductsListScreen extends Component {
     )
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    offset: state.product.offset
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getProducts: (offset, cb) => { dispatch(getProducts(offset, cb)) }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductsListScreen)
