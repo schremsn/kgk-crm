@@ -9,7 +9,7 @@ import DD from '../Data/datadictionary'
  */
 let instance = null
 
-const maxRecords = 10
+const maxRecords = 100
 
 export default class DataProvider {
   constructor () {
@@ -469,7 +469,7 @@ export default class DataProvider {
   getProducts (index) {
     const params = {
       domain: [['active', '=', 'true'], ['sale_ok', '=', 'true']],
-      fields: DD.product,
+      fields: DD.productDetail,
       limit: maxRecords,
       offset: index,
       order: 'id desc'

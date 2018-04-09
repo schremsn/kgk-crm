@@ -21,7 +21,7 @@ class ProductsListScreen extends Component {
     this.getProductList()
   }
   getProductList = (isRefreshed) => {
-    this.props.getProducts(this.props.offset, (list) => {
+    this.props.getProducts(0, (list) => {
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
       const dataSource = ds.cloneWithRows(list)
       this.setState({
@@ -33,7 +33,7 @@ class ProductsListScreen extends Component {
     if (isRefreshed && this.setState({ isRefreshing: false }));
   };
   getProductListNextPage = () => {
-    this.props.getProducts(this.props.offset, (list) => {
+    this.props.getProducts(0, (list) => {
       const data = this.state.list
       const newData = list
       newData.map((item, index) => data.push(item))
@@ -47,8 +47,8 @@ class ProductsListScreen extends Component {
     this.getProductList('isRefreshed')
   }
   renderProduct = (item) => (
-    <TouchableOpacity onPress={() => { this.props.navigation.navigate('ProductDetailScreen', {productDetail: item}) }} style={styles.sectionHeaderContainer}>
-      <Text style={styles.sectionHeader}>{item.id} - {item.name}</Text>
+    <TouchableOpacity onPress={() => { this.props.navigation.navigate('ProductDetailScreen', {productId: item.id}) }} style={styles.sectionHeaderContainer}>
+      <Text style={styles.sectionHeader}>{item.name}</Text>
       <Text style={styles.sectionText}>{I18n.t('code')}: {item.code}</Text>
       <Text style={styles.sectionText}>{I18n.t('description')}: {item.description}</Text>
       <View style={styles.sectionImage}>
@@ -59,6 +59,7 @@ class ProductsListScreen extends Component {
     </TouchableOpacity>
   );
   render () {
+    console.log(this.props)
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
@@ -98,7 +99,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getProducts: (offset, cb) => { dispatch(getProducts(offset, cb)) }
+    getProducts: (offset, cb) => { dispatch(getProducts(offset, cb)) },
   }
 }
 

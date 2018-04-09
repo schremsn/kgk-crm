@@ -18,6 +18,7 @@ export default class UserInput extends Component {
           returnKeyType={this.props.returnKeyType}
           placeholderTextColor='white'
           underlineColorAndroid='transparent'
+          onChangeText={(value) => this.props.onChangeText((value))}
         />
       </View>
     )
@@ -30,11 +31,11 @@ UserInput.propTypes = {
   secureTextEntry: PropTypes.bool,
   autoCorrect: PropTypes.bool,
   autoCapitalize: PropTypes.string,
-  returnKeyType: PropTypes.string
+  returnKeyType: PropTypes.string,
+  onChangeText: PropTypes.func
 }
 
 const DEVICE_WIDTH = Dimensions.get('window').width
-const DEVICE_HEIGHT = Dimensions.get('window').height
 
 const styles = StyleSheet.create({
   input: {

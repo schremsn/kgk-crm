@@ -31,15 +31,15 @@ class LoginScreen extends Component {
     return (
       <Wallpaper>
         <Logo />
-        <Form username={this.state.username} password={this.state.password} />
-        <ButtonSubmit onSignIn={() => this.onSignIn()} navigation={this.props.navigation} />
+        <Form
+          username={this.state.username}
+          onChangeUsername={(username) => this.setState({username})}
+          password={this.state.password}
+          onChangePassword={(password) => this.setState({password})}
+        />
+        <ButtonSubmit onSignIn={this.onSignIn} navigation={this.props.navigation} />
       </Wallpaper>
     )
-  }
-}
-
-const mapStateToProps = (state) => {
-  return {
   }
 }
 
@@ -49,4 +49,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen)
+export default connect(null, mapDispatchToProps)(LoginScreen)

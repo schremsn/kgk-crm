@@ -72,7 +72,7 @@ export default class ButtonSubmit extends Component {
     })
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container]}>
         <Animated.View style={{width: changeWidth}}>
           <TouchableOpacity
             style={styles.button}
