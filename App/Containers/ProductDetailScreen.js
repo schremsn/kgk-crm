@@ -5,6 +5,8 @@ import I18n from 'react-native-i18n'
 import styles from './Styles/ProductDetailScreen'
 import { Images } from './../Themes'
 import RoundedButton from '../../App/Components/RoundedButton'
+import {getProductDetail} from "../Redux/ProductRedux";
+import {connect} from "react-redux";
 
 const data = [
   {name: 'id', value: 'Id'},
@@ -25,8 +27,9 @@ export default class ProductDetailScreen extends Component {
     title: 'Product Detail'
   };
   componentWillMount () {
-    this.setState({
-      productDetail: this.props.navigation.state.params.productDetail
+    const productId = this.props.navigation.state.params.productId
+    this.props.getProductDetail(productId, (productDetail) =>{
+      this.setState({productDetail})
     })
   }
   renderCard (cardTitle, rowData, isButton) {
@@ -67,6 +70,7 @@ export default class ProductDetailScreen extends Component {
   }
   render () {
     const { productDetail } = this.state
+    console.log(productDetail)
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
@@ -82,3 +86,12 @@ export default class ProductDetailScreen extends Component {
     )
   }
 }
+
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getProductDetail: (productId, cb) => { dispatch(getProductDetail(productId, cb)) },
+  }
+}
+
+export default connect(null, mapDispatchToProps)(ProductDetailScreen)

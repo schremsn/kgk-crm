@@ -39,6 +39,7 @@ export default class Form extends Component {
           autoCapitalize={'none'}
           returnKeyType={'done'}
           autoCorrect={false}
+          onChangeText={(value) => this.props.onChangeUsername(value)}
         />
         <UserInput
           value={this.props.password}
@@ -48,6 +49,7 @@ export default class Form extends Component {
           returnKeyType={'done'}
           autoCapitalize={'none'}
           autoCorrect={false}
+          onChangeText={(value) => this.props.onChangePassword(value)}
         />
         <TouchableOpacity
           activeOpacity={0.7}

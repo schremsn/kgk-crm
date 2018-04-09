@@ -41,6 +41,17 @@ export const getProducts = (offset, cb) => {
       })
   }
 }
+export const getProductDetail = (productId, cb) => {
+  return (dispatch) => {
+    dataprovider.getProductDetail(productId)
+      .then((detail) => {
+        if (cb) { cb(detail) }
+      })
+      .catch(() => {
+
+      })
+  }
+}
 
 /* ------------- Reducers ------------- */
 
