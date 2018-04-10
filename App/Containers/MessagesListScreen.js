@@ -51,7 +51,7 @@ class MessagesListScreen extends Component {
     const channel = this.props.mailChannels.filter(ch => {
       return ch.id === item.channel_ids[0]
     })[0]
-    return (<TouchableOpacity style={styles.sectionHeaderContainer}>
+    return (<TouchableOpacity style={styles.sectionHeaderContainer} onPress={() => { this.props.navigation.navigate('MessageDetailScreen', {messageDetail: item}) }} >
       <Text style={styles.sectionHeader}>Date - {item.date}</Text>
       <Text style={styles.sectionText}>Email_from: {item.email_from}</Text>
       <Text style={styles.sectionText}>Channel: {channel && channel.name}</Text>
