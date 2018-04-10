@@ -45,7 +45,7 @@ export const getProductDetail = (productId, cb) => {
   return (dispatch) => {
     dataprovider.getProductDetail(productId)
       .then((detail) => {
-        if (cb) { cb(detail) }
+        if (cb) { cb(detail[0]) }
       })
       .catch(() => {
 

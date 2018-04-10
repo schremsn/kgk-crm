@@ -10,27 +10,25 @@ import {getProductDetail} from "../Redux/ProductRedux";
 
 const data = [
   {name: 'id', value: 'Id'},
-  {name: 'name', value: I18n.t('name')},
-  {name: 'code', value: I18n.t('code')},
-  {name: 'description', value: I18n.t('description')},
-  {name: 'image_small', value: I18n.t('image')}]
-class ProductDetailScreen extends Component {
+  {name: 'date', value: I18n.t('date')},
+  {name: 'email_from', value: I18n.t('email from')},
+  {name: 'name', value: I18n.t('name')}
+  ]
+export default class MessageDetailScreen extends Component {
   constructor () {
     super()
     this.state = {
-      productDetail: []
+      messageDetail: []
     }
     this.renderCard = this.renderCard.bind(this)
     this.renderRows = this.renderRows.bind(this)
   }
   static navigationOptions = {
-    title: 'Product Detail'
+    title: 'Message Detail'
   };
   componentWillMount () {
-    const productId = this.props.navigation.state.params.productId
-    this.props.getProductDetail(productId, (productDetail) =>{
-      this.setState({productDetail})
-    })
+    const messageDetail = this.props.navigation.state.params.messageDetail
+    this.setState({messageDetail})
   }
   renderCard (cardTitle, rowData, isButton) {
     return (
@@ -69,20 +67,26 @@ class ProductDetailScreen extends Component {
     }
   }
   render () {
-    const { productDetail } = this.state
-    console.log(productDetail)
+    const { messageDetail } = this.state
+    console.log(messageDetail)
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
         <ScrollView>
           <View style={{padding: 10}}>
-            {this.renderCard('Product Information', productDetail)}
+            {this.renderCard('Message Information', messageDetail)}
           </View>
           <View style={{padding: 20}}>
             <WebViewAutoHeight
-              source={{ html: `<body>${productDetail.information}</body>` }}
+              source={{ html: `<body>${messageDetail.body}</body>` }}
             />
           </View>
+
+
+          {/*<View style={{padding: 10}}>*/}
+            {/*{this.renderCard('Traning Information', null, true)}*/}
+          {/*</View>*/}
+
         </ScrollView>
       </View>
     )
@@ -90,10 +94,3 @@ class ProductDetailScreen extends Component {
 }
 
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getProductDetail: (productId, cb) => { dispatch(getProductDetail(productId, cb)) },
-  }
-}
-
-export default connect(null, mapDispatchToProps)(ProductDetailScreen)

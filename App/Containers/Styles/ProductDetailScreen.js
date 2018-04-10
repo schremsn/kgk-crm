@@ -8,7 +8,6 @@ export default StyleSheet.create({
   },
   sectionHeader: {
     ...ApplicationStyles.darkLabel,
-    paddingTop: 50
   },
   cardTitle: {
     alignSelf: 'center',

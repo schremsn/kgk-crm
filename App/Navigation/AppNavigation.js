@@ -13,6 +13,7 @@ import ProductDetailScreen from '../Containers/ProductDetailScreen'
 import WebViewScreen from '../Containers/WebViewScreen'
 import MoreScreen from '../Containers/MoreScreen'
 import MessagesListScreen from '../Containers/MessagesListScreen'
+import MessageDetailScreen from '../Containers/MessageDetailScreen'
 
 const HomeStack = StackNavigator({
   LaunchScreen: { screen: LaunchScreen }
@@ -59,7 +60,8 @@ const MoreStack = StackNavigator({
   }
 })
 const MessagesStack = StackNavigator({
-  MessagesListScreen: { screen: MessagesListScreen }
+  MessagesListScreen: { screen: MessagesListScreen },
+  MessageDetailScreen: { screen: MessageDetailScreen }
 }, {
   initialRouteName: 'MessagesListScreen',
   navigationOptions: {

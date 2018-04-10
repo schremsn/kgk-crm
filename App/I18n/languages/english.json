@@ -15,5 +15,7 @@
    "home": "Home",
    "products": "Products",
    "messages": "Messages",
+   "date": "Date",
+   "email from": "Email from",
    "more": "More"
 }
