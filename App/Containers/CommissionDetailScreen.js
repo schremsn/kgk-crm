@@ -1,36 +1,37 @@
 import React, {Component} from 'react'
-import { View, ScrollView, Text, Image, WebView, Platform, Dimensions } from 'react-native'
+import { View, ScrollView, Text, Image } from 'react-native'
 import I18n from 'react-native-i18n'
 import {connect} from "react-redux";
 import styles from './Styles/ProductDetailScreen'
 import { Images } from './../Themes'
-import RoundedButton from '../../App/Components/RoundedButton'
 import WebViewAutoHeight from '../../App/Components/WebViewAutoHeight'
-import {getProductDetail} from "../Redux/ProductRedux";
+import {getCommissionStatusDetail} from "../Redux/AuthRedux";
 
 const data = [
   {name: 'id', value: 'Id'},
-  {name: 'date', value: I18n.t('date')},
-  {name: 'email_from', value: I18n.t('email from')},
-  {name: 'channel', value: I18n.t('channel')}
-  ]
-export default class MessageDetailScreen extends Component {
+  {name: 'name', value: I18n.t('name')},
+  {name: 'code', value: I18n.t('code')},
+  {name: 'description', value: I18n.t('description')},
+  {name: 'image_small', value: I18n.t('image')}]
+class CommissionDetailScreen extends Component {
   constructor () {
     super()
     this.state = {
-      messageDetail: []
+      commissionDetail: {}
     }
     this.renderCard = this.renderCard.bind(this)
     this.renderRows = this.renderRows.bind(this)
   }
   static navigationOptions = {
-    title: I18n.t('product detail')
+    title: I18n.t('commission detail')
   };
   componentWillMount () {
-    const messageDetail = this.props.navigation.state.params.messageDetail
-    this.setState({messageDetail})
+    const commissionId = this.props.navigation.state.params.commissionId
+    this.props.getCommissionStatusDetail(commissionId, (commissionDetail) =>{
+      this.setState({commissionDetail})
+    })
   }
-  renderCard (cardTitle, rowData, isButton) {
+  renderCard (cardTitle, rowData) {
     return (
       <View>
         <View style={styles.sectionHeaderContainer}>
@@ -57,26 +58,19 @@ export default class MessageDetailScreen extends Component {
     )
   }
   render () {
-    const { messageDetail } = this.state
-    console.log(messageDetail)
+    const { commissionDetail } = this.state;
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
         <ScrollView>
-          <View style={{padding: 10}}>
-            {this.renderCard('Message Information', messageDetail)}
-          </View>
-          <View style={{padding: 20}}>
-            <WebViewAutoHeight
-              source={{ html: `<body>${messageDetail.body}</body>` }}
-            />
-          </View>
-
-
           {/*<View style={{padding: 10}}>*/}
-            {/*{this.renderCard('Traning Information', null, true)}*/}
+            {/*{this.renderCard('Product Information', productDetail)}*/}
           {/*</View>*/}
-
+          {/*<View style={{padding: 20}}>*/}
+            {/*<WebViewAutoHeight*/}
+              {/*source={{ html: `<body>${productDetail.information}</body>` }}*/}
+            {/*/>*/}
+          {/*</View>*/}
         </ScrollView>
       </View>
     )
@@ -84,3 +78,10 @@ export default class MessageDetailScreen extends Component {
 }
 
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getCommissionStatusDetail: (commissionId, cb) => { dispatch(getCommissionStatusDetail(commissionId, cb)) },
+  }
+}
+
+export default connect(null, mapDispatchToProps)(CommissionDetailScreen)

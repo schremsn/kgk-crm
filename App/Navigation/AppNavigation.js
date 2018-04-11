@@ -6,6 +6,7 @@ import I18n from 'react-native-i18n'
 import { Colors } from '../Themes'
 
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
+import CommissionDetailScreen from '../Containers/CommissionDetailScreen'
 import LoginScreen from '../Containers/LoginScreen'
 import LaunchScreen from '../Containers/LaunchScreen'
 import ProductsListScreen from '../Containers/ProductsListScreen'
@@ -16,7 +17,8 @@ import MessagesListScreen from '../Containers/MessagesListScreen'
 import MessageDetailScreen from '../Containers/MessageDetailScreen'
 
 const HomeStack = StackNavigator({
-  LaunchScreen: { screen: LaunchScreen }
+  LaunchScreen: { screen: LaunchScreen },
+  CommissionDetailScreen: { screen: CommissionDetailScreen }
 }, {
   initialRouteName: 'LaunchScreen',
   navigationOptions: {

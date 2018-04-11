@@ -52,10 +52,10 @@ class MessagesListScreen extends Component {
       return ch.id === item.channel_ids[0]
     })[0]
     return (<TouchableOpacity style={styles.sectionHeaderContainer} onPress={() => { this.props.navigation.navigate('MessageDetailScreen', {messageDetail: item}) }} >
-      <Text style={styles.sectionHeader}>Date - {item.date}</Text>
-      <Text style={styles.sectionText}>Email_from: {item.email_from}</Text>
-      <Text style={styles.sectionText}>Channel: {channel && channel.name}</Text>
-      <Text style={styles.sectionText}>Message: {item.body && item.body.substring(0, 40)}</Text>
+      <Text style={styles.sectionHeader}>{I18n.t('date')}} - {item.date}</Text>
+      <Text style={styles.sectionText}>{I18n.t('email from')}: {item.email_from}</Text>
+      <Text style={styles.sectionText}>{I18n.t('channel')}: {channel && channel.name}</Text>
+      <Text style={styles.sectionText}>{I18n.t('message')}: {item.body && item.body.substring(0, 40)}</Text>
     </TouchableOpacity>)
   }
   render () {
