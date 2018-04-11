@@ -21,11 +21,25 @@ export default class DD {
   ]
   static commissionSummary = [
     'display_name',
-    'id', 'start_date',
-    'end_date', 'amount',
+    'id',
+    'start_date',
+    'end_date',
+    'amount',
     'points',
     'sales_agent',
+  ]
+  static commissionDetail = [
     'id',
+    'calc_datetime',
+    'sales_agent',
+    'product',
+    'commission_group',
+    'commission_scheme',
+    'commission_tier',
+    'type',
+    'rate',
+    'amount',
+    'points',
   ]
 
   static commissionStatus = [
@@ -43,6 +57,14 @@ export default class DD {
     'amount',
     'update_date',
     'detail',
+    'id',
+  ]
+  static commissionStatusDetail = [
+    'id',
+    'status_date',
+    'status',
+    'changed_by',
+    'notes',
   ]
 
   static mailChannel = [

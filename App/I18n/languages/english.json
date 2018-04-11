@@ -14,8 +14,12 @@
    "image": "Image",
    "home": "Home",
    "products": "Products",
+   "product detail": "Product Detail",
+   "commission detail": "Commission Detail",
    "messages": "Messages",
    "date": "Date",
+   "channel": "Channel",
+   "message": "Message",
    "email from": "Email from",
    "more": "More"
 }
