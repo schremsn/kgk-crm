@@ -51,6 +51,9 @@ const ProductStack = StackNavigator({
 });
 const MoreStack = StackNavigator({
   MoreScreen: { screen: MoreScreen },
+  ProductsListScreen: { screen: ProductsListScreen },
+  ProductDetailScreen: { screen: ProductDetailScreen },
+  WebViewScreen: { screen: WebViewScreen },
 }, {
   initialRouteName: 'MoreScreen',
   navigationOptions: {
@@ -82,7 +85,6 @@ const MessagesStack = StackNavigator({
 const AppStack = TabNavigator(
   {
     Home: { screen: HomeStack },
-    Products: { screen: ProductStack },
     Messages: { screen: MessagesStack },
     More: { screen: MoreStack },
   },
