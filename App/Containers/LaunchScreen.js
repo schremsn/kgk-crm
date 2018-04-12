@@ -1,4 +1,6 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import { RefreshControl, Text, Image, View, TouchableOpacity, ScrollView } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';

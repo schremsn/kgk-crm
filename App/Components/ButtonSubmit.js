@@ -1,6 +1,5 @@
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
-import Dimensions from 'Dimensions'
+import React, { Component } from 'react';
+import Dimensions from 'Dimensions';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -8,76 +7,76 @@ import {
   Animated,
   Easing,
   Image,
-  View
-} from 'react-native'
+  View,
+} from 'react-native';
 // import {Actions, ActionConst} from 'react-native-router-flux';
+import I18n from 'react-native-i18n';
+import spinner from './images/loading.gif';
 
-import spinner from './images/loading.gif'
-import I18n from 'react-native-i18n'
-
-const DEVICE_WIDTH = Dimensions.get('window').width
-const MARGIN = 40
+const DEVICE_WIDTH = Dimensions.get('window').width;
+const MARGIN = 40;
 
 export default class ButtonSubmit extends Component {
-  constructor () {
-    super()
+  constructor() {
+    super();
 
     this.state = {
-      isLoading: false
-    }
+      isLoading: false,
+    };
 
-    this.buttonAnimated = new Animated.Value(0)
-    this.growAnimated = new Animated.Value(0)
-    this._onPress = this._onPress.bind(this)
+    this.buttonAnimated = new Animated.Value(0);
+    this.growAnimated = new Animated.Value(0);
+    this.onPress = this.onPress.bind(this);
   }
-  _onPress () {
-    if (this.state.isLoading) return
+  onPress() {
+    if (this.state.isLoading) return;
 
-    this.setState({isLoading: true})
+    this.setState({ isLoading: true });
     Animated.timing(this.buttonAnimated, {
       toValue: 1,
       duration: 200,
-      easing: Easing.linear
-    }).start()
+      easing: Easing.linear,
+    }).start();
 
     setTimeout(() => {
-      this._onGrow()
-    }, 2000)
+      this.onGrow();
+    }, 2000);
 
     setTimeout(() => {
       // Actions.secondScreen();
-      this.props.onSignIn()
-      this.setState({isLoading: false})
-      this.buttonAnimated.setValue(0)
-      this.growAnimated.setValue(0)
-    }, 2300)
+      this.props.onSignIn();
+      this.setState({ isLoading: false });
+      this.buttonAnimated.setValue(0);
+      this.growAnimated.setValue(0);
+    }, 2300);
   }
 
-  _onGrow () {
+  onGrow() {
     Animated.timing(this.growAnimated, {
       toValue: 1,
       duration: 200,
-      easing: Easing.linear
-    }).start()
+      easing: Easing.linear,
+    }).start();
   }
 
-  render () {
+  render() {
     const changeWidth = this.buttonAnimated.interpolate({
       inputRange: [0, 1],
-      outputRange: [DEVICE_WIDTH - MARGIN, MARGIN]
-    })
+      outputRange: [DEVICE_WIDTH - MARGIN, MARGIN],
+    });
     const changeScale = this.growAnimated.interpolate({
       inputRange: [0, 1],
-      outputRange: [1, MARGIN]
-    })
+      outputRange: [1, MARGIN],
+    });
 
     return (
       <View style={[styles.container]}>
-        <Animated.View style={{width: changeWidth}}>
+        <Animated.View style={{ width: changeWidth }}>
           <TouchableOpacity
             style={styles.button}
-            onPress={this._onPress}
-            activeOpacity={1}>
+            onPress={this.onPress}
+            activeOpacity={1}
+          >
             {this.state.isLoading ? (
               <Image source={spinner} style={styles.image} />
             ) : (
@@ -85,11 +84,11 @@ export default class ButtonSubmit extends Component {
             )}
           </TouchableOpacity>
           <Animated.View
-            style={[styles.circle, {transform: [{scale: changeScale}]}]}
+            style={[styles.circle, { transform: [{ scale: changeScale }] }]}
           />
         </Animated.View>
       </View>
-    )
+    );
   }
 }
 
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   button: {
     alignItems: 'center',
@@ -105,7 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F035E0',
     height: MARGIN,
     borderRadius: 20,
-    zIndex: 100
+    zIndex: 100,
   },
   circle: {
     height: MARGIN,
@@ -116,14 +115,14 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignSelf: 'center',
     zIndex: 99,
-    backgroundColor: '#F035E0'
+    backgroundColor: '#F035E0',
   },
   text: {
     color: 'white',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   image: {
     width: 24,
-    height: 24
-  }
-})
+    height: 24,
+  },
+});

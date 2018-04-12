@@ -7,6 +7,7 @@ import RoundedButton from '../../App/Components/RoundedButton';
 // Styles
 import styles from './Styles/ProductsListScreenStyle';
 import I18n from 'react-native-i18n';
+import ProductsListScreen from "./ProductsListScreen";
 
 export default class MoreScreen extends Component {
   static navigationOptions = {
@@ -16,6 +17,11 @@ export default class MoreScreen extends Component {
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
+        <View style={styles.sectionHeaderContainer}>
+          <RoundedButton onPress={() => this.props.navigation.navigate('ProductsListScreen')}>
+            {I18n.t('product')}
+          </RoundedButton>
+        </View>
         <View style={styles.sectionHeaderContainer}>
           <RoundedButton onPress={() => this.props.navigation.navigate('WebViewScreen')}>
             {I18n.t('logOut')}
