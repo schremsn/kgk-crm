@@ -98,7 +98,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getCommissionStatus: (offset, cb) => { dispatch(getCommissionStatus(offset, cb)) },
+    getCommissionStatus: (offset, cb) => { dispatch(getCommissionStatus(offset, cb)) }
   }
 }
 
