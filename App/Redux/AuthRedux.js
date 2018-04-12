@@ -3,6 +3,7 @@ import Immutable from 'seamless-immutable'
 import DataProvider from '../Lib/dataprovider'
 import ReferenceData from '../Data/referencedata'
 import {Alert} from 'react-native'
+import { getCommissionStatus, getCommissionSummary } from './CommissionRedux'
 const dataprovider = DataProvider.getInstance()
 
 /* ------------- Types and Action Creators ------------- */
@@ -13,7 +14,6 @@ const { Types, Creators } = createActions({
   getUserInfoSuccess: ['userInfo'],
   getCompanyInfoSuccess: ['companyInfo'],
   getMailChannelsSuccess: ['mailChannels'],
-  getCommissionSuccess: ['commission']
 })
 
 export const AuthTypes = Types
@@ -37,8 +37,8 @@ export const login = ({username, password}, cb) => {
         dispatch(getUserInfo())
         dispatch(getCompanyInfo(info))
         dispatch(getMailChannels(info))
-        dispatch(getCommissionSummary(info))
         dispatch(getCommissionStatus(info.uid))
+        dispatch(getCommissionSummary())
         dispatch(Creators.loginSuccess(info))
       })
       .catch((error) => {
@@ -53,46 +53,7 @@ export const login = ({username, password}, cb) => {
       })
   }
 }
-export const getCommissionSummary = () => {
-  console.log(1)
-  return (dispatch) => {
-    dataprovider.getCommissionSummary()
-      .then((data) => {
-        const length = data.length
-        console.log('getCommissionSummary', data[length-1])
-        dispatch(Creators.getCommissionSuccess(data[length-1]))
-      })
-      .catch((err) => {
-        console.log(`error user ${err}`)
-      })
-  }
-}
-export const getCommissionStatusDetail = (commissionId, cb) => {
-  return (dispatch) => {
-    console.log(commissionId)
-    dataprovider.getCommissionStatusDetail(commissionId)
-      .then((data) => {
-        console.log('getCommissionStatusDetail', data)
-        // dispatch(Creators.getUserInfoSuccess(data))
-      })
-      .catch((err) => {
-        console.log(`error user ${err}`)
-      })
-  }
-}
-export const getCommissionStatus = (userId) => {
-  return (dispatch) => {
-    console.log(userId)
-    dataprovider.getCommissionStatus()
-      .then((data) => {
-        console.log('getCommissionStatus', data)
-        // dispatch(Creators.getUserInfoSuccess(data))
-      })
-      .catch((err) => {
-        console.log(`error user ${err}`)
-      })
-  }
-}
+
 export const getUserInfo = () => {
   return (dispatch) => {
     dataprovider.getUserInfo()
@@ -149,10 +110,7 @@ export const getMailChannelsSuccess = (state, action) => {
   const { mailChannels } = action
   return state.merge({ mailChannels })
 }
-export const getCommissionSuccess = (state, action) => {
-  const { commission } = action
-  return state.merge({ commission })
-}
+
 
 // Something went wrong somewhere.
 export const failure = (state, action) => {
@@ -168,6 +126,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_USER_INFO_SUCCESS]: getUserInfoSuccess,
   [Types.GET_COMPANY_INFO_SUCCESS]: getCompanyInfoSuccess,
   [Types.GET_MAIL_CHANNELS_SUCCESS]: getMailChannelsSuccess,
-  [Types.GET_COMMISSION_SUCCESS]: getCommissionSuccess
 
 })

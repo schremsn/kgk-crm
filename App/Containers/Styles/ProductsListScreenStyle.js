@@ -6,7 +6,7 @@ export default StyleSheet.create({
   sectionText: {
     ...Fonts.base,
     color: Colors.text,
-    fontSize: 12,
+    fontSize: 14,
     lineHeight: Metrics.doubleBaseMargin + 5
   },
   mainContainer: {
