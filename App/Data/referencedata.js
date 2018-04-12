@@ -1,14 +1,14 @@
 /**
  * class used to store global reference data
  */
-let instance = null
+let instance = null;
 
 export default class ReferenceData {
-  constructor () {
+  constructor() {
     if (!instance) {
-      instance = this
+      instance = this;
     } else {
-      return instance
+      return instance;
     }
   }
   states = [];
@@ -20,115 +20,115 @@ export default class ReferenceData {
   leadStages = [];
   leadStagesMap = new Map();
 
-  static getInstance () {
+  static getInstance() {
     if (!instance) {
-      return new ReferenceData()
+      return new ReferenceData();
     }
-    return instance
+    return instance;
   }
 
   /**
    * save both the array and map
    * @param {array} tags
    */
-  setLeadTags (tags) {
-    this.leadTags = tags
+  setLeadTags(tags) {
+    this.leadTags = tags;
     // add the selection for none
     if (Array.isArray(tags)) {
-      this.leadTags.push({ id: 0, name: 'none' })
+      this.leadTags.push({ id: 0, name: 'none' });
     }
     // convert the array to a map
     if (Array.isArray(tags)) {
       tags.forEach((tag) => {
-        this.leadTagsMap.set(tag.id, tag.name)
-      })
+        this.leadTagsMap.set(tag.id, tag.name);
+      });
     }
   }
 
-  getLeadTags () {
-    return this.leadTags
+  getLeadTags() {
+    return this.leadTags;
   }
 
-  lookupTagname (id) {
-    return this.leadTagsMap.get(id)
+  lookupTagname(id) {
+    return this.leadTagsMap.get(id);
   }
 
-  setLeadStages (stages) {
-    this.leadStages = stages
+  setLeadStages(stages) {
+    this.leadStages = stages;
     // convert array in to map
     if (Array.isArray(stages)) {
       stages.forEach((stage) => {
-        this.leadStagesMap.set(stage.id, stage.name)
-      })
+        this.leadStagesMap.set(stage.id, stage.name);
+      });
     }
   }
 
-  getLeadStages () {
-    return this.leadStages
+  getLeadStages() {
+    return this.leadStages;
   }
 
-  lookupStageName (id) {
-    return this.leadStagesMap.get(id)
+  lookupStageName(id) {
+    return this.leadStagesMap.get(id);
   }
 
-  setActivityTypes (types) {
-    this.activityTypes = types
+  setActivityTypes(types) {
+    this.activityTypes = types;
   }
 
-  getActivityTypes () {
-    return this.activityTypes
+  getActivityTypes() {
+    return this.activityTypes;
   }
 
-  setStates (states) {
-    this.states = states
+  setStates(states) {
+    this.states = states;
   }
 
-  getStates () {
-    return this.states
+  getStates() {
+    return this.states;
   }
 
-  setUserInfo (info) {
-    this.userInfo = info
+  setUserInfo(info) {
+    this.userInfo = info;
   }
 
-  getUserInfo () {
+  getUserInfo() {
     if (Array.isArray(this.userInfo)) {
-      return this.userInfo[0]
+      return this.userInfo[0];
     }
 
-    return this.userInfo
+    return this.userInfo;
   }
 
-  getUserLocal () {
-    return this.getUserInfo().lang
+  getUserLocal() {
+    return this.getUserInfo().lang;
   }
 
-  setCompanyInfo (info) {
-    this.companyUnfo = info
+  setCompanyInfo(info) {
+    this.companyUnfo = info;
   }
 
-  getCompanyInfo () {
-    return this.companyInfo
+  getCompanyInfo() {
+    return this.companyInfo;
   }
 
   /**
    * returns the default company for the user
    */
-  getUserCompany () {
-    const info = this.getUserInfo()
+  getUserCompany() {
+    const info = this.getUserInfo();
     if (info !== undefined) {
-      return info.company_id[0]
+      return info.company_id[0];
     }
 
-    return null
+    return null;
   }
 
-  getUserLanguage () {
-    const info = this.getUserInfo()
+  getUserLanguage() {
+    const info = this.getUserInfo();
     if (info !== undefined) {
-      return info.lang
+      return info.lang;
     }
 
-    return null
+    return null;
   }
 }

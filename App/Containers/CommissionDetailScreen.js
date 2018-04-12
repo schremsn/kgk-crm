@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
 import { View, ScrollView, Text, Image } from 'react-native'
 import I18n from 'react-native-i18n'
-import {connect} from "react-redux";
-import ScrollableTabView , {DefaultTabBar} from 'react-native-scrollable-tab-view'
+import {connect} from 'react-redux'
+import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view'
 
 import styles from './Styles/ProductDetailScreen'
 import { Images } from './../Themes'
 import WebViewAutoHeight from '../../App/Components/WebViewAutoHeight'
-import {getCommissionStatusDetail} from "../Redux/CommissionRedux";
+import {getCommissionStatusDetail} from '../Redux/CommissionRedux'
 
 const data = [
   {name: 'id', value: I18n.t('id')},
@@ -23,7 +23,7 @@ const data = [
   {name: 'notes', value: I18n.t('notes')},
   {name: 'sales_agent', value: I18n.t('sales_agent')},
   {name: 'amount', value: I18n.t('amount')},
-  {name: 'mobile', value: I18n.t('mobile')},
+  {name: 'mobile', value: I18n.t('mobile')}
 ]
 class CommissionDetailScreen extends Component {
   constructor (props) {
@@ -40,7 +40,7 @@ class CommissionDetailScreen extends Component {
   };
   componentWillMount () {
     const commissionId = this.props.navigation.state.params.commissionDetail.id
-    this.props.getCommissionStatusDetail(commissionId, (commissionMore) =>{
+    this.props.getCommissionStatusDetail(commissionId, (commissionMore) => {
       this.setState({commissionMore})
     })
   }
@@ -67,7 +67,7 @@ class CommissionDetailScreen extends Component {
     )
   }
   render () {
-    const { commissionDetail, commissionMore } = this.state;
+    const { commissionDetail, commissionMore } = this.state
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
@@ -77,7 +77,7 @@ class CommissionDetailScreen extends Component {
             <ScrollableTabView
               style={{height: 150, padding: 10}}
               initialPage={1}
-              renderTabBar={() => <DefaultTabBar   backgroundColor='rgba(255, 255, 255, 0.7)' />}
+              renderTabBar={() => <DefaultTabBar backgroundColor='rgba(255, 255, 255, 0.7)' />}
             >
               <View style={styles.cardStyle} tabLabel={I18n.t('status_date')}>
                 <Text>{commissionMore.status_date}</Text>
@@ -86,7 +86,7 @@ class CommissionDetailScreen extends Component {
                 <Text>{commissionMore.status}</Text>
               </View>
               <View style={styles.cardStyle} tabLabel={I18n.t('changed_by')}>
-               <Text> {commissionMore.changed_by}</Text>
+                <Text> {commissionMore.changed_by}</Text>
               </View>
               <View style={styles.cardStyle} tabLabel={I18n.t('notes')}>
                 <Text>{commissionMore.notes}</Text>
@@ -94,17 +94,15 @@ class CommissionDetailScreen extends Component {
             </ScrollableTabView>
           </View>
 
-
         </ScrollView>
       </View>
     )
   }
 }
 
-
 const mapDispatchToProps = (dispatch) => {
   return {
-    getCommissionStatusDetail: (commissionId, cb) => { dispatch(getCommissionStatusDetail(commissionId, cb)) },
+    getCommissionStatusDetail: (commissionId, cb) => { dispatch(getCommissionStatusDetail(commissionId, cb)) }
   }
 }
 

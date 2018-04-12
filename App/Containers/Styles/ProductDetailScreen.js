@@ -7,7 +7,7 @@ export default StyleSheet.create({
     ...ApplicationStyles.darkLabelContainer
   },
   sectionHeader: {
-    ...ApplicationStyles.darkLabel,
+    ...ApplicationStyles.darkLabel
   },
   cardTitle: {
     alignSelf: 'center',

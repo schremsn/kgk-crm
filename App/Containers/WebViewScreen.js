@@ -1,23 +1,23 @@
-import React, { Component } from 'react'
-import { WebView, Image, View } from 'react-native'
+import React, { Component } from 'react';
+import { WebView, Image, View } from 'react-native';
 
-import { Images } from './../Themes'
+import { Images } from './../Themes';
 
 // Styles
-import styles from './Styles/ProductsListScreenStyle'
+import styles from './Styles/ProductsListScreenStyle';
 
 export default class WebViewScreen extends Component {
   static navigationOptions = {
-    title: 'Website'
+    title: 'Website',
   };
-  render () {
+  render() {
     return (
       <View style={[styles.container]}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
+        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <WebView
-          source={{uri: 'https://www.bing.com/'}}
+          source={{ uri: 'https://www.bing.com/' }}
         />
       </View>
-    )
+    );
   }
 }
