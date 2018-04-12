@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import {RefreshControl, Text, Image, View, TouchableOpacity, ScrollView} from 'react-native'
 import { Images } from '../Themes'
-
+import numeral from 'numeral'
 // Styles
 import styles from './Styles/ProductsListScreenStyle'
 import I18n from 'react-native-i18n'
 import {connect} from "react-redux";
-import {getCommissionSummary} from "../Redux/AuthRedux";
+import {getCommissionSummary} from "../Redux/CommissionRedux";
 
 class LaunchScreen extends Component {
   constructor () {
@@ -46,11 +46,11 @@ class LaunchScreen extends Component {
             />
           }
         >
-          <TouchableOpacity onPress={() => { this.props.navigation.navigate('CommissionDetailScreen', {commissionId: commission.id}) }} style={styles.sectionHeaderContainer}>
+          <TouchableOpacity onPress={() => { this.props.navigation.navigate('CommissionListScreen') }} style={styles.sectionHeaderContainer}>
             <Text style={styles.sectionHeader}>{commission.display_name}</Text>
-            <Text style={styles.sectionText}>Id: {commission.id}</Text>
-            <Text style={styles.sectionText}>End date: {commission.end_date}</Text>
-            <Text style={styles.sectionText}>Amount: {commission.amount}</Text>
+            <Text style={styles.sectionText}>{I18n.t('id')}: {commission.id}</Text>
+            <Text style={styles.sectionText}>{I18n.t('end_date')}: {commission.end_date}</Text>
+            <Text style={styles.sectionText}>{I18n.t('amount')}: {numeral(commission.amount).format('0,0')} VND</Text>
           </TouchableOpacity>
 
         </ScrollView>
@@ -60,7 +60,7 @@ class LaunchScreen extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    commission: state.auth.commission
+    commission: state.commission.commission
   }
 }
 

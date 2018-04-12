@@ -1065,7 +1065,6 @@ export default class DataProvider {
     if (userId === 0) {
       user = this.getUserId();
     }
-    console.log(user)
 
     const params = {
       domain: [['sales_agent', '=', user]],

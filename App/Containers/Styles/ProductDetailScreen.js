@@ -56,5 +56,12 @@ export default StyleSheet.create({
   rowInfo: {
     fontSize: Fonts.size.regular,
     margin: Metrics.baseMargin
+  },
+  cardStyle: {
+    marginTop: 10,
+    backgroundColor: 'white',
+    height: 50,
+    paddingTop: 10,
+    paddingLeft: 10
   }
 })

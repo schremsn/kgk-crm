@@ -7,6 +7,7 @@ import { Colors } from '../Themes'
 
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
 import CommissionDetailScreen from '../Containers/CommissionDetailScreen'
+import CommissionListScreen from '../Containers/CommissionListScreen'
 import LoginScreen from '../Containers/LoginScreen'
 import LaunchScreen from '../Containers/LaunchScreen'
 import ProductsListScreen from '../Containers/ProductsListScreen'
@@ -18,7 +19,8 @@ import MessageDetailScreen from '../Containers/MessageDetailScreen'
 
 const HomeStack = StackNavigator({
   LaunchScreen: { screen: LaunchScreen },
-  CommissionDetailScreen: { screen: CommissionDetailScreen }
+  CommissionDetailScreen: { screen: CommissionDetailScreen },
+  CommissionListScreen: { screen: CommissionListScreen }
 }, {
   initialRouteName: 'LaunchScreen',
   navigationOptions: {
