@@ -16,15 +16,18 @@ export default Creators;
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
-  commission: {},
+  commission: [],
 });
 
-export const getCommissionSummary = () => (dispatch) => {
-  dataprovider.getCommissionSummary()
+export const getCommissionSummary = (month, cb) => (dispatch) => {
+  console.log(month)
+  dataprovider.getCommissionSummary(month)
     .then((data) => {
-      const lengthData = data.length;
-      console.log('getCommissionSummary', data[lengthData - 1]);
-      dispatch(Creators.getCommissionSuccess(data[lengthData - 1]));
+      if (cb) {
+        cb(data);
+      }
+      console.log('getCommissionSummary', data);
+      dispatch(Creators.getCommissionSuccess(data));
     })
     .catch((err) => {
       console.log(`error user ${err}`);
