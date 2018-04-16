@@ -40,7 +40,7 @@ class ProductsListScreen extends Component {
     if (isRefreshed && this.setState({ isRefreshing: false }));
   };
   getProductListNextPage = () => {
-    this.props.getProducts(0, (list) => {
+    this.props.getProducts(this.props.offset, (list) => {
       const data = this.state.list;
       const newData = list;
       newData.map(item => data.push(item));
@@ -66,6 +66,7 @@ class ProductsListScreen extends Component {
     </TouchableOpacity>
   );
   render() {
+    console.log(this.props.offset)
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />

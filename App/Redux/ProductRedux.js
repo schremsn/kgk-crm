@@ -8,7 +8,7 @@ const dataprovider = DataProvider.getInstance();
 
 const { Types, Creators } = createActions({
   productRequest: null,
-  productSuccess: ['list'],
+  productSuccess: ['list', 'offset'],
   productFailure: null,
   updateParams: ['params'],
 });
@@ -28,10 +28,11 @@ export const initState = () => (dispatch) => {
   dispatch(Creators.productRequest());
 };
 
-export const getProducts = (offset, cb) => (dispatch) => {
+export const getProducts = (offset, cb) => (dispatch, getState) => {
+  console.log(getState)
   dataprovider.getProducts(offset)
     .then((list) => {
-      dispatch(Creators.productSuccess(list));
+      dispatch(Creators.productSuccess(list, offset));
       if (cb) { cb(list); }
     })
     .catch(() => {
@@ -57,8 +58,8 @@ export const request = (state, { params }) =>
 
 // successful api lookup
 export const success = (state, action) => {
-  const { list } = action;
-  return state.merge({ list, offset: state.offset + 5 });
+  const { list, offset } = action;
+  return state.merge({ list, offset: offset + 5 });
 };
 
 // Something went wrong somewhere.
