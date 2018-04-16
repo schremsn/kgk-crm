@@ -12,9 +12,6 @@ const data = [
   { name: 'channel', value: I18n.t('channel') },
 ];
 export default class MessageDetailScreen extends Component {
-  static navigationOptions = {
-    title: I18n.t('product detail'),
-  };
   constructor() {
     super();
     this.state = {
@@ -74,3 +71,7 @@ export default class MessageDetailScreen extends Component {
     );
   }
 }
+MessageDetailScreen.navigationOptions = {
+  title: I18n.t('message detail'),
+  tabBarHidden: true,
+};

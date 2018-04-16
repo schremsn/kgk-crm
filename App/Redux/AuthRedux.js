@@ -26,10 +26,10 @@ export const INITIAL_STATE = Immutable({
   userInfo: {},
   profile: {},
   companyInfo: {},
+  mailChannels: [],
   isLogin: false,
   error: {},
 });
-
 
 export const getUserInfo = () => (dispatch) => {
   dataprovider.getUserInfo()
@@ -63,7 +63,6 @@ export const getMailChannels = () => (dispatch) => {
       console.log(`error user ${err}`);
     });
 };
-
 
 export const login = ({ username, password }, cb) => (dispatch) => {
   dataprovider.login(username, password)

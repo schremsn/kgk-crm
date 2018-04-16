@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
-import {WebView, View, Text} from 'react-native'
-import Dimensions from 'Dimensions'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { WebView, View, Text } from 'react-native';
+import Dimensions from 'Dimensions';
 
-const deviceWidth = Dimensions.get('window').width
-const BODY_TAG_PATTERN = /\<\/ *body\>/
+const deviceWidth = Dimensions.get('window').width;
+const BODY_TAG_PATTERN = /\<\/ *body\>/;
 
-var script = `
+const script = `
 ;(function() {
     var wrapper = document.createElement("div");
     wrapper.id = "height-wrapper";
@@ -26,65 +26,67 @@ var script = `
     });
     window.addEventListener("resize", updateHeight);
 }());
-`
+`;
 
 const style = `
 <script>
 ${script}
 </script>
-`
+`;
 
-const codeInject = (html) => html.replace(BODY_TAG_PATTERN, style + '</body>')
+const codeInject = html => html.replace(BODY_TAG_PATTERN, `${style}</body>`);
 
 class WebViewAutoHeight extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
-      realContentHeight: this.props.minHeight
-    }
+      realContentHeight: this.props.minHeight,
+    };
   }
 
-  handleNavigationChange (navState) {
+  handleNavigationChange(navState) {
     // console.log(navState,'here')
     if (navState && navState.title) {
-      const realContentHeight = parseInt(navState.title, 10) || 0 // turn NaN to 0
-      this.setState({realContentHeight})
+      const realContentHeight = parseInt(navState.title, 10) || 0; // turn NaN to 0
+      this.setState({ realContentHeight });
     }
     if (typeof this.props.onNavigationStateChange === 'function') {
-      this.props.onNavigationStateChange(navState)
+      this.props.onNavigationStateChange(navState);
     }
   }
 
-  render () {
-    const {source, style, minHeight, ...otherProps} = this.props
-    const {realContentHeight} = this.state
-    const html = source.html
+  render() {
+    const {
+      source, style, minHeight, ...otherProps
+    } = this.props;
+    const { realContentHeight } = this.state;
+    const html = source.html;
 
     if (!html) {
-      throw new Error('WebViewAutoHeight supports only source.html')
+      throw new Error('WebViewAutoHeight supports only source.html');
     }
 
     if (!BODY_TAG_PATTERN.test(html)) {
-      throw new Error('Cannot find </body> from: ' + html)
+      throw new Error(`Cannot find </body> from: ${html}`);
     }
 
     // console.log('wh',Math.max(this.state.realContentHeight, minHeight))
 
     return (
-      <View style={{height: Math.max(realContentHeight, minHeight)}}>
+      <View style={{ height: Math.max(realContentHeight, minHeight) }}>
         <WebView
           {...otherProps}
-          source={{html: codeInject(html)}}
+          source={{ html: codeInject(html) }}
           scrollEnabled={false}
-          style={[{height: Math.max(realContentHeight, minHeight)}, style]}
+          style={[{ height: Math.max(realContentHeight, minHeight) }, style]}
           javaScriptEnabled
           onNavigationStateChange={(data) => {
-            this.handleNavigationChange(data)
+            this.handleNavigationChange(data);
           }}
         />
       </View>
-    )
+    );
   }
 }
 
@@ -93,11 +95,11 @@ WebViewAutoHeight.propTypes = {
   injectedJavaScript: PropTypes.string,
   minHeight: PropTypes.number,
   onNavigationStateChange: PropTypes.func,
-  style: WebView.propTypes.style
-}
+  style: WebView.propTypes.style,
+};
 
 WebViewAutoHeight.defaultProps = {
-  minHeight: 100
-}
+  minHeight: 100,
+};
 
-export default WebViewAutoHeight
+export default WebViewAutoHeight;

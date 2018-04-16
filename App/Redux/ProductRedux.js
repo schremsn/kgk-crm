@@ -48,6 +48,7 @@ export const getProductDetail = (productId, cb) => () => {
     });
 };
 
+
 /* ------------- Reducers ------------- */
 
 // request the data from an api

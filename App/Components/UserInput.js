@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
-import Dimensions from 'Dimensions'
-import {StyleSheet, View, TextInput, Image} from 'react-native'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import Dimensions from 'Dimensions';
+import { StyleSheet, View, TextInput, Image } from 'react-native';
 
 export default class UserInput extends Component {
-  render () {
+  render() {
     return (
       <View style={styles.inputWrapper}>
         <Image source={this.props.source} style={styles.inlineImg} />
@@ -16,12 +16,12 @@ export default class UserInput extends Component {
           autoCorrect={this.props.autoCorrect}
           autoCapitalize={this.props.autoCapitalize}
           returnKeyType={this.props.returnKeyType}
-          placeholderTextColor='white'
-          underlineColorAndroid='transparent'
-          onChangeText={(value) => this.props.onChangeText((value))}
+          placeholderTextColor="white"
+          underlineColorAndroid="transparent"
+          onChangeText={value => this.props.onChangeText((value))}
         />
       </View>
-    )
+    );
   }
 }
 
@@ -32,10 +32,10 @@ UserInput.propTypes = {
   autoCorrect: PropTypes.bool,
   autoCapitalize: PropTypes.string,
   returnKeyType: PropTypes.string,
-  onChangeText: PropTypes.func
-}
+  onChangeText: PropTypes.func,
+};
 
-const DEVICE_WIDTH = Dimensions.get('window').width
+const DEVICE_WIDTH = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   input: {
@@ -45,10 +45,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     paddingLeft: 45,
     borderRadius: 20,
-    color: '#ffffff'
+    color: '#ffffff',
   },
   inputWrapper: {
-    flex: 1
+    flex: 1,
   },
   inlineImg: {
     position: 'absolute',
@@ -56,6 +56,6 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     left: 35,
-    top: 9
-  }
-})
+    top: 9,
+  },
+});

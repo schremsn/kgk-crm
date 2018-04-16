@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
 import I18n from 'react-native-i18n';
 import ProgressBar from '../Components/ProgressBar';
@@ -14,15 +15,18 @@ class MessagesListScreen extends Component {
       isLoading: true,
       isRefreshing: false,
     };
+
+    this.getMessages = this.getMessages.bind(this);
+    this.getMessagesNextPage = this.getMessagesNextPage.bind(this);
+    this.renderMessage = this.renderMessage.bind(this);
+    this.onRefresh = this.onRefresh.bind(this);
   }
-  static navigationOptions = {
-    title: I18n.t('messages'),
-  };
   componentWillMount() {
     this.getMessages();
   }
-  getMessages = (isRefreshed) => {
-    this.props.getMessages(this.props.offset, (list) => {
+
+  getMessages(isRefreshed) {
+    this.props.getMessages(0, (list) => {
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
       const dataSource = ds.cloneWithRows(list);
       this.setState({
@@ -31,30 +35,34 @@ class MessagesListScreen extends Component {
         isLoading: false,
       });
     });
-    if (isRefreshed && this.setState({ isRefreshing: false }));
+    if (isRefreshed) {
+      this.setState({ isRefreshing: false });
+    }
   }
-  getMessagesNextPage = () => {
+  getMessagesNextPage() {
     this.props.getMessages(this.props.offset, (list) => {
       const data = this.state.list;
       const newData = list;
-      newData.map((item) => data.push(item));
+      newData.map(item => data.push(item));
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(data),
       });
     });
   }
-  onRefresh = () => {
+  onRefresh() {
     this.setState({ isRefreshing: true });
     this.getMessages('isRefreshed');
   }
-  renderMessage = (item) => {
+  renderMessage(item) {
     const channel = this.props.mailChannels.filter(ch => ch.id === item.channel_ids[0])[0];
-    return (<TouchableOpacity style={styles.sectionHeaderContainer} onPress={() => { this.props.navigation.navigate('MessageDetailScreen', { messageDetail: item }); }} >
-      <Text style={styles.sectionHeader}>{I18n.t('date')}} - {item.date}</Text>
-      <Text style={styles.sectionText}>{I18n.t('email from')}: {item.email_from}</Text>
-      <Text style={styles.sectionText}>{I18n.t('channel')}: {channel && channel.name}</Text>
-      <Text style={styles.sectionText}>{I18n.t('message')}: {item.body && item.body.substring(0, 40)}</Text>
-    </TouchableOpacity>);
+    return (
+      <TouchableOpacity style={styles.sectionHeaderContainer} onPress={() => { this.props.navigation.navigate('MessageDetailScreen', { messageDetail: item }); }} >
+        <Text style={styles.sectionHeader}>{I18n.t('date')}</Text>
+        <Text style={styles.sectionText}>{I18n.t('email from')}: {item.email_from}</Text>
+        <Text style={styles.sectionText}>{I18n.t('channel')}: {channel && channel.name}</Text>
+        <Text style={styles.sectionText}>{I18n.t('message')}: {item.body && item.body.substring(0, 40)}</Text>
+      </TouchableOpacity>
+    );
   }
   render() {
     return (
@@ -65,7 +73,7 @@ class MessagesListScreen extends Component {
             : <ListView
               style={styles.container}
               enableEmptySections
-              onEndReached={() => this.getMessagesNextPage()}
+              onEndReached={this.getMessagesNextPage}
               onEndReachedThreshold={1200}
               dataSource={this.state.dataSource}
               renderRow={item => this.renderMessage(item)}
@@ -96,5 +104,15 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getMessages: (offset, cb) => { dispatch(getMessages(offset, cb)); },
 });
+MessagesListScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  offset: PropTypes.number.isRequired,
+  mailChannels: PropTypes.array.isRequired,
+  getMessages: PropTypes.func.isRequired,
+};
+
+MessagesListScreen.navigationOptions = {
+  title: I18n.t('messages'),
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessagesListScreen);
