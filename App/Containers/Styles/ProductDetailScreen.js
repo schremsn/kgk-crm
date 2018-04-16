@@ -1,20 +1,20 @@
-import { StyleSheet } from 'react-native'
-import { Colors, Metrics, Fonts, ApplicationStyles } from '../../Themes/'
+import { StyleSheet } from 'react-native';
+import { Colors, Metrics, Fonts, ApplicationStyles } from '../../Themes/';
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   sectionHeaderContainer: {
-    ...ApplicationStyles.darkLabelContainer
+    ...ApplicationStyles.darkLabelContainer,
   },
   sectionHeader: {
-    ...ApplicationStyles.darkLabel
+    ...ApplicationStyles.darkLabel,
   },
   cardTitle: {
     alignSelf: 'center',
     fontSize: Fonts.size.regular,
     fontWeight: 'bold',
     marginVertical: Metrics.baseMargin,
-    color: Colors.snow
+    color: Colors.snow,
   },
   cardContainer: {
     backgroundColor: Colors.ember,
@@ -24,44 +24,44 @@ export default StyleSheet.create({
     shadowColor: Colors.panther,
     shadowOffset: {
       height: 7,
-      width: 7
+      width: 7,
     },
     shadowRadius: 2,
     paddingBottom: Metrics.baseMargin,
-    margin: Metrics.baseMargin
+    margin: Metrics.baseMargin,
   },
   rowContainer: {
     flexDirection: 'row',
     borderColor: Colors.windowTint,
     borderWidth: 0.5,
     borderRadius: 2,
-    marginHorizontal: Metrics.baseMargin
+    marginHorizontal: Metrics.baseMargin,
   },
   rowLabelContainer: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: Colors.snow
+    backgroundColor: Colors.snow,
   },
   rowLabel: {
     fontWeight: 'bold',
     fontSize: Fonts.size.medium,
     marginVertical: Metrics.baseMargin,
-    marginLeft: Metrics.baseMargin
+    marginLeft: Metrics.baseMargin,
   },
   rowInfoContainer: {
     flex: 2,
     justifyContent: 'center',
-    backgroundColor: Colors.silver
+    backgroundColor: Colors.silver,
   },
   rowInfo: {
     fontSize: Fonts.size.regular,
-    margin: Metrics.baseMargin
+    margin: Metrics.baseMargin,
   },
   cardStyle: {
     marginTop: 10,
     backgroundColor: 'white',
     height: 50,
     paddingTop: 10,
-    paddingLeft: 10
-  }
-})
+    paddingLeft: 10,
+  },
+});

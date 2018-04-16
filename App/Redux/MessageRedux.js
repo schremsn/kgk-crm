@@ -8,7 +8,7 @@ const dataprovider = DataProvider.getInstance();
 
 const { Types, Creators } = createActions({
   messageRequest: ['data'],
-  getMessagesSuccess: ['list'],
+  getMessagesSuccess: ['list', 'offset'],
   getMessagesFailure: null,
 });
 
@@ -26,7 +26,7 @@ export const INITIAL_STATE = Immutable({
 export const getMessages = (offset, cb) => (dispatch) => {
   dataprovider.getMessages(offset)
     .then((list) => {
-      dispatch(Creators.getMessagesSuccess(list));
+      dispatch(Creators.getMessagesSuccess(list, offset));
       if (cb) { cb(list); }
     })
     .catch(() => {
@@ -37,12 +37,12 @@ export const getMessages = (offset, cb) => (dispatch) => {
 
 // request the data from an api
 export const request = (state, { params }) =>
-  state.merge({ fetching: true, payload: null });
+  state.merge({ offset: 0 });
 
 // successful api lookup
 export const getMessagesSuccess = (state, action) => {
-  const { list } = action;
-  return state.merge({ list, offset: state.offset + 5 });
+  const { list, offset } = action;
+  return state.merge({ list, offset: offset + 5 });
 };
 // Something went wrong somewhere.
 export const getMessagesFailure = state =>

@@ -10,7 +10,7 @@ import { getProducts } from '../Redux/ProductRedux';
 
 class ProductsListScreen extends Component {
   static navigationOptions = {
-    title: I18n.t('products'),
+    title: I18n.t('product list'),
   };
   static propTypes = {
     navigation: PropTypes.object.isRequired,

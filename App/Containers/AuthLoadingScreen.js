@@ -38,4 +38,3 @@ export default class AuthLoadingScreen extends React.Component {
     );
   }
 }
-

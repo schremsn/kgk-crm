@@ -85,7 +85,10 @@ const MessagesStack = StackNavigator({
 const AppStack = TabNavigator(
   {
     Home: { screen: HomeStack },
-    Messages: { screen: MessagesStack },
+    Messages: {
+      screen: MessagesStack,
+
+    },
     More: { screen: MoreStack },
   },
   {
@@ -107,6 +110,10 @@ const AppStack = TabNavigator(
         // icon component from react-native-vector-icons
         return <Ionicons name={iconName} size={25} color={tintColor} />;
       },
+      tabBarLabel: (() => {
+        const { routeName } = navigation.state;
+        return routeName;
+      }),
     }),
     tabBarOptions: {
       activeTintColor: 'tomato',

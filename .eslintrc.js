@@ -1,31 +1,32 @@
 module.exports = {
 
-    "parser": "babel-eslint",
+  "parser": "babel-eslint",
 
-    "extends": "airbnb",
+  "extends": "airbnb",
 
-    "plugins": ["react", "jsx-a11y", "import"],
+  "plugins": ["react", "jsx-a11y", "import"],
 
-    "rules": {
+  "rules": {
 
-        "react/jsx-filename-extension": ["off"],
-        "linebreak-style": ["off"],
-        "no-undef": ["error"],
-        "react/sort-comp": ["off"],
-        "react/prefer-stateless-function": ["off"],
-        "class-methods-use-this": ["off"]
-    },
+    "react/jsx-filename-extension": ["off"],
+    "linebreak-style": ["off"],
+    "no-undef": ["error"],
+    "react/sort-comp": ["off"],
+    "react/prefer-stateless-function": ["off"],
+    "class-methods-use-this": ["off"],
 
-    "globals": {
+  },
 
-        "it": 0,
+  "globals": {
 
-        "expect": 0,
+    "it": 0,
 
-        "describe": 0,
+    "expect": 0,
 
-        "navigator": 0
+    "describe": 0,
 
-    }
+    "navigator": 0
+
+  }
 
 }
