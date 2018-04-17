@@ -62,7 +62,7 @@ class LaunchScreen extends Component {
   }
   renderCommission(commission) {
     return (
-      <TouchableOpacity onPress={() => { this.props.navigation.navigate('CommissionListScreen'); }} style={styles.sectionHeaderContainer}>
+      <TouchableOpacity onPress={() => { this.props.navigation.navigate('ProductsListScreen'); }} style={styles.sectionHeaderContainer}>
         <Text style={styles.sectionHeader}>{commission.display_name}</Text>
         <Text style={styles.sectionText}>{I18n.t('id')}: {commission.id}</Text>
         <Text style={styles.sectionText}>{I18n.t('end_date')}: {commission.end_date}</Text>

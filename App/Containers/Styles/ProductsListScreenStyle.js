@@ -11,6 +11,7 @@ export default StyleSheet.create({
   },
   mainContainer: {
     paddingHorizontal: Metrics.doubleBaseMargin,
+    height: Metrics.screenHeight,
   },
   description: {
     marginVertical: Metrics.doubleSection,

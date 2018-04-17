@@ -69,6 +69,7 @@ class ProductDetailScreen extends Component {
           <View style={{ padding: 20 }}>
             <WebViewAutoHeight
               source={{ html: `<body>${productDetail.information}</body>` }}
+              minHeight={800}
             />
           </View>
         </ScrollView>

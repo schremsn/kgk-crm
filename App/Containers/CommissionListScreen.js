@@ -64,7 +64,20 @@ class CommissionListScreen extends Component {
   }
   render() {
     return (
-      <View style={[styles.container, styles.mainContainer]}>
+      <View
+        style={[styles.container, styles.mainContainer]}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.isRefreshing}
+            onRefresh={this.onRefresh}
+            colors={['#EA0000']}
+            tintColor="white"
+            title={`${I18n.t('loading')}...`}
+            titleColor="white"
+            progressBackgroundColor="white"
+          />
+        }
+      >
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         {
           this.state.isLoading ? <View style={styles.progressBar}><ProgressBar /></View>

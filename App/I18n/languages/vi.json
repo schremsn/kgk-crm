@@ -14,6 +14,7 @@
   "home": "Trang chủ",
   "product list": "Danh sách sản phẩm",
   "product detail": "Chi tiết sản phẩm",
+  "commission company": "Nhiệm vụ công ty",
   "commission list": "Danh sách nhiệm vụ",
   "commission detail": "Chi tiết nhiệm vụ",
   "messages": "Tin nhắn",
@@ -24,6 +25,7 @@
   "email from": "Email từ",
   "more": "Mở rộng",
   "menu": "Menu",
+  "account": "Tài khoản",
   //Commission Detail
   "commission_information" : "Thông tin nhiệm vụ",
   "identifier" : "Nhận dạng",

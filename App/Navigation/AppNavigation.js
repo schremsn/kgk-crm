@@ -7,6 +7,7 @@ import { Colors } from '../Themes';
 
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen';
 import CommissionDetailScreen from '../Containers/CommissionDetailScreen';
+import CommissionCompanyScreen from '../Containers/CommissionCompanyScreen';
 import CommissionListScreen from '../Containers/CommissionListScreen';
 import LoginScreen from '../Containers/LoginScreen';
 import LaunchScreen from '../Containers/LaunchScreen';
@@ -19,10 +20,24 @@ import MessageDetailScreen from '../Containers/MessageDetailScreen';
 
 const HomeStack = StackNavigator({
   LaunchScreen: { screen: LaunchScreen },
+}, {
+  initialRouteName: 'LaunchScreen',
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: Colors.background,
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  },
+});
+const CommissionStack = StackNavigator({
+  CommissionCompanyScreen: { screen: CommissionCompanyScreen },
   CommissionDetailScreen: { screen: CommissionDetailScreen },
   CommissionListScreen: { screen: CommissionListScreen },
 }, {
-  initialRouteName: 'LaunchScreen',
+  initialRouteName: 'CommissionCompanyScreen',
   navigationOptions: {
     headerStyle: {
       backgroundColor: Colors.background,
@@ -85,10 +100,8 @@ const MessagesStack = StackNavigator({
 const AppStack = TabNavigator(
   {
     Home: { screen: HomeStack },
-    Messages: {
-      screen: MessagesStack,
-
-    },
+    Commission: { screen: CommissionStack },
+    Messages: { screen: MessagesStack },
     More: { screen: MoreStack },
   },
   {
@@ -98,6 +111,8 @@ const AppStack = TabNavigator(
         let iconName;
         if (routeName === 'Home') {
           iconName = `ios-home${focused ? '' : '-outline'}`;
+        } else if (routeName === 'Commission') {
+          iconName = `ios-list-box${focused ? '' : '-outline'}`;
         } else if (routeName === 'Products') {
           iconName = `ios-list-box${focused ? '' : '-outline'}`;
         } else if (routeName === 'Messages') {

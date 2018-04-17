@@ -9,7 +9,7 @@ import DD from '../Data/datadictionary';
  */
 let instance = null;
 
-const maxRecords = 5;
+const maxRecords = 50;
 
 export default class DataProvider {
   constructor() {

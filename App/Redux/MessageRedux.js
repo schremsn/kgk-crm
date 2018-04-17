@@ -26,6 +26,7 @@ export const INITIAL_STATE = Immutable({
 export const getMessages = (offset, cb) => (dispatch) => {
   dataprovider.getMessages(offset)
     .then((list) => {
+      console.log(list)
       dispatch(Creators.getMessagesSuccess(list, offset));
       if (cb) { cb(list); }
     })

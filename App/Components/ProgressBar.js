@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
+import {Metrics} from "../Themes";
 
 const ProgressBar = () => (
   <View style={styles.progressBar}>

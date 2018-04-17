@@ -15,6 +15,7 @@
    "home": "Home",
    "product list": "Product List",
    "product detail": "Product Detail",
+   "commission company": "Commission Company",
    "commission detail": "Commission Detail",
    "commission list": "Commission List",
    "messages": "Messages",
@@ -25,6 +26,7 @@
    "email from": "Email from",
    "more": "More",
    "menu": "Menu",
+   "account": "Account",
   //Commission Detail
   "commission_information" : "Commission Information",
   "identifier" : "Identifier",

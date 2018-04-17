@@ -34,16 +34,22 @@ export default class MoreScreen extends Component {
             {I18n.t('logOut')}
           </RoundedButton>
         </View>
-        {
-          this.state.isShowMenu && <TouchableOpacity style={[styles.buttonBox, { bottom: 100 }]} onPress={() => this.props.navigation.navigate('ProductsListScreen')}>
-            <Text style={styles.text}>
-              {I18n.t('product list')}
-            </Text>
-            <View style={styles.button}>
-              <Ionicons name="ios-podium-outline" size={25} color="white" />
-            </View>
-          </TouchableOpacity>
-        }
+        <TouchableOpacity style={[styles.buttonBox, { bottom: 170 }]} onPress={() => this.props.navigation.navigate('ProductsListScreen')}>
+          <Text style={styles.text}>
+            {I18n.t('account')}
+          </Text>
+          <View style={styles.button}>
+            <Ionicons name="ios-person-outline" size={25} color="white" />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.buttonBox, { bottom: 100 }]} onPress={() => this.props.navigation.navigate('ProductsListScreen')}>
+          <Text style={styles.text}>
+            {I18n.t('product list')}
+          </Text>
+          <View style={styles.button}>
+            <Ionicons name="ios-podium-outline" size={25} color="white" />
+          </View>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.buttonBox} onPress={() => { this.toggleMenu(); }}>
           <Text style={styles.text}>
             {I18n.t('menu')}

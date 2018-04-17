@@ -1,6 +1,5 @@
 {
   "presets": ["react-native"],
-  "retainLines": true,
   "env": {
     "production": {
       "plugins": ["ignite-ignore-reactotron"]

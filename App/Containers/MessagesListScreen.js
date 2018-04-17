@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, ScrollView } from 'react-native';
 import I18n from 'react-native-i18n';
 import ProgressBar from '../Components/ProgressBar';
 import { getMessages } from '../Redux/MessageRedux';
 import styles from './Styles/ProductsListScreenStyle';
-import { Images } from './../Themes';
+import { Images, Metrics } from './../Themes';
 
 class MessagesListScreen extends Component {
   constructor() {
@@ -26,7 +26,7 @@ class MessagesListScreen extends Component {
   }
 
   getMessages(isRefreshed) {
-    this.props.getMessages(0, (list) => {
+    this.props.getMessages(50, (list) => {
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
       const dataSource = ds.cloneWithRows(list);
       this.setState({
@@ -57,7 +57,7 @@ class MessagesListScreen extends Component {
     const channel = this.props.mailChannels.filter(ch => ch.id === item.channel_ids[0])[0];
     return (
       <TouchableOpacity style={styles.sectionHeaderContainer} onPress={() => { this.props.navigation.navigate('MessageDetailScreen', { messageDetail: item }); }} >
-        <Text style={styles.sectionHeader}>{I18n.t('date')}</Text>
+        <Text style={styles.sectionHeader}>{I18n.t('date')} : {item.date}</Text>
         <Text style={styles.sectionText}>{I18n.t('email from')}: {item.email_from}</Text>
         <Text style={styles.sectionText}>{I18n.t('channel')}: {channel && channel.name}</Text>
         <Text style={styles.sectionText}>{I18n.t('message')}: {item.body && item.body.substring(0, 40)}</Text>
@@ -66,10 +66,23 @@ class MessagesListScreen extends Component {
   }
   render() {
     return (
-      <View style={[styles.container, styles.mainContainer]}>
+      <View
+        style={[styles.container, styles.mainContainer]}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.isRefreshing}
+            onRefresh={this.onRefresh}
+            colors={['#EA0000']}
+            tintColor="white"
+            title={`${I18n.t('loading')}...`}
+            titleColor="white"
+            progressBackgroundColor="white"
+          />
+        }
+      >
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         {
-          this.state.isLoading ? <View style={styles.progressBar}><ProgressBar /></View>
+          this.state.isLoading ? <View style={[styles.progressBar, { height: Metrics.screenHeight }]}><ProgressBar /></View>
             : <ListView
               style={styles.container}
               enableEmptySections
