@@ -1,0 +1,17 @@
+{
+<<<<<<< HEAD
+  "presets": ["babel-preset-expo", "react-native", "flow"],
+  "retainLines": true,
+  
+  "env": {
+    "development": {
+      "plugins": ["transform-react-jsx-source"]
+=======
+  "presets": ["react-native"],
+  "env": {
+    "production": {
+      "plugins": ["ignite-ignore-reactotron"]
+>>>>>>> update
+    }
+  }
+}

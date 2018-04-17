@@ -1,0 +1,21 @@
+{
+<<<<<<< HEAD
+  "expo": {
+    "name": "mobilecrm",
+    "version": "1.0.0",
+    "slug": "mobilecrm",
+    "sdkVersion": "25.0.0",
+
+    "ios": {
+      "bundleIdentifier": "com.schremsn.mobilecrm"
+    },
+    "android": {
+      "package": "com.schremsn.mobilecrm"
+    }
+  }
+}
+=======
+  "name": "kgkCrm2",
+  "displayName": "kgkCrm2"
+}
+>>>>>>> update
