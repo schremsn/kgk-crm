@@ -54,9 +54,11 @@ class MessagesListScreen extends Component {
     this.getMessages('isRefreshed');
   }
   renderMessage(item) {
+    const data = item;
     const channel = this.props.mailChannels.filter(ch => ch.id === item.channel_ids[0])[0];
+    data.channel = channel.name || '';
     return (
-      <TouchableOpacity style={styles.sectionHeaderContainer} onPress={() => { this.props.navigation.navigate('MessageDetailScreen', { messageDetail: item }); }} >
+      <TouchableOpacity style={styles.sectionHeaderContainer} onPress={() => { this.props.navigation.navigate('MessageDetailScreen', { messageDetail: data }); }} >
         <Text style={styles.sectionHeader}>{I18n.t('date')} : {item.date}</Text>
         <Text style={styles.sectionText}>{I18n.t('from')}: {item.email_from}</Text>
         <Text style={styles.sectionText}>{I18n.t('channel')}: {channel && channel.name}</Text>

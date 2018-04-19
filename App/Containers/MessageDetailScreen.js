@@ -8,7 +8,7 @@ import WebViewAutoHeight from '../../App/Components/WebViewAutoHeight';
 const data = [
   { name: 'id', value: 'Id' },
   { name: 'date', value: I18n.t('date') },
-  { name: 'email_from', value: I18n.t('email from') },
+  { name: 'email_from', value: I18n.t('from') },
   { name: 'channel', value: I18n.t('channel') },
 ];
 export default class MessageDetailScreen extends Component {
@@ -27,9 +27,6 @@ export default class MessageDetailScreen extends Component {
   renderCard(cardTitle, rowData) {
     return (
       <View>
-        <View style={styles.sectionHeaderContainer}>
-          <Text style={styles.sectionHeader}>{cardTitle.toUpperCase()}</Text>
-        </View>
         {this.renderRows(rowData)}
       </View>
     );
@@ -42,11 +39,7 @@ export default class MessageDetailScreen extends Component {
             <Text style={styles.rowLabel}>{item.value}</Text>
           </View>
           <View style={styles.rowInfoContainer}>
-            {
-              item.value === I18n.t('image')
-                ? <Image source={{ uri: `data:image/png;base64,${rowData[item.name]}` }} style={{ width: 100, height: 100, marginBottom: 10 }} />
-                : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
-            }
+            <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
           </View>
         </View>
       ))
@@ -60,21 +53,23 @@ export default class MessageDetailScreen extends Component {
         <TouchableOpacity
           onPress={() => this.props.navigation.goBack(null)}
           style={{
-          position: 'absolute',
-          paddingTop: 30,
-          paddingHorizontal: 5,
-          zIndex: 10,
+            flexDirection: 'row',
+            paddingTop: 10,
+            paddingBottom: 10,
+            paddingLeft: 20
         }}
         >
           <Image source={Images.backButton} />
+          <Text style={{ paddingLeft: 30, paddingTop: 10, color: 'white', frontSize: 50, fontWeight: '700'}}>{I18n.t('message detail').toUpperCase()}</Text>
         </TouchableOpacity>
-        <ScrollView style={{ paddingTop: 80}}>
+        <ScrollView>
           <View style={{ padding: 10 }}>
             {this.renderCard('Message Information', messageDetail)}
           </View>
           <View style={{ padding: 20 }}>
             <WebViewAutoHeight
               source={{ html: `<body>${messageDetail.body}</body>` }}
+              minHeight={500}
             />
           </View>
         </ScrollView>
