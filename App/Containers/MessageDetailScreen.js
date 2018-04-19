@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, Image } from 'react-native';
+import { View, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
 import I18n from 'react-native-i18n';
 import styles from './Styles/ProductDetailScreen';
 import { Images } from './../Themes';
@@ -57,7 +57,18 @@ export default class MessageDetailScreen extends Component {
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <ScrollView>
+        <TouchableOpacity
+          onPress={() => this.props.navigation.goBack(null)}
+          style={{
+          position: 'absolute',
+          paddingTop: 30,
+          paddingHorizontal: 5,
+          zIndex: 10,
+        }}
+        >
+          <Image source={Images.backButton} />
+        </TouchableOpacity>
+        <ScrollView style={{ paddingTop: 80}}>
           <View style={{ padding: 10 }}>
             {this.renderCard('Message Information', messageDetail)}
           </View>

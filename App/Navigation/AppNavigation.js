@@ -85,6 +85,7 @@ const MessagesStack = StackNavigator({
   MessagesListScreen: { screen: MessagesListScreen },
   MessageDetailScreen: { screen: MessageDetailScreen },
 }, {
+  headerMode: 'none',
   initialRouteName: 'MessagesListScreen',
   navigationOptions: {
     headerStyle: {
@@ -101,7 +102,7 @@ const AppStack = TabNavigator(
   {
     Home: { screen: HomeStack },
     Commission: { screen: CommissionStack },
-    Messages: { screen: MessagesStack },
+    Message: { screen: MessagesStack },
     More: { screen: MoreStack },
   },
   {
@@ -115,7 +116,7 @@ const AppStack = TabNavigator(
           iconName = `ios-list-box${focused ? '' : '-outline'}`;
         } else if (routeName === 'Products') {
           iconName = `ios-list-box${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Messages') {
+        } else if (routeName === 'Message') {
           iconName = `ios-mail${focused ? '' : '-outline'}`;
         } else if (routeName === 'More') {
           iconName = `ios-options${focused ? '' : '-outline'}`;
