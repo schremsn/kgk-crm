@@ -36,18 +36,8 @@ export const getUserInfo = () => (dispatch) => {
     .then((data) => {
       // console.log('getUserInfo', data)
       dispatch(Creators.getUserInfoSuccess(data));
-    })
-    .catch((err) => {
-      console.log(`error user ${err}`);
-    });
-};
-export const getCompanyInfo = info => (dispatch) => {
-  const { id } = info;
-  dataprovider.getUserInfo(id)
-    .then((userInfo) => {
-      // console.log('loadCompanyInfo', userInfo)
-      ReferenceData.getInstance().setCompanyInfo(userInfo);
-      dispatch(Creators.getCompanyInfoSuccess(userInfo));
+      ReferenceData.getInstance().setCompanyInfo(data.id);
+      dispatch(Creators.getCompanyInfoSuccess(data));
     })
     .catch((err) => {
       console.log(`error user ${err}`);
@@ -69,10 +59,8 @@ export const login = ({ username, password }, cb) => (dispatch) => {
     .then((info) => {
       cb(info);
       dispatch(getUserInfo());
-      dispatch(getCompanyInfo(info));
       dispatch(getMailChannels(info));
       dispatch(getCommissionStatus(info.uid));
-      dispatch(getCommissionSummary());
       dispatch(Creators.loginSuccess(info));
     })
     .catch((error) => {

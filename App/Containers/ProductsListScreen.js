@@ -99,7 +99,7 @@ class ProductsListScreen extends Component {
               dataSource={this.state.dataSource}
               renderRow={item => this.renderProduct(item)}
               renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-              renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
+              // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
               refreshControl={
                 <RefreshControl
                   refreshing={this.state.isRefreshing}

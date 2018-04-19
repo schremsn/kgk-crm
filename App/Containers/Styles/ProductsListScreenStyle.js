@@ -37,7 +37,6 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   seperator: {
-    marginTop: 10,
     backgroundColor: '#8E8E8E',
   },
   thumpImage: {

@@ -7,7 +7,7 @@ import { Colors } from '../Themes';
 
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen';
 import CommissionDetailScreen from '../Containers/CommissionDetailScreen';
-import CommissionCompanyScreen from '../Containers/CommissionCompanyScreen';
+import CommissionCompanyScreen from '../Containers/CommissionCompanyListScreen';
 import CommissionListScreen from '../Containers/CommissionListScreen';
 import LoginScreen from '../Containers/LoginScreen';
 import LaunchScreen from '../Containers/LaunchScreen';
@@ -21,6 +21,7 @@ import MessageDetailScreen from '../Containers/MessageDetailScreen';
 const HomeStack = StackNavigator({
   LaunchScreen: { screen: LaunchScreen },
 }, {
+  headerMode: 'none',
   initialRouteName: 'LaunchScreen',
   navigationOptions: {
     headerStyle: {
@@ -37,6 +38,7 @@ const CommissionStack = StackNavigator({
   CommissionDetailScreen: { screen: CommissionDetailScreen },
   CommissionListScreen: { screen: CommissionListScreen },
 }, {
+  headerMode: 'none',
   initialRouteName: 'CommissionCompanyScreen',
   navigationOptions: {
     headerStyle: {
@@ -70,6 +72,7 @@ const MoreStack = StackNavigator({
   ProductDetailScreen: { screen: ProductDetailScreen },
   WebViewScreen: { screen: WebViewScreen },
 }, {
+  headerMode: 'none',
   initialRouteName: 'MoreScreen',
   navigationOptions: {
     headerStyle: {
@@ -101,7 +104,7 @@ const MessagesStack = StackNavigator({
 const AppStack = TabNavigator(
   {
     Home: { screen: HomeStack },
-    Commission: { screen: CommissionStack },
+    Status: { screen: CommissionStack },
     Message: { screen: MessagesStack },
     More: { screen: MoreStack },
   },
@@ -112,7 +115,7 @@ const AppStack = TabNavigator(
         let iconName;
         if (routeName === 'Home') {
           iconName = `ios-home${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Commission') {
+        } else if (routeName === 'Status') {
           iconName = `ios-list-box${focused ? '' : '-outline'}`;
         } else if (routeName === 'Products') {
           iconName = `ios-list-box${focused ? '' : '-outline'}`;

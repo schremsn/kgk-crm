@@ -62,7 +62,7 @@ class CommissionCompanyScreen extends Component {
   }
   renderCommission(commission) {
     return (
-      <TouchableOpacity onPress={() => { this.props.navigation.navigate('ProductsListScreen'); }} style={styles.sectionHeaderContainer}>
+      <TouchableOpacity style={styles.sectionHeaderContainer}>
         <Text style={styles.sectionHeader}>{commission.display_name}</Text>
         <Text style={styles.sectionText}>{I18n.t('id')}: {commission.id}</Text>
         <Text style={styles.sectionText}>{I18n.t('end_date')}: {commission.end_date}</Text>
@@ -84,7 +84,7 @@ class CommissionCompanyScreen extends Component {
               dataSource={this.state.dataSource}
               renderRow={item => this.renderCommission(item)}
               renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-              renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
+              // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
               refreshControl={
                 <RefreshControl
                   refreshing={this.state.isRefreshing}
