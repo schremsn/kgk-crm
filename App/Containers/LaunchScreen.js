@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { RefreshControl, Text, Image, View, TouchableOpacity, ListView } from 'react-native';
+import { RefreshControl, Text, Image, View, TouchableOpacity, ListView, BackAndroid, Alert } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import numeral from 'numeral';
@@ -30,9 +30,33 @@ class LaunchScreen extends Component {
     this.getCommissionListNextPage = this.getCommissionListNextPage.bind(this);
     this.renderCommission = this.renderCommission.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
+    this.handleBackAndroid = this.handleBackAndroid.bind(this);
   }
   componentWillMount() {
     this.getCommissionList();
+  }
+  componentDidMount() {
+    BackAndroid.addEventListener(
+      'change',
+      this.handleBackAndroid
+    );
+  }
+  handleBackAndroid(t) {
+    Alert.alert(
+      'Alert',
+      'Do you want to quit the app?',
+      [
+        { text: 'Cancel',
+          onPress: () => true,
+          style: 'cancel' },
+        { text: 'OK',
+          onPress: () => {
+            BackAndroid.exitApp();
+          }
+        }
+      ]
+    );
+    return true;
   }
   getCommissionList(isRefreshed) {
     this.props.getCommissionSummary(0, (list) => {

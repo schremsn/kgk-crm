@@ -34,12 +34,11 @@ const HomeStack = StackNavigator({
   },
 });
 const CommissionStack = StackNavigator({
-  CommissionCompanyScreen: { screen: CommissionCompanyScreen },
   CommissionDetailScreen: { screen: CommissionDetailScreen },
   CommissionListScreen: { screen: CommissionListScreen },
 }, {
   headerMode: 'none',
-  initialRouteName: 'CommissionCompanyScreen',
+  initialRouteName: 'CommissionListScreen',
   navigationOptions: {
     headerStyle: {
       backgroundColor: Colors.background,

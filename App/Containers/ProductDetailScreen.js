@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, Image } from 'react-native';
+import { View, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import styles from './Styles/ProductDetailScreen';
@@ -62,6 +62,18 @@ class ProductDetailScreen extends Component {
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
+        <TouchableOpacity
+          onPress={() => this.props.navigation.goBack(null)}
+          style={{
+            flexDirection: 'row',
+            paddingTop: 10,
+            paddingBottom: 10,
+            paddingLeft: 20,
+          }}
+        >
+          <Image source={Images.backButton} />
+          <Text style={{ paddingLeft: 30, paddingTop: 5, color: 'white', fontSize: 25, fontWeight: '700'}}>{I18n.t('product detail').toUpperCase()}</Text>
+        </TouchableOpacity>
         <ScrollView>
           <View style={{ padding: 10 }}>
             {this.renderCard('Product Information', productDetail)}

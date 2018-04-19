@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, Image } from 'react-native';
+import { View, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 
 import styles from './Styles/ProductDetailScreen';
 import { Images } from './../Themes';
-import WebViewAutoHeight from '../../App/Components/WebViewAutoHeight';
 import { getCommissionStatusDetail } from '../Redux/CommissionRedux';
 
 const data = [
@@ -47,23 +46,22 @@ class CommissionDetailScreen extends Component {
   renderCard(cardTitle, rowData = {}) {
     return (
       <View>
-        <View style={styles.sectionHeaderContainer}>
-          <Text style={styles.sectionHeader}>{cardTitle.toUpperCase()}</Text>
-        </View>
         {this.renderRows(rowData)}
       </View>
     );
   }
   renderRows(rowData) {
     return (
-      data.map((item, index) => (<View key={index} style={styles.rowContainer}>
-        <View style={styles.rowLabelContainer}>
-          <Text style={styles.rowLabel}>{item.value}</Text>
+      data.map((item, index) => (
+        <View key={`${item}${index}`} style={styles.rowContainer}>
+          <View style={styles.rowLabelContainer}>
+            <Text style={styles.rowLabel}>{item.value}</Text>
+          </View>
+          <View style={styles.rowInfoContainer}>
+            <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
+          </View>
         </View>
-        <View style={styles.rowInfoContainer}>
-          <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
-        </View>
-      </View>))
+      ))
     );
   }
   render() {
@@ -71,6 +69,22 @@ class CommissionDetailScreen extends Component {
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
+        <TouchableOpacity
+          onPress={() => this.props.navigation.goBack(null)}
+          style={{
+            flexDirection: 'row',
+            paddingTop: 10,
+            paddingBottom: 10,
+            paddingLeft: 20,
+          }}
+        >
+          <Image source={Images.backButton} />
+          <Text style={{
+            paddingLeft: 30, paddingTop: 5, color: 'white', fontSize: 25, fontWeight: '700',
+          }}
+          >{I18n.t('commission detail').toUpperCase()}
+          </Text>
+        </TouchableOpacity>
         <ScrollView>
           <View style={{ padding: 20 }}>
             {this.renderCard(I18n.t('commission_information'), commissionDetail)}

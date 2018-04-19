@@ -60,7 +60,7 @@ export default class MessageDetailScreen extends Component {
         }}
         >
           <Image source={Images.backButton} />
-          <Text style={{ paddingLeft: 30, paddingTop: 10, color: 'white', frontSize: 50, fontWeight: '700'}}>{I18n.t('message detail').toUpperCase()}</Text>
+          <Text style={{ paddingLeft: 30, paddingTop: 5, color: 'white', fontSize: 25, fontWeight: '700'}}>{I18n.t('message detail').toUpperCase()}</Text>
         </TouchableOpacity>
         <ScrollView>
           <View style={{ padding: 10 }}>
