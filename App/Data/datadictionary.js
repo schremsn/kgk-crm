@@ -72,4 +72,60 @@ export default class DD {
     'name',
     'description',
   ]
+
+  static leadDetail = [
+    'contact_name',
+    'name',
+    'title_action',
+    'phone',
+    'partner_name',
+    'mobile',
+    'city',
+    'type',
+    'email_from',
+    'id',
+    'description',
+    'lost_reason',
+    'zip',
+    'street',
+    'street2',
+    'function',
+    'stage_id',
+    'tag_ids',
+    'probability',
+    'date_deadline',
+  ]
+
+  static customer = ['company_name', 'name', 'city', 'mobile', 'phone', 'id']
+
+  static customerDetail = [
+    'name',
+    'city',
+    'mobile',
+    'phone',
+    'id',
+    'email',
+    'comment',
+    'company_name',
+    'contact_address',
+    'is_company',
+    'street',
+    'street2',
+    'website',
+    'zip',
+    'state',
+  ]
+
+  static lead = [
+    'contact_name',
+    'name',
+    'title_action',
+    'phone',
+    'partner_name',
+    'city',
+    'type',
+    'email_from',
+    'id',
+    'date_deadline',
+  ]
 }
