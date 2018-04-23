@@ -794,7 +794,7 @@ export default class DataProvider {
       kwargs: {},
       model,
       method: 'retrieve_sales_dashboard',
-      args: [this.getUserId],
+      args: [this.getUserId()],
     };
 
     return new Promise((resolve, reject) => {
@@ -883,7 +883,7 @@ export default class DataProvider {
   getChannels(partnerid) {
     const params = {
       domain: [['channel_partner_ids', '=', partnerid]],
-      fields: ['name', 'id'],
+      fields: DD.mailChannel,
     };
 
     return new Promise((resolve, reject) => {
@@ -1041,6 +1041,35 @@ export default class DataProvider {
 
     return new Promise((resolve, reject) => {
       this.odoo.search_read('mail.channel', params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+
+  /**
+   * mark the message as read
+   * @param {number} id
+   */
+  markMessageRead(id) {
+    const model = 'mail.message';
+    const endpoint = '/web/dataset/call_kw';
+
+    const params = {
+      kwargs: {
+        context: this.context,
+      },
+      model,
+      method: 'set_message_done',
+      args: [id],
+    };
+
+    return new Promise((resolve, reject) => {
+      this.odoo.rpc_call(endpoint, params, (err, data) => {
         if (err) {
           reject(err);
         } else {
