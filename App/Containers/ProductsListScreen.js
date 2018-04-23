@@ -88,7 +88,21 @@ class ProductsListScreen extends Component {
         }
       >
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-
+        <TouchableOpacity
+          onPress={() => this.props.navigation.goBack(null)}
+          style={{
+            flexDirection: 'row',
+            paddingTop: 10,
+            paddingBottom: 10,
+          }}
+        >
+          <Image source={Images.backButton} />
+          <Text style={{
+            paddingLeft: 30, paddingTop: 5, color: 'white', fontSize: 25, fontWeight: '700',
+          }}
+          >{I18n.t('product list').toUpperCase()}
+          </Text>
+        </TouchableOpacity>
         {
           this.state.isLoading ? <View style={styles.progressBar}><ProgressBar /></View>
             : <ListView

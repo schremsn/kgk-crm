@@ -78,10 +78,11 @@ class WebViewAutoHeight extends Component {
         <WebView
           {...otherProps}
           source={{ html: codeInject(html) }}
-          scrollEnabled={false}
+          scrollEnabled
           style={[{ height: Math.max(realContentHeight, minHeight) }, style]}
           javaScriptEnabled
           onNavigationStateChange={(data) => {
+            console.log(data)
             this.handleNavigationChange(data);
           }}
         />

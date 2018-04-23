@@ -29,11 +29,6 @@ export default class MoreScreen extends Component {
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <View style={styles.sectionHeaderContainer}>
-          <RoundedButton onPress={this.toggleMenu}>
-            {I18n.t('logOut')}
-          </RoundedButton>
-        </View>
         <TouchableOpacity style={[styles.buttonBox, { bottom: 170 }]} onPress={() => this.props.navigation.navigate('ProductsListScreen')}>
           <Text style={styles.text}>
             {I18n.t('account')}
@@ -52,7 +47,7 @@ export default class MoreScreen extends Component {
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonBox} onPress={() => { this.toggleMenu(); }}>
           <Text style={styles.text}>
-            {I18n.t('menu')}
+            {I18n.t('logOut')}
           </Text>
           <View style={styles.button}>
             <Ionicons name="ios-clipboard-outline" size={25} color="white" />

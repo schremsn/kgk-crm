@@ -3,9 +3,11 @@ import { View, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import styles from './Styles/ProductDetailScreen';
-import { Images } from './../Themes';
-import WebViewAutoHeight from '../../App/Components/WebViewAutoHeight';
+import { Images, Metrics } from './../Themes';
 import { getProductDetail } from '../Redux/ProductRedux';
+import MyWebView from 'react-native-webview-autoheight';
+
+const customStyle = '<style>* {max-width: 100% } body {font-family: sans-serif;} h1 {color: red;}</style>';
 
 const data = [
   { name: 'id', value: 'Id' },
@@ -72,16 +74,21 @@ class ProductDetailScreen extends Component {
           }}
         >
           <Image source={Images.backButton} />
-          <Text style={{ paddingLeft: 30, paddingTop: 5, color: 'white', fontSize: 25, fontWeight: '700'}}>{I18n.t('product detail').toUpperCase()}</Text>
+          <Text style={{
+ paddingLeft: 30, paddingTop: 5, color: 'white', fontSize: 25, fontWeight: '700',
+}}
+          >{I18n.t('product detail').toUpperCase()}
+          </Text>
         </TouchableOpacity>
         <ScrollView>
           <View style={{ padding: 10 }}>
             {this.renderCard('Product Information', productDetail)}
           </View>
           <View style={{ padding: 20 }}>
-            <WebViewAutoHeight
-              source={{ html: `<body>${productDetail.information}</body>` }}
-              minHeight={800}
+            <MyWebView
+              source={{ html: customStyle + productDetail.information }}
+              startInLoadingState
+              width={Metrics.screenWidth - 40}
             />
           </View>
         </ScrollView>

@@ -7,6 +7,7 @@ import styles from './Styles/ProductsListScreenStyle';
 import { Images } from './../Themes';
 import ProgressBar from '../Components/ProgressBar';
 import { getCommissionStatus } from '../Redux/CommissionRedux';
+import colors from "../Themes/Colors";
 
 class CommissionListScreen extends Component {
   constructor() {
@@ -70,7 +71,7 @@ class CommissionListScreen extends Component {
           <RefreshControl
             refreshing={this.state.isRefreshing}
             onRefresh={this.onRefresh}
-            colors={['#EA0000']}
+            colors={[colors.fire]}
             tintColor="white"
             title={`${I18n.t('loading')}...`}
             titleColor="white"
@@ -94,7 +95,7 @@ class CommissionListScreen extends Component {
                 <RefreshControl
                   refreshing={this.state.isRefreshing}
                   onRefresh={this.onRefresh}
-                  colors={['#EA0000']}
+
                   tintColor="white"
                   title={`${I18n.t('loading')}...`}
                   titleColor="white"

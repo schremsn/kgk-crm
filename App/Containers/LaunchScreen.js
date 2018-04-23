@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { RefreshControl, Text, Image, View, TouchableOpacity, ListView, BackAndroid, Alert } from 'react-native';
+import { RefreshControl, Text, Image, View, TouchableOpacity, ListView, BackAndroid, Alert, BackHandler } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import numeral from 'numeral';
@@ -36,25 +36,28 @@ class LaunchScreen extends Component {
     this.getCommissionList();
   }
   componentDidMount() {
-    BackAndroid.addEventListener(
-      'change',
-      this.handleBackAndroid
-    );
+    BackHandler.addEventListener('backPress', this.handleBackAndroid);
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('backPress');
   }
   handleBackAndroid(t) {
     Alert.alert(
       'Alert',
       'Do you want to quit the app?',
       [
-        { text: 'Cancel',
+        {
+          text: 'Cancel',
           onPress: () => true,
-          style: 'cancel' },
-        { text: 'OK',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
           onPress: () => {
             BackAndroid.exitApp();
-          }
-        }
-      ]
+          },
+        },
+      ],
     );
     return true;
   }
@@ -86,7 +89,7 @@ class LaunchScreen extends Component {
   }
   renderCommission(commission) {
     return (
-      <TouchableOpacity onPress={() => { this.props.navigation.navigate('ProductsListScreen'); }} style={styles.sectionHeaderContainer}>
+      <TouchableOpacity style={styles.sectionHeaderContainer}>
         <Text style={styles.sectionHeader}>{commission.display_name}</Text>
         <Text style={styles.sectionText}>{I18n.t('id')}: {commission.id}</Text>
         <Text style={styles.sectionText}>{I18n.t('end_date')}: {commission.end_date}</Text>
@@ -100,7 +103,7 @@ class LaunchScreen extends Component {
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         {
           this.state.isLoading ? <View style={styles.progressBar}><ProgressBar /></View>
-            :<ListView
+            : <ListView
               style={styles.container}
               enableEmptySections
               onEndReached={() => this.getCommissionListNextPage()}
