@@ -2,28 +2,18 @@ import React, { Component } from 'react';
 import { View, ScrollView, Text, Image, TouchableOpacity, Picker } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
-import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
+import moment from 'moment/moment';
 
 import styles from './Styles/ProductDetailScreen';
 import { Images, Metrics } from './../Themes';
 import { getCommissionStatusDetail } from '../Redux/CommissionRedux';
-import moment from "moment/moment";
 
 const data = [
   { name: 'id', value: I18n.t('id') },
-  { name: 'identifier', value: I18n.t('identifier') },
-  { name: 'partner', value: I18n.t('partner') },
-  { name: 'customer', value: I18n.t('customer') },
-  { name: 'product', value: I18n.t('product') },
-  { name: 'product_category', value: I18n.t('product_category') },
-  { name: 'issue', value: I18n.t('issue') },
-  { name: 'create_date', value: I18n.t('create_date') },
-  { name: 'phone', value: I18n.t('phone') },
-  { name: 'mobile', value: I18n.t('mobile') },
+  { name: 'status_date', value: I18n.t('status_date') },
+  { name: 'status', value: I18n.t('status') },
+  { name: 'changed_by', value: I18n.t('changed_by') },
   { name: 'notes', value: I18n.t('notes') },
-  { name: 'sales_agent', value: I18n.t('sales_agent') },
-  { name: 'amount', value: I18n.t('amount') },
-  { name: 'mobile', value: I18n.t('mobile') },
 ];
 class CommissionDetailScreen extends Component {
   constructor(props) {
@@ -32,7 +22,6 @@ class CommissionDetailScreen extends Component {
       commissionDetail: props.navigation.state.params.commissionDetail,
       list: props.navigation.state.params.list,
       commissionMore: {},
-      language: 'java',
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
@@ -71,8 +60,8 @@ class CommissionDetailScreen extends Component {
     );
   }
   render() {
-    const { commissionDetail, list } = this.state;
-    const listAfter = list.filter( item => item.id > (commissionDetail.id - 6) && item.id !== commissionDetail.id && item.id < (commissionDetail.id + 5) )
+    const { commissionDetail, list, commissionMore } = this.state;
+    const listAfter = list.filter(item => item.id > (commissionDetail.id - 6) && item.id !== commissionDetail.id && item.id < (commissionDetail.id + 5));
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
@@ -92,25 +81,10 @@ class CommissionDetailScreen extends Component {
           >{I18n.t('commission detail').toUpperCase()}
           </Text>
         </TouchableOpacity>
-        <ScrollView>
-          <View style={{ padding: 10 }}>
-            {this.renderCard(I18n.t('commission_information'), commissionDetail)}
-            <View style={{ padding: 10 }}>
-              <View style={{backgroundColor: 'white'}}>
-                <Picker
-                  selectedValue={this.state.language}
-                  style={{ height: 50, width: (Metrics.screenWidth-40) }}
-                  mode="dropdown"
-                  onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}
-                >
-                  <Picker.Item label="Identifier" value="identifier" />
-                  <Picker.Item label="Partner" value="partner" />
-                  <Picker.Item label="Customer" value="customer" />
-                  <Picker.Item label="Update date" value="updateDate" />
-                  <Picker.Item label="Issue" value="issue" />
-                </Picker>
-              </View>
-
+        <View style={{ padding: 10 }}>
+          {this.renderCard(I18n.t('commission_information'), commissionMore)}
+        </View>
+        <ScrollView style={{ padding: 20 }}>
               {
                 listAfter.map(item => (
                   <View key={item.id} style={styles.sectionHeaderContainer}>
@@ -123,9 +97,6 @@ class CommissionDetailScreen extends Component {
                   </View>
                 ))
               }
-            </View>
-          </View>
-
         </ScrollView>
       </View>
     );

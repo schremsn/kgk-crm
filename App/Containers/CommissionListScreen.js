@@ -58,7 +58,7 @@ class CommissionListScreen extends Component {
         <Text style={styles.sectionText}>{I18n.t('identifier')}: {item.identifier}</Text>
         <Text style={styles.sectionText}>{I18n.t('partner')}: {item.partner[1]}</Text>
         <Text style={styles.sectionText}>{I18n.t('customer')}: {item.customer}</Text>
-        <Text style={styles.sectionText}>{I18n.t('update_date')}: {moment(item.update_date).format('MM-DD-YYYY')}</Text>
+        <Text style={styles.sectionText}>{I18n.t('update_date')}: {item.update_date && moment(item.update_date).format('MM-DD-YYYY')}</Text>
         <Text style={styles.sectionText}>{I18n.t('issue')}: {item.issue}</Text>
       </TouchableOpacity>
     );
