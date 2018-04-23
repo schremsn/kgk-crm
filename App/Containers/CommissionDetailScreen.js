@@ -1,26 +1,35 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, Image, TouchableOpacity, Picker } from 'react-native';
+import { View, ScrollView, Text, Image } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
-import moment from 'moment/moment';
+import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 
 import styles from './Styles/ProductDetailScreen';
-import { Images, Metrics } from './../Themes';
+import { Images } from './../Themes';
+import WebViewAutoHeight from '../../App/Components/WebViewAutoHeight';
 import { getCommissionStatusDetail } from '../Redux/CommissionRedux';
 
 const data = [
   { name: 'id', value: I18n.t('id') },
-  { name: 'status_date', value: I18n.t('status_date') },
-  { name: 'status', value: I18n.t('status') },
-  { name: 'changed_by', value: I18n.t('changed_by') },
+  { name: 'identifier', value: I18n.t('identifier') },
+  { name: 'partner', value: I18n.t('partner') },
+  { name: 'customer', value: I18n.t('customer') },
+  { name: 'product', value: I18n.t('product') },
+  { name: 'product_category', value: I18n.t('product_category') },
+  { name: 'issue', value: I18n.t('issue') },
+  { name: 'create_date', value: I18n.t('create_date') },
+  { name: 'phone', value: I18n.t('phone') },
+  { name: 'mobile', value: I18n.t('mobile') },
   { name: 'notes', value: I18n.t('notes') },
+  { name: 'sales_agent', value: I18n.t('sales_agent') },
+  { name: 'amount', value: I18n.t('amount') },
+  { name: 'mobile', value: I18n.t('mobile') },
 ];
 class CommissionDetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       commissionDetail: props.navigation.state.params.commissionDetail,
-      list: props.navigation.state.params.list,
       commissionMore: {},
     };
     this.renderCard = this.renderCard.bind(this);
@@ -38,65 +47,53 @@ class CommissionDetailScreen extends Component {
   renderCard(cardTitle, rowData = {}) {
     return (
       <View>
+        <View style={styles.sectionHeaderContainer}>
+          <Text style={styles.sectionHeader}>{cardTitle.toUpperCase()}</Text>
+        </View>
         {this.renderRows(rowData)}
       </View>
     );
   }
   renderRows(rowData) {
     return (
-      data.map((item, index) => (
-        <View key={`${item}${index}`} style={styles.rowContainer}>
-          <View style={styles.rowLabelContainer}>
-            <Text style={styles.rowLabel}>{item.value}</Text>
-          </View>
-          <View style={styles.rowInfoContainer}>
-            {
-              item.name === 'create_date' ? <Text style={styles.rowInfo}>{moment(rowData[item.name]).format('MM-DD-YYYY')}</Text>
-              : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
-            }
-          </View>
+      data.map((item, index) => (<View key={index} style={styles.rowContainer}>
+        <View style={styles.rowLabelContainer}>
+          <Text style={styles.rowLabel}>{item.value}</Text>
         </View>
-      ))
+        <View style={styles.rowInfoContainer}>
+          <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
+        </View>
+      </View>))
     );
   }
   render() {
-    const { commissionDetail, list, commissionMore } = this.state;
-    const listAfter = list.filter(item => item.id > (commissionDetail.id - 6) && item.id !== commissionDetail.id && item.id < (commissionDetail.id + 5));
+    const { commissionDetail, commissionMore } = this.state;
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <TouchableOpacity
-          onPress={() => this.props.navigation.goBack(null)}
-          style={{
-            flexDirection: 'row',
-            paddingTop: 10,
-            paddingBottom: 10,
-            paddingLeft: 20,
-          }}
-        >
-          <Image source={Images.backButton} />
-          <Text style={{
-            paddingLeft: 30, paddingTop: 5, color: 'white', fontSize: 25, fontWeight: '700',
-          }}
-          >{I18n.t('commission detail').toUpperCase()}
-          </Text>
-        </TouchableOpacity>
-        <View style={{ padding: 10 }}>
-          {this.renderCard(I18n.t('commission_information'), commissionMore)}
-        </View>
-        <ScrollView style={{ padding: 20 }}>
-              {
-                listAfter.map(item => (
-                  <View key={item.id} style={styles.sectionHeaderContainer}>
-                    <Text style={styles.sectionHeader}>{item.id}</Text>
-                    <Text style={styles.sectionText}>{I18n.t('identifier')}: {item.identifier}</Text>
-                    <Text style={styles.sectionText}>{I18n.t('partner')}: {item.partner[1]}</Text>
-                    <Text style={styles.sectionText}>{I18n.t('customer')}: {item.customer}</Text>
-                    <Text style={styles.sectionText}>{I18n.t('update_date')}: {item.update_date}</Text>
-                    <Text style={styles.sectionText}>{I18n.t('issue')}: {item.issue}</Text>
-                  </View>
-                ))
-              }
+        <ScrollView>
+          <View style={{ padding: 20 }}>
+            {this.renderCard(I18n.t('commission_information'), commissionDetail)}
+            <ScrollableTabView
+              style={{ height: 150, padding: 10 }}
+              initialPage={1}
+              renderTabBar={() => <DefaultTabBar backgroundColor="rgba(255, 255, 255, 0.7)" />}
+            >
+              <View style={styles.cardStyle} tabLabel={I18n.t('status_date')}>
+                <Text>{commissionMore.status_date}</Text>
+              </View>
+              <View style={styles.cardStyle} tabLabel={I18n.t('status')}>
+                <Text>{commissionMore.status}</Text>
+              </View>
+              <View style={styles.cardStyle} tabLabel={I18n.t('changed_by')}>
+                <Text> {commissionMore.changed_by}</Text>
+              </View>
+              <View style={styles.cardStyle} tabLabel={I18n.t('notes')}>
+                <Text>{commissionMore.notes}</Text>
+              </View>
+            </ScrollableTabView>
+          </View>
+
         </ScrollView>
       </View>
     );

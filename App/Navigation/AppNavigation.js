@@ -6,9 +6,9 @@ import I18n from 'react-native-i18n';
 import { Colors } from '../Themes';
 
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen';
-import CommissionDetailScreen from '../Containers/CommissionDetailScreen';
-import CommissionCompanyScreen from '../Containers/CommissionCompanyListScreen';
-import CommissionListScreen from '../Containers/CommissionListScreen';
+import CommissionDetailScreen from '../Containers/CommissionStatusDetailScreen';
+import CommissionCompanyScreen from '../Containers/CommissionListScreen';
+import CommissionListScreen from '../Containers/CommissionStatusListScreen';
 import LoginScreen from '../Containers/LoginScreen';
 import LaunchScreen from '../Containers/LaunchScreen';
 import ProductsListScreen from '../Containers/ProductsListScreen';
