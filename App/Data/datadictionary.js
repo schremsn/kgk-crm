@@ -128,4 +128,29 @@ export default class DD {
     'id',
     'date_deadline',
   ]
+
+  static dashboard = {
+    meeting: {
+      today: 0,
+      next_7_days: 0,
+    },
+    activity: {
+      today: 0,
+      overdue: 0,
+      next_7_days: 0,
+    },
+    closing: {
+      today: 0,
+      overdue: 0,
+      next_7_days: 0,
+    },
+    done: {
+      this_month: 0,
+      last_month: 0,
+    },
+    won: {
+      this_month: 0,
+      last_month: 0,
+    },
+  }
 }
