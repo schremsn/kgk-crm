@@ -1,6 +1,5 @@
 import Odoo from './odoo';
 import Config from './config';
-import ReferenceData from '../Data/referencedata';
 import DD from '../Data/datadictionary';
 
 /**
@@ -603,6 +602,7 @@ export default class DataProvider {
    * @param {any} activity
    */
   logActivity(activity) {
+    throw new Error('Not implemented');
     if (activity === undefined) {
       throw new Error('Wrong argument');
     }
@@ -630,9 +630,8 @@ export default class DataProvider {
       });
     });
     */
-
+    /*
     const type = activity.next_activity_id;
-    const temp = ReferenceData.getInstance().getActivityTypes();
     let subtype = 0;
     temp.forEach((act) => {
       if (act.id === type) {
@@ -679,6 +678,7 @@ export default class DataProvider {
         console.log(err);
         return false;
       });
+    */
   }
 
   /**
