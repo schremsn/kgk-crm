@@ -21,7 +21,6 @@ const data = [
   { name: 'issue', value: I18n.t('issue') },
   { name: 'create_date', value: I18n.t('create_date') },
   { name: 'phone', value: I18n.t('phone') },
-  { name: 'mobile', value: I18n.t('mobile') },
   { name: 'notes', value: I18n.t('notes') },
   { name: 'sales_agent', value: I18n.t('sales_agent') },
   { name: 'amount', value: I18n.t('amount') },
@@ -32,9 +31,7 @@ class CommissionStatusDetailScreen extends Component {
     super(props);
     this.state = {
       commissionDetail: props.navigation.state.params.commissionDetail,
-      list: props.navigation.state.params.list,
-      commissionMore: [],
-      isLoading: true
+      isLoading: true,
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
@@ -47,9 +44,8 @@ class CommissionStatusDetailScreen extends Component {
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
       const dataSource = ds.cloneWithRows(commissionMore);
       this.setState({
-        commissionMore,
         dataSource,
-        isLoading: false
+        isLoading: false,
       });
     });
   }
