@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Text, Image, TouchableOpacity, Linking } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import styles from './Styles/ProductDetailScreen';
@@ -86,9 +86,16 @@ class ProductDetailScreen extends Component {
           </View>
           <View style={{ padding: 20 }}>
             <MyWebView
+              ref={(ref) => { this.webview = ref; }}
               source={{ html: customStyle + productDetail.information }}
               startInLoadingState
               width={Metrics.screenWidth - 40}
+              onNavigationStateChange={(event) => {
+                if (event.url.slice(0, 14) !== 'data:text/html') {
+                  this.webview.stopLoading();
+                  Linking.openURL(event.url);
+                }
+              }}
             />
           </View>
         </ScrollView>
