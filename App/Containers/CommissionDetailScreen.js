@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Text, Image, TouchableOpacity, Picker } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 
 import styles from './Styles/ProductDetailScreen';
-import { Images } from './../Themes';
+import { Images, Metrics } from './../Themes';
 import { getCommissionStatusDetail } from '../Redux/CommissionRedux';
+import moment from "moment/moment";
 
 const data = [
   { name: 'id', value: I18n.t('id') },
@@ -29,7 +30,9 @@ class CommissionDetailScreen extends Component {
     super(props);
     this.state = {
       commissionDetail: props.navigation.state.params.commissionDetail,
+      list: props.navigation.state.params.list,
       commissionMore: {},
+      language: 'java',
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
@@ -58,14 +61,18 @@ class CommissionDetailScreen extends Component {
             <Text style={styles.rowLabel}>{item.value}</Text>
           </View>
           <View style={styles.rowInfoContainer}>
-            <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
+            {
+              item.name === 'create_date' ? <Text style={styles.rowInfo}>{moment(rowData[item.name]).format('MM-DD-YYYY')}</Text>
+              : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
+            }
           </View>
         </View>
       ))
     );
   }
   render() {
-    const { commissionDetail, commissionMore } = this.state;
+    const { commissionDetail, list } = this.state;
+    const listAfter = list.filter( item => item.id > (commissionDetail.id - 6) && item.id !== commissionDetail.id && item.id < (commissionDetail.id + 5) )
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
@@ -86,26 +93,37 @@ class CommissionDetailScreen extends Component {
           </Text>
         </TouchableOpacity>
         <ScrollView>
-          <View style={{ padding: 20 }}>
+          <View style={{ padding: 10 }}>
             {this.renderCard(I18n.t('commission_information'), commissionDetail)}
-            <ScrollableTabView
-              style={{ height: 150, padding: 10 }}
-              initialPage={1}
-              renderTabBar={() => <DefaultTabBar backgroundColor="rgba(255, 255, 255, 0.7)" />}
-            >
-              <View style={styles.cardStyle} tabLabel={I18n.t('status_date')}>
-                <Text>{commissionMore.status_date}</Text>
+            <View style={{ padding: 10 }}>
+              <View style={{backgroundColor: 'white'}}>
+                <Picker
+                  selectedValue={this.state.language}
+                  style={{ height: 50, width: (Metrics.screenWidth-40) }}
+                  mode="dropdown"
+                  onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}
+                >
+                  <Picker.Item label="Identifier" value="identifier" />
+                  <Picker.Item label="Partner" value="partner" />
+                  <Picker.Item label="Customer" value="customer" />
+                  <Picker.Item label="Update date" value="updateDate" />
+                  <Picker.Item label="Issue" value="issue" />
+                </Picker>
               </View>
-              <View style={styles.cardStyle} tabLabel={I18n.t('status')}>
-                <Text>{commissionMore.status}</Text>
-              </View>
-              <View style={styles.cardStyle} tabLabel={I18n.t('changed_by')}>
-                <Text> {commissionMore.changed_by}</Text>
-              </View>
-              <View style={styles.cardStyle} tabLabel={I18n.t('notes')}>
-                <Text>{commissionMore.notes}</Text>
-              </View>
-            </ScrollableTabView>
+
+              {
+                listAfter.map(item => (
+                  <View key={item.id} style={styles.sectionHeaderContainer}>
+                    <Text style={styles.sectionHeader}>{item.id}</Text>
+                    <Text style={styles.sectionText}>{I18n.t('identifier')}: {item.identifier}</Text>
+                    <Text style={styles.sectionText}>{I18n.t('partner')}: {item.partner[1]}</Text>
+                    <Text style={styles.sectionText}>{I18n.t('customer')}: {item.customer}</Text>
+                    <Text style={styles.sectionText}>{I18n.t('update_date')}: {item.update_date}</Text>
+                    <Text style={styles.sectionText}>{I18n.t('issue')}: {item.issue}</Text>
+                  </View>
+                ))
+              }
+            </View>
           </View>
 
         </ScrollView>

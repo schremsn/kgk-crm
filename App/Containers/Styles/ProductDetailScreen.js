@@ -4,10 +4,20 @@ import { Colors, Metrics, Fonts, ApplicationStyles } from '../../Themes/';
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   sectionHeaderContainer: {
-    ...ApplicationStyles.darkLabelContainer,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: Metrics.baseMargin,
+    marginVertical: 20,
+  },
+  sectionText: {
+    ...Fonts.base,
+    color: Colors.text,
+    fontSize: 14,
+    lineHeight: Metrics.doubleBaseMargin + 5,
   },
   sectionHeader: {
-    ...ApplicationStyles.darkLabel,
+    ...Fonts.style.h5,
+    color: Colors.fire,
   },
   cardTitle: {
     alignSelf: 'center',

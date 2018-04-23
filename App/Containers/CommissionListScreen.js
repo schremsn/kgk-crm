@@ -8,7 +8,7 @@ import { Images } from './../Themes';
 import ProgressBar from '../Components/ProgressBar';
 import { getCommissionStatus } from '../Redux/CommissionRedux';
 import colors from "../Themes/Colors";
-
+import moment from 'moment'
 class CommissionListScreen extends Component {
   constructor() {
     super();
@@ -53,12 +53,12 @@ class CommissionListScreen extends Component {
   }
   renderCommission(item) {
     return (
-      <TouchableOpacity onPress={() => { this.props.navigation.navigate('CommissionDetailScreen', { commissionDetail: item }); }} style={styles.sectionHeaderContainer}>
+      <TouchableOpacity onPress={() => { this.props.navigation.navigate('CommissionDetailScreen', { commissionDetail: item, list: this.state.list }); }} style={styles.sectionHeaderContainer}>
         <Text style={styles.sectionHeader}>{item.id}</Text>
         <Text style={styles.sectionText}>{I18n.t('identifier')}: {item.identifier}</Text>
         <Text style={styles.sectionText}>{I18n.t('partner')}: {item.partner[1]}</Text>
         <Text style={styles.sectionText}>{I18n.t('customer')}: {item.customer}</Text>
-        <Text style={styles.sectionText}>{I18n.t('update_date')}: {item.update_date}</Text>
+        <Text style={styles.sectionText}>{I18n.t('update_date')}: {moment(item.update_date).format('MM-DD-YYYY')}</Text>
         <Text style={styles.sectionText}>{I18n.t('issue')}: {item.issue}</Text>
       </TouchableOpacity>
     );
