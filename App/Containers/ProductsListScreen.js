@@ -1,22 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, Button } from 'react-native';
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, ScrollView } from 'react-native';
 import I18n from 'react-native-i18n';
-import styles from './Styles/ProductsListScreenStyle';
-import { Images } from './../Themes';
-import ProgressBar from '../Components/ProgressBar';
+import styles from './Styles/ProductDetailScreen';
+import { Images, Colors } from './../Themes';
 import { getProducts } from '../Redux/ProductRedux';
+import ProgressBar from '../Components/ProgressBar';
+import Header from '../Components/Header';
 
 class ProductsListScreen extends Component {
-  static navigationOptions = {
-    title: I18n.t('product list'),
-  };
-  static propTypes = {
-    navigation: PropTypes.object.isRequired,
-    getProducts: PropTypes.func.isRequired,
-  }
-
   constructor() {
     super();
     this.state = {
@@ -46,8 +39,7 @@ class ProductsListScreen extends Component {
   getProductListNextPage() {
     this.props.getProducts(this.props.offset, (list) => {
       const data = this.state.list;
-      const newData = list;
-      newData.map(item => data.push(item));
+      list.map(item => data.push(item));
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(data),
       });
@@ -79,58 +71,57 @@ class ProductsListScreen extends Component {
           <RefreshControl
             refreshing={this.state.isRefreshing}
             onRefresh={this.onRefresh}
-            colors={['#EA0000']}
-            tintColor="white"
+            colors={[Colors.fire]}
+            tintColor={Colors.snow}
             title={`${I18n.t('loading')}...`}
-            titleColor="white"
-            progressBackgroundColor="white"
+            titleColor={Colors.snow}
+            progressBackgroundColor={Colors.snow}
           />
         }
       >
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <TouchableOpacity
-          onPress={() => this.props.navigation.goBack(null)}
-          style={{
-            flexDirection: 'row',
-            paddingTop: 10,
-            paddingBottom: 10,
-          }}
-        >
-          <Image source={Images.backButton} />
-          <Text style={{
-            paddingLeft: 30, paddingTop: 5, color: 'white', fontSize: 25, fontWeight: '700',
-          }}
-          >{I18n.t('product list').toUpperCase()}
-          </Text>
-        </TouchableOpacity>
-        {
-          this.state.isLoading ? <View style={styles.progressBar}><ProgressBar /></View>
-            : <ListView
-              style={styles.container}
-              enableEmptySections
-              onEndReached={() => this.getProductListNextPage()}
-              onEndReachedThreshold={1200}
-              dataSource={this.state.dataSource}
-              renderRow={item => this.renderProduct(item)}
-              renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-              // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.isRefreshing}
-                  onRefresh={this.onRefresh}
-                  colors={['#EA0000']}
-                  tintColor="white"
-                  title={`${I18n.t('loading')}...`}
-                  titleColor="white"
-                  progressBackgroundColor="white"
-                />
-              }
-            />
-        }
+        <Header title="product list" onPress={() => this.props.navigation.goBack(null)} />
+
+        <ScrollView style={{ padding: 20 }}>
+          {
+            this.state.isLoading ? <View style={styles.progressBar}><ProgressBar /></View>
+              : <ListView
+                style={styles.container}
+                enableEmptySections
+                onEndReached={() => this.getProductListNextPage()}
+                onEndReachedThreshold={1200}
+                dataSource={this.state.dataSource}
+                renderRow={item => this.renderProduct(item)}
+                renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
+                // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={this.state.isRefreshing}
+                    onRefresh={this.onRefresh}
+                    colors={[Colors.fire]}
+                    tintColor={Colors.snow}
+                    title={`${I18n.t('loading')}...`}
+                    titleColor={Colors.snow}
+                    progressBackgroundColor={Colors.snow}
+                  />
+                }
+              />
+          }
+        </ScrollView>
       </View>
     );
   }
 }
+
+ProductsListScreen.navigationOptions = {
+  title: I18n.t('product list'),
+};
+ProductsListScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  getProducts: PropTypes.func.isRequired,
+  offset: PropTypes.number.isRequired,
+};
+
 const mapStateToProps = state => ({
   offset: state.product.offset,
 });

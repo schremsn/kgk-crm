@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
 import I18n from 'react-native-i18n';
+import moment from 'moment';
+
 import styles from './Styles/ProductsListScreenStyle';
-import { Images } from './../Themes';
+import { Images, Colors } from './../Themes';
 import ProgressBar from '../Components/ProgressBar';
 import { getCommissionStatus } from '../Redux/CommissionRedux';
-import colors from "../Themes/Colors";
-import moment from 'moment'
+
 class CommissionStatusListScreen extends Component {
   constructor() {
     super();
@@ -35,13 +36,14 @@ class CommissionStatusListScreen extends Component {
         isLoading: false,
       });
     });
-    if (isRefreshed && this.setState({ isRefreshing: false }));
+    if (isRefreshed) {
+      this.setState({ isRefreshing: false });
+    }
   }
   getCommissionStatusListNextPage() {
     this.props.getCommissionStatus(0, (list) => {
       const data = this.state.list;
-      const newData = list;
-      newData.map(item => data.push(item));
+      list.map(item => data.push(item));
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(data),
       });
@@ -71,11 +73,11 @@ class CommissionStatusListScreen extends Component {
           <RefreshControl
             refreshing={this.state.isRefreshing}
             onRefresh={this.onRefresh}
-            colors={[colors.fire]}
-            tintColor="white"
+            colors={[Colors.fire]}
+            tintColor={Colors.snow}
             title={`${I18n.t('loading')}...`}
-            titleColor="white"
-            progressBackgroundColor="white"
+            titleColor={Colors.snow}
+            progressBackgroundColor={Colors.snow}
           />
         }
       >
@@ -95,11 +97,11 @@ class CommissionStatusListScreen extends Component {
                 <RefreshControl
                   refreshing={this.state.isRefreshing}
                   onRefresh={this.onRefresh}
-
-                  tintColor="white"
+                  colors={[Colors.fire]}
+                  tintColor={Colors.snow}
                   title={`${I18n.t('loading')}...`}
-                  titleColor="white"
-                  progressBackgroundColor="white"
+                  titleColor={Colors.snow}
+                  progressBackgroundColor={Colors.snow}
                 />
               }
             />

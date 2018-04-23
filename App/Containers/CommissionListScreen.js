@@ -8,7 +8,7 @@ import numeral from 'numeral';
 import ProgressBar from '../Components/ProgressBar';
 
 import styles from './Styles/ProductsListScreenStyle';
-import { Images } from '../Themes';
+import { Images, Colors } from '../Themes';
 
 import { getCommissionSummary } from '../Redux/CommissionRedux';
 
@@ -72,11 +72,24 @@ class CommissionListScreen extends Component {
   }
   render() {
     return (
-      <View style={[styles.container, styles.mainContainer]}>
+      <View
+        style={[styles.container, styles.mainContainer]}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.isRefreshing}
+            onRefresh={this.onRefresh}
+            colors={[Colors.fire]}
+            tintColor={Colors.snow}
+            title={`${I18n.t('loading')}...`}
+            titleColor={Colors.snow}
+            progressBackgroundColor={Colors.snow}
+          />
+            }
+      >
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         {
           this.state.isLoading ? <View style={styles.progressBar}><ProgressBar /></View>
-            :<ListView
+            : <ListView
               style={styles.container}
               enableEmptySections
               onEndReached={() => this.getCommissionListNextPage()}
@@ -89,11 +102,11 @@ class CommissionListScreen extends Component {
                 <RefreshControl
                   refreshing={this.state.isRefreshing}
                   onRefresh={this.onRefresh}
-                  colors={['#EA0000']}
+                  colors={[Colors.fire]}
                   tintColor="white"
                   title={`${I18n.t('loading')}...`}
-                  titleColor="white"
-                  progressBackgroundColor="white"
+                  titleColor={Colors.snow}
+                  progressBackgroundColor={Colors.snow}
                 />
               }
             />

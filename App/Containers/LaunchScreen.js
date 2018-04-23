@@ -54,7 +54,7 @@ class LaunchScreen extends Component {
         {
           text: 'OK',
           onPress: () => {
-            BackAndroid.exitApp();
+            BackHandler.exitApp();
           },
         },
       ],

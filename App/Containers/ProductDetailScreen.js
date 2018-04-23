@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, Image, TouchableOpacity, Linking } from 'react-native';
+import PropTypes from 'prop-types';
+
+import { View, ScrollView, Text, Image, Linking } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
+import MyWebView from 'react-native-webview-autoheight';
 import styles from './Styles/ProductDetailScreen';
 import { Images, Metrics } from './../Themes';
 import { getProductDetail } from '../Redux/ProductRedux';
-import MyWebView from 'react-native-webview-autoheight';
+import Header from '../Components/Header';
 
 const customStyle = '<style>* {max-width: 100% } body {font-family: sans-serif;} h1 {color: red;}</style>';
 
@@ -24,11 +27,8 @@ class ProductDetailScreen extends Component {
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
   }
-  static navigationOptions = {
-    title: I18n.t('product detail'),
-  };
   componentWillMount() {
-    const productId = this.props.navigation.state.params.productId;
+    const { productId } = this.props.navigation.state.params;
     this.props.getProductDetail(productId, (productDetail) => {
       this.setState({ productDetail });
     });
@@ -36,9 +36,6 @@ class ProductDetailScreen extends Component {
   renderCard(cardTitle, rowData) {
     return (
       <View>
-        <View style={styles.sectionHeaderContainer}>
-          <Text style={styles.sectionHeader}>{cardTitle.toUpperCase()}</Text>
-        </View>
         {this.renderRows(rowData)}
       </View>
     );
@@ -64,22 +61,7 @@ class ProductDetailScreen extends Component {
     return (
       <View style={[styles.container, styles.mainContainer]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <TouchableOpacity
-          onPress={() => this.props.navigation.goBack(null)}
-          style={{
-            flexDirection: 'row',
-            paddingTop: 10,
-            paddingBottom: 10,
-            paddingLeft: 20,
-          }}
-        >
-          <Image source={Images.backButton} />
-          <Text style={{
- paddingLeft: 30, paddingTop: 5, color: 'white', fontSize: 25, fontWeight: '700',
-}}
-          >{I18n.t('product detail').toUpperCase()}
-          </Text>
-        </TouchableOpacity>
+        <Header title="product detail" onPress={() => this.props.navigation.goBack(null)} />
         <ScrollView>
           <View style={{ padding: 10 }}>
             {this.renderCard('Product Information', productDetail)}
@@ -103,6 +85,14 @@ class ProductDetailScreen extends Component {
     );
   }
 }
+
+ProductDetailScreen.navigationOptions = {
+  title: I18n.t('product detail'),
+};
+ProductDetailScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  getProductDetail: PropTypes.func.isRequired,
+};
 
 const mapDispatchToProps = dispatch => ({
   getProductDetail: (productId, cb) => { dispatch(getProductDetail(productId, cb)); },

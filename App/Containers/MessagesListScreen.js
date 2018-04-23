@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
 import I18n from 'react-native-i18n';
 import ProgressBar from '../Components/ProgressBar';
 import { getMessages } from '../Redux/MessageRedux';
 import styles from './Styles/ProductsListScreenStyle';
-import { Images, Metrics } from './../Themes';
+import { Images, Metrics, Colors } from './../Themes';
 
 class MessagesListScreen extends Component {
   constructor() {
@@ -74,17 +74,18 @@ class MessagesListScreen extends Component {
           <RefreshControl
             refreshing={this.state.isRefreshing}
             onRefresh={this.onRefresh}
-            colors={['#EA0000']}
-            tintColor="white"
+            colors={[Colors.fire]}
+            tintColor={Colors.snow}
             title={`${I18n.t('loading')}...`}
-            titleColor="white"
-            progressBackgroundColor="white"
+            titleColor={Colors.snow}
+            progressBackgroundColor={Colors.snow}
           />
         }
       >
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         {
-          this.state.isLoading ? <View style={[styles.progressBar, { height: Metrics.screenHeight }]}><ProgressBar /></View>
+          this.state.isLoading
+            ? <View style={[styles.progressBar, { height: Metrics.screenHeight }]}><ProgressBar /></View>
             : <ListView
               style={styles.container}
               enableEmptySections
@@ -98,11 +99,11 @@ class MessagesListScreen extends Component {
                 <RefreshControl
                   refreshing={this.state.isRefreshing}
                   onRefresh={this.onRefresh}
-                  colors={['#EA0000']}
-                  tintColor="white"
+                  colors={[Colors.fire]}
+                  tintColor={Colors.snow}
                   title={`${I18n.t('loading')}...`}
-                  titleColor="white"
-                  progressBackgroundColor="white"
+                  titleColor={Colors.snow}
+                  progressBackgroundColor={Colors.snow}
                 />
               }
             />
