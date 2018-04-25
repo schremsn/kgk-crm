@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import moment from 'moment/moment';
 import ProgressBar from '../Components/ProgressBar';
 
-import styles from './Styles/ProductDetailScreen';
-import { Images, Colors } from './../Themes';
+import styles from './Styles/ContainerStyles';
+import { Images, Metrics } from './../Themes';
 import { getCommissionStatusDetail } from '../Redux/CommissionRedux';
 import Header from '../Components/Header';
 
@@ -32,13 +32,19 @@ class CommissionStatusDetailScreen extends Component {
     this.state = {
       commissionDetail: props.navigation.state.params.commissionDetail,
       isLoading: true,
+      isRefreshing: false
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
-    this.renderProduct = this.renderProduct.bind(this);
+    this.renderCommissionStatus = this.renderCommissionStatus.bind(this);
+    this.onRefresh = this.onRefresh.bind(this);
+    this.getCommissionStatusDetail = this.getCommissionStatusDetail.bind(this);
   }
 
   componentWillMount() {
+    this.getCommissionStatusDetail();
+  }
+  getCommissionStatusDetail(isRefreshed) {
     const commissionId = this.props.navigation.state.params.commissionDetail.id;
     this.props.getCommissionStatusDetail(commissionId, (commissionMore) => {
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
@@ -48,6 +54,9 @@ class CommissionStatusDetailScreen extends Component {
         isLoading: false,
       });
     });
+    if (isRefreshed) {
+      this.setState({ isRefreshing: false });
+    }
   }
   renderCard(cardTitle, rowData = {}) {
     return (
@@ -73,7 +82,7 @@ class CommissionStatusDetailScreen extends Component {
       ))
     );
   }
-  renderProduct(item) {
+  renderCommissionStatus(item) {
     return (
       <View style={styles.sectionHeaderContainer}>
         <Text style={styles.sectionHeader}>{item.id}</Text>
@@ -85,21 +94,26 @@ class CommissionStatusDetailScreen extends Component {
       </View>
     );
   }
+  onRefresh() {
+    this.setState({ isRefreshing: true });
+    this.getCommissionStatusDetail('isRefreshed');
+  }
   render() {
-    const { commissionDetail } = this.state;
+    const { commissionDetail, isRefreshing } = this.state;
     return (
-      <View style={[styles.container, styles.mainContainer]}>
+      <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title="status detail" onPress={() => this.props.navigation.goBack(null)} />
-        <ScrollView style={{ padding: 10 }}>
+        <ScrollView style={styles.mainContainer}>
           {this.renderCard(I18n.t('commission_information'), commissionDetail)}
           {
-            this.state.isLoading ? <View style={styles.progressBar}><ProgressBar /></View>
+            this.state.isLoading
+              ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
               : <ListView
-                style={styles.container}
+                style={{ marginTop: Metrics.doubleBaseMargin, marginBottom: 50 }}
                 enableEmptySections
                 dataSource={this.state.dataSource}
-                renderRow={item => this.renderProduct(item)}
+                renderRow={item => this.renderCommissionStatus(item)}
                 renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
               />
             }

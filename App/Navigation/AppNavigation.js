@@ -6,11 +6,10 @@ import I18n from 'react-native-i18n';
 import { Colors } from '../Themes';
 
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen';
-import CommissionDetailScreen from '../Containers/CommissionStatusDetailScreen';
-import CommissionCompanyScreen from '../Containers/CommissionListScreen';
-import CommissionListScreen from '../Containers/CommissionStatusListScreen';
+import CommissionStatusDetailScreen from '../Containers/CommissionStatusDetailScreen';
+import CommissionStatusListScreen from '../Containers/CommissionStatusListScreen';
 import LoginScreen from '../Containers/LoginScreen';
-import LaunchScreen from '../Containers/LaunchScreen';
+import CommissionListScreen from '../Containers/CommissionListScreen';
 import ProductsListScreen from '../Containers/ProductsListScreen';
 import ProductDetailScreen from '../Containers/ProductDetailScreen';
 import WebViewScreen from '../Containers/WebViewScreen';
@@ -19,22 +18,6 @@ import MessagesListScreen from '../Containers/MessagesListScreen';
 import MessageDetailScreen from '../Containers/MessageDetailScreen';
 
 const HomeStack = StackNavigator({
-  LaunchScreen: { screen: LaunchScreen },
-}, {
-  headerMode: 'none',
-  initialRouteName: 'LaunchScreen',
-  navigationOptions: {
-    headerStyle: {
-      backgroundColor: Colors.background,
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-  },
-});
-const CommissionStack = StackNavigator({
-  CommissionDetailScreen: { screen: CommissionDetailScreen },
   CommissionListScreen: { screen: CommissionListScreen },
 }, {
   headerMode: 'none',
@@ -49,12 +32,12 @@ const CommissionStack = StackNavigator({
     },
   },
 });
-const ProductStack = StackNavigator({
-  ProductsListScreen: { screen: ProductsListScreen },
-  ProductDetailScreen: { screen: ProductDetailScreen },
-  WebViewScreen: { screen: WebViewScreen },
+const CommissionStack = StackNavigator({
+  CommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
+  CommissionStatusListScreen: { screen: CommissionStatusListScreen },
 }, {
-  initialRouteName: 'ProductsListScreen',
+  headerMode: 'none',
+  initialRouteName: 'CommissionStatusListScreen',
   navigationOptions: {
     headerStyle: {
       backgroundColor: Colors.background,

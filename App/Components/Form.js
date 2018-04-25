@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   KeyboardAvoidingView,
   TouchableOpacity,
   Image,
 } from 'react-native';
+import PropTypes from 'prop-types';
+import I18n from 'react-native-i18n';
 
 import UserInput from './UserInput';
 
 import usernameImg from './images/username.png';
 import passwordImg from './images/password.png';
 import eyeImg from './images/eye_black.png';
-import I18n from 'react-native-i18n';
+import styles from './Styles/ComponentStyles';
 
 export default class Form extends Component {
   constructor(props) {
@@ -24,9 +25,11 @@ export default class Form extends Component {
   }
 
   showPass() {
-    this.state.press === false
-      ? this.setState({ showPass: false, press: true })
-      : this.setState({ showPass: true, press: false });
+    if (this.state.press === false) {
+      this.setState({ showPass: false, press: true });
+    } else {
+      this.setState({ showPass: true, press: false });
+    }
   }
 
   render() {
@@ -63,20 +66,9 @@ export default class Form extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  btnEye: {
-    position: 'absolute',
-    top: 80,
-    right: 28,
-  },
-  iconEye: {
-    width: 25,
-    height: 25,
-    zIndex: 1,
-    tintColor: 'rgba(0,0,0,0.2)',
-  },
-});
+Form.propTypes = {
+  password: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  onChangePassword: PropTypes.func.isRequired,
+  onChangeUsername: PropTypes.func.isRequired,
+};

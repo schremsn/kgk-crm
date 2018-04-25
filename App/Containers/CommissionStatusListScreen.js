@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, ScrollView } from 'react-native';
 import I18n from 'react-native-i18n';
 import moment from 'moment';
 
-import styles from './Styles/ProductsListScreenStyle';
+import styles from './Styles/ContainerStyles';
 import { Images, Colors } from './../Themes';
 import ProgressBar from '../Components/ProgressBar';
 import { getCommissionStatus } from '../Redux/CommissionRedux';
@@ -55,7 +55,10 @@ class CommissionStatusListScreen extends Component {
   }
   renderCommission(item) {
     return (
-      <TouchableOpacity onPress={() => { this.props.navigation.navigate('CommissionDetailScreen', { commissionDetail: item, list: this.state.list }); }} style={styles.sectionHeaderContainer}>
+      <TouchableOpacity
+        onPress={() => { this.props.navigation.navigate('CommissionStatusDetailScreen', { commissionDetail: item }); }}
+        style={styles.sectionHeaderContainer}
+      >
         <Text style={styles.sectionHeader}>{item.id}</Text>
         <Text style={styles.sectionText}>{I18n.t('identifier')}: {item.identifier}</Text>
         <Text style={styles.sectionText}>{I18n.t('partner')}: {item.partner[1]}</Text>
@@ -66,36 +69,25 @@ class CommissionStatusListScreen extends Component {
     );
   }
   render() {
+    const { isLoading, isRefreshing, dataSource } = this.state;
     return (
-      <View
-        style={[styles.container, styles.mainContainer]}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.isRefreshing}
-            onRefresh={this.onRefresh}
-            colors={[Colors.fire]}
-            tintColor={Colors.snow}
-            title={`${I18n.t('loading')}...`}
-            titleColor={Colors.snow}
-            progressBackgroundColor={Colors.snow}
-          />
-        }
-      >
+      <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         {
-          this.state.isLoading ? <View style={styles.progressBar}><ProgressBar /></View>
+          isLoading
+            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
             : <ListView
-              style={styles.container}
+              style={styles.mainContainer}
               enableEmptySections
               onEndReached={() => this.getCommissionStatusListNextPage()}
               onEndReachedThreshold={1200}
-              dataSource={this.state.dataSource}
+              dataSource={dataSource}
               renderRow={item => this.renderCommission(item)}
               renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
               // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
               refreshControl={
                 <RefreshControl
-                  refreshing={this.state.isRefreshing}
+                  refreshing={isRefreshing}
                   onRefresh={this.onRefresh}
                   colors={[Colors.fire]}
                   tintColor={Colors.snow}

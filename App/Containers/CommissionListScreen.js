@@ -1,25 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import { RefreshControl, Text, Image, View, TouchableOpacity, ListView } from 'react-native';
+import { RefreshControl, Text, Image, View, TouchableOpacity, ListView, Alert, BackHandler } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import numeral from 'numeral';
 import ProgressBar from '../Components/ProgressBar';
-
-import styles from './Styles/ProductsListScreenStyle';
-import { Images, Colors } from '../Themes';
-
+import styles from './Styles/ContainerStyles';
+import { Colors, Images } from '../Themes';
 import { getCommissionSummary } from '../Redux/CommissionRedux';
 
 class CommissionListScreen extends Component {
-  static navigationOptions = {
-    title: I18n.t('commission company'),
-  };
-  static propTypes = {
-    navigation: PropTypes.object.isRequired,
-    getCommissionSummary: PropTypes.func.isRequired,
-  }
   constructor() {
     super();
     this.state = {
@@ -30,9 +20,36 @@ class CommissionListScreen extends Component {
     this.getCommissionListNextPage = this.getCommissionListNextPage.bind(this);
     this.renderCommission = this.renderCommission.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
+    this.handleBackAndroid = this.handleBackAndroid.bind(this);
   }
   componentWillMount() {
     this.getCommissionList();
+  }
+  componentDidMount() {
+    BackHandler.addEventListener('backPress', this.handleBackAndroid);
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('backPress');
+  }
+  handleBackAndroid() {
+    Alert.alert(
+      'Alert',
+      'Do you want to quit the app?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => true,
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            BackHandler.exitApp();
+          },
+        },
+      ],
+    );
+    return true;
   }
   getCommissionList(isRefreshed) {
     this.props.getCommissionSummary(0, (list) => {
@@ -49,8 +66,7 @@ class CommissionListScreen extends Component {
   getCommissionListNextPage() {
     this.props.getCommissionSummary(0, (list) => {
       const data = this.state.list;
-      const newData = list;
-      newData.map(item => data.push(item));
+      list.map(item => data.push(item));
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(data),
       });
@@ -71,39 +87,28 @@ class CommissionListScreen extends Component {
     );
   }
   render() {
+    const { isLoading, isRefreshing, dataSource } = this.state;
     return (
-      <View
-        style={[styles.container, styles.mainContainer]}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.isRefreshing}
-            onRefresh={this.onRefresh}
-            colors={[Colors.fire]}
-            tintColor={Colors.snow}
-            title={`${I18n.t('loading')}...`}
-            titleColor={Colors.snow}
-            progressBackgroundColor={Colors.snow}
-          />
-            }
-      >
+      <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         {
-          this.state.isLoading ? <View style={styles.progressBar}><ProgressBar /></View>
+          isLoading
+            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
             : <ListView
-              style={styles.container}
+              style={styles.mainContainer}
               enableEmptySections
               onEndReached={() => this.getCommissionListNextPage()}
               onEndReachedThreshold={1200}
-              dataSource={this.state.dataSource}
+              dataSource={dataSource}
               renderRow={item => this.renderCommission(item)}
               renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
               // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
               refreshControl={
                 <RefreshControl
-                  refreshing={this.state.isRefreshing}
+                  refreshing={isRefreshing}
                   onRefresh={this.onRefresh}
                   colors={[Colors.fire]}
-                  tintColor="white"
+                  tintColor={Colors.snow}
                   title={`${I18n.t('loading')}...`}
                   titleColor={Colors.snow}
                   progressBackgroundColor={Colors.snow}
@@ -116,6 +121,15 @@ class CommissionListScreen extends Component {
     );
   }
 }
+
+CommissionListScreen.navigationOptions = {
+  title: I18n.t('home'),
+};
+CommissionListScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  getCommissionSummary: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => ({
   commission: state.commission.commission,
 });

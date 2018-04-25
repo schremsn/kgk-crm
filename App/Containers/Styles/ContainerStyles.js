@@ -1,13 +1,10 @@
 import { StyleSheet } from 'react-native';
-import { Colors, Metrics, Fonts, ApplicationStyles } from '../../Themes/';
+import { Fonts, Colors, Metrics, ApplicationStyles } from '../../Themes/';
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
-  sectionHeaderContainer: {
-    borderWidth: 1,
-    borderColor: Colors.border,
-    padding: Metrics.baseMargin,
-    marginVertical: 20,
+  applicationView: {
+    flex: 1,
   },
   sectionText: {
     ...Fonts.base,
@@ -15,10 +12,67 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: Metrics.doubleBaseMargin + 5,
   },
+  container: {
+    padding: Metrics.doubleBaseMargin,
+    height: Metrics.screenHeight,
+  },
+  mainContainer: {
+
+  },
+  description: {
+    marginVertical: Metrics.doubleSection,
+  },
   sectionHeader: {
     ...Fonts.style.h5,
     color: Colors.fire,
   },
+  sectionHeaderContainer: {
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: Metrics.baseMargin,
+    marginBottom: 20,
+  },
+  sectionImage: {
+    alignItems: 'center',
+    padding: 15,
+  },
+  progressBar: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    minHeight: Metrics.screenHeight,
+    paddingBottom: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  seperator: {
+    backgroundColor: '#8E8E8E',
+  },
+  thumpImage: {
+    width: 100,
+    height: 100,
+  },
+  buttonBox: {
+    position: 'absolute',
+    right: 30,
+    bottom: 100,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  button: {
+    borderRadius: 50,
+    width: 50,
+    height: 50,
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+  },
+  text: {
+    paddingRight: 20,
+    color: 'white',
+  },
+  // Style Car
   cardTitle: {
     alignSelf: 'center',
     fontSize: Fonts.size.regular,
@@ -45,7 +99,6 @@ export default StyleSheet.create({
     borderColor: Colors.windowTint,
     borderWidth: 0.5,
     borderRadius: 2,
-    marginHorizontal: Metrics.baseMargin,
   },
   rowLabelContainer: {
     flex: 1,

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import { View, ScrollView, Text, Image, Linking } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import MyWebView from 'react-native-webview-autoheight';
-import styles from './Styles/ProductDetailScreen';
+import styles from './Styles/ContainerStyles';
 import { Images, Metrics } from './../Themes';
 import { getProductDetail } from '../Redux/ProductRedux';
 import Header from '../Components/Header';
@@ -42,31 +41,30 @@ class ProductDetailScreen extends Component {
   }
   renderRows(rowData) {
     return (
-      data.map(item => (<View key={item.name} style={styles.rowContainer}>
-        <View style={styles.rowLabelContainer}>
-          <Text style={styles.rowLabel}>{item.value}</Text>
-        </View>
-        <View style={styles.rowInfoContainer}>
-          {
+      data.map(item => (
+        <View key={item.name} style={styles.rowContainer}>
+          <View style={styles.rowLabelContainer}>
+            <Text style={styles.rowLabel}>{item.value}</Text>
+          </View>
+          <View style={styles.rowInfoContainer}>
+            {
             item.value === I18n.t('image')
               ? <Image source={{ uri: `data:image/png;base64,${rowData[item.name]}` }} style={{ width: 100, height: 100, marginBottom: 10 }} />
               : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
           }
-        </View>
-      </View>))
+          </View>
+        </View>))
     );
   }
   render() {
     const { productDetail } = this.state;
     return (
-      <View style={[styles.container, styles.mainContainer]}>
+      <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title="product detail" onPress={() => this.props.navigation.goBack(null)} />
-        <ScrollView>
-          <View style={{ padding: 10 }}>
-            {this.renderCard('Product Information', productDetail)}
-          </View>
-          <View style={{ padding: 20 }}>
+        <ScrollView style={styles.mainContainer}>
+          {this.renderCard('Product Information', productDetail)}
+          <View style={{ paddingVertical: Metrics.doubleBaseMargin }}>
             <MyWebView
               ref={(ref) => { this.webview = ref; }}
               source={{ html: customStyle + productDetail.information }}

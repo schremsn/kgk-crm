@@ -5,8 +5,8 @@ import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'r
 import I18n from 'react-native-i18n';
 import ProgressBar from '../Components/ProgressBar';
 import { getMessages } from '../Redux/MessageRedux';
-import styles from './Styles/ProductsListScreenStyle';
-import { Images, Metrics, Colors } from './../Themes';
+import styles from './Styles/ContainerStyles';
+import { Images, Colors } from './../Themes';
 
 class MessagesListScreen extends Component {
   constructor() {
@@ -42,8 +42,7 @@ class MessagesListScreen extends Component {
   getMessagesNextPage() {
     this.props.getMessages(this.props.offset, (list) => {
       const data = this.state.list;
-      const newData = list;
-      newData.map(item => data.push(item));
+      list.map(item => data.push(item));
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(data),
       });
@@ -67,37 +66,25 @@ class MessagesListScreen extends Component {
     );
   }
   render() {
+    const { isLoading, isRefreshing, dataSource } = this.state;
     return (
-      <View
-        style={[styles.container, styles.mainContainer]}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.isRefreshing}
-            onRefresh={this.onRefresh}
-            colors={[Colors.fire]}
-            tintColor={Colors.snow}
-            title={`${I18n.t('loading')}...`}
-            titleColor={Colors.snow}
-            progressBackgroundColor={Colors.snow}
-          />
-        }
-      >
+      <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         {
-          this.state.isLoading
-            ? <View style={[styles.progressBar, { height: Metrics.screenHeight }]}><ProgressBar /></View>
+          isLoading
+            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
             : <ListView
-              style={styles.container}
+              style={styles.mainContainer}
               enableEmptySections
               onEndReached={this.getMessagesNextPage}
               onEndReachedThreshold={1200}
-              dataSource={this.state.dataSource}
+              dataSource={dataSource}
               renderRow={item => this.renderMessage(item)}
               renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
               // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
               refreshControl={
                 <RefreshControl
-                  refreshing={this.state.isRefreshing}
+                  refreshing={isRefreshing}
                   onRefresh={this.onRefresh}
                   colors={[Colors.fire]}
                   tintColor={Colors.snow}

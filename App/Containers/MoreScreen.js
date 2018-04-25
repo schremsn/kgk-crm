@@ -3,7 +3,7 @@ import { Text, Image, View, TouchableOpacity } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Images, Colors } from '../Themes';
-import styles from './Styles/ProductsListScreenStyle';
+import styles from './Styles/ContainerStyles';
 
 export default class MoreScreen extends Component {
   constructor() {
@@ -18,9 +18,9 @@ export default class MoreScreen extends Component {
   }
   render() {
     return (
-      <View style={[styles.container, styles.mainContainer]}>
+      <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <TouchableOpacity style={[styles.buttonBox, { bottom: 170 }]} onPress={() => this.props.navigation.navigate('ProductsListScreen')}>
+        <TouchableOpacity style={[styles.buttonBox, { bottom: 240 }]} onPress={() => this.props.navigation.navigate('ProductsListScreen')}>
           <Text style={styles.text}>
             {I18n.t('account')}
           </Text>
@@ -28,7 +28,7 @@ export default class MoreScreen extends Component {
             <Ionicons name="ios-person-outline" size={25} color={Colors.snow} />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.buttonBox, { bottom: 100 }]} onPress={() => this.props.navigation.navigate('ProductsListScreen')}>
+        <TouchableOpacity style={[styles.buttonBox, { bottom: 170 }]} onPress={() => this.props.navigation.navigate('ProductsListScreen')}>
           <Text style={styles.text}>
             {I18n.t('product list')}
           </Text>

@@ -1,19 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   ActivityIndicator,
   AsyncStorage,
   StatusBar,
-  StyleSheet,
   View,
 } from 'react-native';
+import styles from './Styles/ContainerStyles';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default class AuthLoadingScreen extends React.Component {
   componentWillMount() {
@@ -31,10 +25,13 @@ export default class AuthLoadingScreen extends React.Component {
   // Render any loading content that you like here
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
         <ActivityIndicator />
         <StatusBar barStyle="default" />
       </View>
     );
   }
 }
+AuthLoadingScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};

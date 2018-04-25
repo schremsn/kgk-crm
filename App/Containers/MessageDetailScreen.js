@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { View, ScrollView, Text, Image, Linking } from 'react-native';
 import I18n from 'react-native-i18n';
 import MyWebView from 'react-native-webview-autoheight';
-import styles from './Styles/ProductDetailScreen';
+import styles from './Styles/ContainerStyles';
 import { Images, Metrics } from './../Themes';
 import Header from '../Components/Header';
 
@@ -22,16 +22,8 @@ export default class MessageDetailScreen extends Component {
       messageDetail: props.navigation.state.params.messageDetail,
     };
     this.renderCard = this.renderCard.bind(this);
-    this.renderRows = this.renderRows.bind(this);
   }
-  renderCard(cardTitle, rowData) {
-    return (
-      <View>
-        {this.renderRows(rowData)}
-      </View>
-    );
-  }
-  renderRows(rowData) {
+  renderCard(rowData) {
     return (
       data.map(item => (
         <View key={item.name} style={styles.rowContainer}>
@@ -48,14 +40,12 @@ export default class MessageDetailScreen extends Component {
   render() {
     const { messageDetail } = this.state;
     return (
-      <View style={[styles.container, styles.mainContainer]}>
+      <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title="message detail" onPress={() => this.props.navigation.goBack(null)} />
-        <ScrollView>
-          <View style={{ padding: 10 }}>
-            {this.renderCard('Message Information', messageDetail)}
-          </View>
-          <View style={{ padding: 20 }}>
+        <ScrollView style={styles.mainContainer}>
+          {this.renderCard(messageDetail)}
+          <View style={{ paddingVertical: Metrics.doubleBaseMargin }}>
             <MyWebView
               ref={(ref) => { this.webview = ref; }}
               source={{ html: customStyle + messageDetail.body }}
@@ -76,7 +66,6 @@ export default class MessageDetailScreen extends Component {
 }
 MessageDetailScreen.navigationOptions = {
   title: I18n.t('message detail'),
-  tabBarHidden: true,
 };
 MessageDetailScreen.propTypes = {
   navigation: PropTypes.object.isRequired,

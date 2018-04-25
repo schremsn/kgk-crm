@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
 import I18n from 'react-native-i18n';
-import styles from './Styles/ProductDetailScreen';
+import styles from './Styles/ContainerStyles';
 import { Images, Colors } from './../Themes';
 import { getProducts } from '../Redux/ProductRedux';
 import ProgressBar from '../Components/ProgressBar';
@@ -34,7 +34,9 @@ class ProductsListScreen extends Component {
         isLoading: false,
       });
     });
-    if (isRefreshed && this.setState({ isRefreshing: false }));
+    if (isRefreshed) {
+      this.setState({ isRefreshing: false });
+    }
   }
   getProductListNextPage() {
     this.props.getProducts(this.props.offset, (list) => {
@@ -64,50 +66,36 @@ class ProductsListScreen extends Component {
     );
   }
   render() {
+    const { isLoading, isRefreshing, dataSource } = this.state;
     return (
-      <View
-        style={[styles.container, styles.mainContainer]}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.isRefreshing}
-            onRefresh={this.onRefresh}
-            colors={[Colors.fire]}
-            tintColor={Colors.snow}
-            title={`${I18n.t('loading')}...`}
-            titleColor={Colors.snow}
-            progressBackgroundColor={Colors.snow}
-          />
-        }
-      >
+      <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title="product list" onPress={() => this.props.navigation.goBack(null)} />
-
-        <ScrollView style={{ padding: 20 }}>
-          {
-            this.state.isLoading ? <View style={styles.progressBar}><ProgressBar /></View>
-              : <ListView
-                style={styles.container}
-                enableEmptySections
-                onEndReached={() => this.getProductListNextPage()}
-                onEndReachedThreshold={1200}
-                dataSource={this.state.dataSource}
-                renderRow={item => this.renderProduct(item)}
-                renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-                // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={this.state.isRefreshing}
-                    onRefresh={this.onRefresh}
-                    colors={[Colors.fire]}
-                    tintColor={Colors.snow}
-                    title={`${I18n.t('loading')}...`}
-                    titleColor={Colors.snow}
-                    progressBackgroundColor={Colors.snow}
-                  />
-                }
-              />
-          }
-        </ScrollView>
+        {
+          isLoading
+            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
+            : <ListView
+              style={styles.mainContainer}
+              enableEmptySections
+              onEndReached={() => this.getProductListNextPage()}
+              onEndReachedThreshold={1200}
+              dataSource={dataSource}
+              renderRow={item => this.renderProduct(item)}
+              renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
+              // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
+              refreshControl={
+                <RefreshControl
+                  refreshing={isRefreshing}
+                  onRefresh={this.onRefresh}
+                  colors={[Colors.fire]}
+                  tintColor={Colors.snow}
+                  title={`${I18n.t('loading')}...`}
+                  titleColor={Colors.snow}
+                  progressBackgroundColor={Colors.snow}
+                />
+              }
+            />
+        }
       </View>
     );
   }

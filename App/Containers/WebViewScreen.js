@@ -4,7 +4,7 @@ import { WebView, Image, View } from 'react-native';
 import { Images } from './../Themes';
 
 // Styles
-import styles from './Styles/ProductsListScreenStyle';
+import styles from './Styles/ContainerStyles';
 
 export default class WebViewScreen extends Component {
   static navigationOptions = {

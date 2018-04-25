@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import I18n from 'react-native-i18n';
 import Logo from '../Components/Logo';
 import Form from '../Components/Form';
 import Wallpaper from '../Components/Wallpaper';
 import ButtonSubmit from '../Components/ButtonSubmit';
 import { login } from '../Redux/AuthRedux';
-import I18n from 'react-native-i18n';
 
 class LoginScreen extends Component {
-  static navigationOptions = {
-    title: I18n.t('login'),
-  };
   constructor(props) {
     super(props);
     this.state = {
@@ -44,6 +42,13 @@ class LoginScreen extends Component {
   }
 }
 
+LoginScreen.navigationOptions = {
+  title: I18n.t('login'),
+};
+LoginScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  login: PropTypes.func.isRequired,
+};
 const mapDispatchToProps = dispatch => ({
   login: (info, cb) => dispatch(login(info, cb)),
 });
