@@ -153,4 +153,19 @@ export default class DD {
       last_month: 0,
     },
   }
+
+  static message = [
+    'email_from',
+    'date',
+    'needaction',
+    'channel_ids',
+    'id',
+    'body',
+  ]
+
+  static leadStage = [
+    'id',
+    'name',
+    'sequence',
+  ]
 }

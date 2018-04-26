@@ -603,6 +603,7 @@ export default class DataProvider {
    */
   logActivity(activity) {
     throw new Error('Not implemented');
+    /*
     if (activity === undefined) {
       throw new Error('Wrong argument');
     }
@@ -618,7 +619,7 @@ export default class DataProvider {
       args: activity,
     };
 
-    /*
+    
     return new Promise((resolve, reject) => {
       this.odoo.rpc_call(endpoint, params, (err, data) => {
         if (err) {
@@ -813,7 +814,7 @@ export default class DataProvider {
    */
   getLeadStages() {
     const params = {
-      fields: ['id', 'name', 'sequence'],
+      fields: DD.leadStage,
       order: 'sequence asc',
     };
 
