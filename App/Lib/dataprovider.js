@@ -305,7 +305,7 @@ export default class DataProvider {
         ['active', '=', 'true'],
         '|',
         ['name', 'ilike', searchTerm],
-        ['tag_ids', 'ilike', searchTerm],
+        ['city', 'ilike', searchTerm],
       ],
       fields: DD.lead,
       limit: 200,
