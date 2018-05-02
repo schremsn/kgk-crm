@@ -36,7 +36,7 @@ export const getCommissionSummary = (month, cb) => (dispatch) => {
 export const getCommissionStatusDetail = (commissionId, cb) => () => {
   dataprovider.getCommissionStatusDetail(commissionId)
     .then((data) => {
-      cb(data[0]);
+      cb(data);
       console.log('getCommissionStatusDetail', data);
       // dispatch(Creators.getUserInfoSuccess(data))
     })

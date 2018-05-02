@@ -1,31 +1,33 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
+import PropTypes from 'prop-types';
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, ScrollView } from 'react-native';
 import I18n from 'react-native-i18n';
+import moment from 'moment';
+
 import styles from './Styles/ContainerStyles';
 import { Images, Colors } from './../Themes';
-import { getProducts } from '../Redux/ProductRedux';
 import ProgressBar from '../Components/ProgressBar';
-import Header from '../Components/Header';
+import { getCommissionStatus } from '../Redux/CommissionRedux';
 
-class ProductsListScreen extends Component {
+class CommissionStatusListScreen extends Component {
   constructor() {
     super();
     this.state = {
       isLoading: true,
       isRefreshing: false,
+      list: [],
     };
-    this.getProductList = this.getProductList.bind(this);
-    this.getProductListNextPage = this.getProductListNextPage.bind(this);
+    this.getCommissionStatusList = this.getCommissionStatusList.bind(this);
+    this.getCommissionStatusListNextPage = this.getCommissionStatusListNextPage.bind(this);
+    this.renderCommission = this.renderCommission.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
-    this.renderProduct = this.renderProduct.bind(this);
   }
   componentWillMount() {
-    this.getProductList();
+    this.getCommissionStatusList();
   }
-  getProductList(isRefreshed) {
-    this.props.getProducts(0, (list) => {
+  getCommissionStatusList(isRefreshed) {
+    this.props.getCommissionStatus(0, (list) => {
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
       const dataSource = ds.cloneWithRows(list);
       this.setState({
@@ -38,8 +40,8 @@ class ProductsListScreen extends Component {
       this.setState({ isRefreshing: false });
     }
   }
-  getProductListNextPage() {
-    this.props.getProducts(this.props.offset, (list) => {
+  getCommissionStatusListNextPage() {
+    this.props.getCommissionStatus(0, (list) => {
       const data = this.state.list;
       list.map(item => data.push(item));
       this.setState({
@@ -49,38 +51,38 @@ class ProductsListScreen extends Component {
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
-    this.getProductList('isRefreshed');
+    this.getCommissionStatusList('isRefreshed');
   }
-  renderProduct(item) {
+  renderCommission(item) {
     return (
-      <TouchableOpacity onPress={() => { this.props.navigation.navigate('ProductDetailScreen', { productId: item.id }); }} style={styles.sectionHeaderContainer}>
-        <Text style={styles.sectionHeader}>{item.name}</Text>
-        <Text style={styles.sectionText}>{I18n.t('code')}: {item.code}</Text>
-        <Text style={styles.sectionText}>{I18n.t('description')}: {item.description}</Text>
-        <View style={styles.sectionImage}>
-          {
-            item.image_small && <Image style={styles.thumpImage} source={{ uri: `data:image/png;base64,${item.image_small}` }} />
-          }
-        </View>
+      <TouchableOpacity
+        onPress={() => { this.props.navigation.navigate('CommissionStatusDetailScreen', { commissionDetail: item }); }}
+        style={styles.sectionHeaderContainer}
+      >
+        <Text style={styles.sectionHeader}>{item.id}</Text>
+        <Text style={styles.sectionText}>{I18n.t('identifier')}: {item.identifier}</Text>
+        <Text style={styles.sectionText}>{I18n.t('partner')}: {item.partner[1]}</Text>
+        <Text style={styles.sectionText}>{I18n.t('customer')}: {item.customer}</Text>
+        <Text style={styles.sectionText}>{I18n.t('update_date')}: {item.update_date && moment(item.update_date).format('MM-DD-YYYY')}</Text>
+        <Text style={styles.sectionText}>{I18n.t('issue')}: {item.issue}</Text>
       </TouchableOpacity>
     );
   }
   render() {
     const { isLoading, isRefreshing, dataSource } = this.state;
     return (
-      <View style={styles.container}>
+      <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title="product list" onPress={() => this.props.navigation.goBack(null)} />
         {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
             : <ListView
               style={styles.mainContainer}
               enableEmptySections
-              onEndReached={() => this.getProductListNextPage()}
+              onEndReached={() => this.getCommissionStatusListNextPage()}
               onEndReachedThreshold={1200}
               dataSource={dataSource}
-              renderRow={item => this.renderProduct(item)}
+              renderRow={item => this.renderCommission(item)}
               renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
               // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
               refreshControl={
@@ -101,21 +103,20 @@ class ProductsListScreen extends Component {
   }
 }
 
-ProductsListScreen.navigationOptions = {
-  title: I18n.t('product list'),
-};
-ProductsListScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
-  getProducts: PropTypes.func.isRequired,
-  offset: PropTypes.number.isRequired,
-};
-
 const mapStateToProps = state => ({
   offset: state.product.offset,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getProducts: (offset, cb) => { dispatch(getProducts(offset, cb)); },
+  getCommissionStatus: (offset, cb) => { dispatch(getCommissionStatus(offset, cb)); },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductsListScreen);
+CommissionStatusListScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  getCommissionStatus: PropTypes.func.isRequired,
+};
+CommissionStatusListScreen.navigationOptions = {
+  title: I18n.t('commission list'),
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CommissionStatusListScreen);

@@ -7,7 +7,7 @@ import { initState } from '../Redux/ProductRedux';
 import ReduxPersist from '../Config/ReduxPersist';
 
 // Styles
-import styles from './Styles/RootContainerStyles';
+import styles from './Styles/ContainerStyles';
 
 class RootContainer extends Component {
   componentDidMount() {

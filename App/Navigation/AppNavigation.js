@@ -6,11 +6,10 @@ import I18n from 'react-native-i18n';
 import { Colors } from '../Themes';
 
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen';
-import CommissionDetailScreen from '../Containers/CommissionDetailScreen';
-import CommissionCompanyScreen from '../Containers/CommissionCompanyScreen';
-import CommissionListScreen from '../Containers/CommissionListScreen';
+import CommissionStatusDetailScreen from '../Containers/CommissionStatusDetailScreen';
+import CommissionStatusListScreen from '../Containers/CommissionStatusListScreen';
 import LoginScreen from '../Containers/LoginScreen';
-import LaunchScreen from '../Containers/LaunchScreen';
+import CommissionListScreen from '../Containers/CommissionListScreen';
 import ProductsListScreen from '../Containers/ProductsListScreen';
 import ProductDetailScreen from '../Containers/ProductDetailScreen';
 import WebViewScreen from '../Containers/WebViewScreen';
@@ -19,9 +18,10 @@ import MessagesListScreen from '../Containers/MessagesListScreen';
 import MessageDetailScreen from '../Containers/MessageDetailScreen';
 
 const HomeStack = StackNavigator({
-  LaunchScreen: { screen: LaunchScreen },
+  CommissionListScreen: { screen: CommissionListScreen },
 }, {
-  initialRouteName: 'LaunchScreen',
+  headerMode: 'none',
+  initialRouteName: 'CommissionListScreen',
   navigationOptions: {
     headerStyle: {
       backgroundColor: Colors.background,
@@ -33,27 +33,11 @@ const HomeStack = StackNavigator({
   },
 });
 const CommissionStack = StackNavigator({
-  CommissionCompanyScreen: { screen: CommissionCompanyScreen },
-  CommissionDetailScreen: { screen: CommissionDetailScreen },
-  CommissionListScreen: { screen: CommissionListScreen },
+  CommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
+  CommissionStatusListScreen: { screen: CommissionStatusListScreen },
 }, {
-  initialRouteName: 'CommissionCompanyScreen',
-  navigationOptions: {
-    headerStyle: {
-      backgroundColor: Colors.background,
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-  },
-});
-const ProductStack = StackNavigator({
-  ProductsListScreen: { screen: ProductsListScreen },
-  ProductDetailScreen: { screen: ProductDetailScreen },
-  WebViewScreen: { screen: WebViewScreen },
-}, {
-  initialRouteName: 'ProductsListScreen',
+  headerMode: 'none',
+  initialRouteName: 'CommissionStatusListScreen',
   navigationOptions: {
     headerStyle: {
       backgroundColor: Colors.background,
@@ -70,6 +54,7 @@ const MoreStack = StackNavigator({
   ProductDetailScreen: { screen: ProductDetailScreen },
   WebViewScreen: { screen: WebViewScreen },
 }, {
+  headerMode: 'none',
   initialRouteName: 'MoreScreen',
   navigationOptions: {
     headerStyle: {
@@ -85,6 +70,7 @@ const MessagesStack = StackNavigator({
   MessagesListScreen: { screen: MessagesListScreen },
   MessageDetailScreen: { screen: MessageDetailScreen },
 }, {
+  headerMode: 'none',
   initialRouteName: 'MessagesListScreen',
   navigationOptions: {
     headerStyle: {
@@ -100,8 +86,8 @@ const MessagesStack = StackNavigator({
 const AppStack = TabNavigator(
   {
     Home: { screen: HomeStack },
-    Commission: { screen: CommissionStack },
-    Messages: { screen: MessagesStack },
+    Status: { screen: CommissionStack },
+    Message: { screen: MessagesStack },
     More: { screen: MoreStack },
   },
   {
@@ -111,11 +97,11 @@ const AppStack = TabNavigator(
         let iconName;
         if (routeName === 'Home') {
           iconName = `ios-home${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Commission') {
+        } else if (routeName === 'Status') {
           iconName = `ios-list-box${focused ? '' : '-outline'}`;
         } else if (routeName === 'Products') {
           iconName = `ios-list-box${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Messages') {
+        } else if (routeName === 'Message') {
           iconName = `ios-mail${focused ? '' : '-outline'}`;
         } else if (routeName === 'More') {
           iconName = `ios-options${focused ? '' : '-outline'}`;

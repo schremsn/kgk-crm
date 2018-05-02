@@ -1,7 +1,5 @@
-
 import Odoo from './odoo';
 import Config from './config';
-import ReferenceData from '../Data/referencedata';
 import DD from '../Data/datadictionary';
 
 /**
@@ -62,24 +60,6 @@ export default class DataProvider {
     });
   }
 
-  retry = function (fn, times, delay) {
-    return new Promise((resolve, reject) => {
-      let error;
-      const attempt = function () {
-        if (times == 0) {
-          reject(error);
-        } else {
-          fn().then(resolve)
-            .catch((e) => {
-              times--;
-              error = e;
-              setTimeout(() => { attempt(); }, delay);
-            });
-        }
-      };
-      attempt();
-    });
-  };
 
   /**
    * @params {number} optional sepcify the offset to read from
@@ -88,7 +68,7 @@ export default class DataProvider {
   getCustomers(offset = 0) {
     const params = {
       domain: [['customer', '=', 'true']],
-      fields: ['company_name', 'name', 'city', 'mobile', 'phone', 'id'],
+      fields: DD.customer,
       limit: maxRecords,
       offset,
       order: 'name asc',
@@ -117,23 +97,7 @@ export default class DataProvider {
 
     const params = {
       ids: id,
-      fields: [
-        'name',
-        'city',
-        'mobile',
-        'phone',
-        'id',
-        'email',
-        'comment',
-        'company_name',
-        'contact_address',
-        'is_company',
-        'street',
-        'street2',
-        'website',
-        'zip',
-        'state',
-      ],
+      fields: DD.customerDetail,
     };
 
     return new Promise((resolve, reject) => {
@@ -147,45 +111,26 @@ export default class DataProvider {
     });
   }
 
-  /**
-   * @deprecated use getCustomers method and specify the offset
-   * @param {*} index
-   */
-  getCustomersBeginIndex(index) {
-    const params = {
-      domain: [['customer', '=', 'true']],
-      fields: ['company_name', 'name', 'city', 'mobile', 'id'],
-      limit: 200,
-      offset: index,
-    };
-
-    return new Promise((resolve, reject) => {
-      this.odoo.search_read('res.partner', params, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  }
 
   /**
    * retrieve lead based on id(s) provided
    * @param {array} id
    */
   getLead(id) {
+    let leadId = [];
     if (id === undefined) {
-      throw (new Error('invalid lead id'));
+      throw new Error('invalid lead id');
     }
     if (!Array.isArray(id)) {
-      id = [id];
+      leadId = [id];
+    }
+    else {
+      leadId = id;
     }
 
     const params = {
-      ids: id,
-      fields: ['contact_name', 'name', 'title_action', 'phone', 'partner_name', 'mobile', 'city', 'type', 'email_from', 'id', 'description',
-        'lost_reason', 'zip', 'street', 'street2', 'function', 'stage_id', 'tag_ids', 'probability', 'date_deadline'],
+      ids: leadId,
+      fields: DD.leadDetail,
     };
 
     return new Promise((resolve, reject) => {
@@ -205,7 +150,7 @@ export default class DataProvider {
    */
   createCustomer(customer) {
     if (customer === undefined) {
-      throw (new Error('No customer provided'));
+      throw new Error('No customer provided');
     }
     return new Promise((resolve, reject) => {
       this.odoo.create('res.partner', customer, (err, data) => {
@@ -229,7 +174,7 @@ export default class DataProvider {
     } else if (customer.id === undefined) {
       throw new Error('Invalid argument');
     }
-    const id = customer.id;
+    const { id } = customer;
 
     return new Promise((resolve, reject) => {
       this.odoo.update('res.partner', id, customer, (err, data) => {
@@ -248,14 +193,19 @@ export default class DataProvider {
    */
   createLead(lead) {
     if (lead === undefined) {
-      throw (new Error('Invalid argument'));
+      throw new Error('Invalid argument');
     }
     // resolve many-to-many relationship for tags
     const tag = lead.get('tag');
     if (tag) {
-      // const temp = Object.freeze([4, tag]);
       const temp = Object.create(null);
-      Object.defineProperty(temp, 4, { enumerable: true, configurable: true, get() { return tag; } });
+      Object.defineProperty(temp, 4, {
+        enumerable: true,
+        configurable: true,
+        get() {
+          return tag;
+        },
+      });
       lead.set('tag_ids', temp);
       lead.delete('tag');
     }
@@ -266,10 +216,15 @@ export default class DataProvider {
     // convert lead map to array
     const newLead = Object.create(null);
     lead.forEach((value, key) => {
-      Object.defineProperty(newLead, key, { enumerable: true, configurable: true, get() { return value; } });
+      Object.defineProperty(newLead, key, {
+        enumerable: true,
+        configurable: true,
+        get() {
+          return value;
+        },
+      });
     });
 
-    console.log(newLead);
     return new Promise((resolve, reject) => {
       this.odoo.create('crm.lead', newLead, (err, data) => {
         if (err) {
@@ -287,10 +242,10 @@ export default class DataProvider {
    */
   updateLead(lead) {
     if (lead === undefined) {
-      throw (new Error('Invalid argument'));
+      throw new Error('Invalid argument');
     }
 
-    console.log(typeof (lead));
+    console.log(typeof lead);
     const id = lead.id;
 
     return new Promise((resolve, reject) => {
@@ -315,8 +270,13 @@ export default class DataProvider {
     const params = {
       // domain: ['&', '|', '|', ['customer', '=', 'true'], ['name', 'ilike', searchTerm], ['city', 'ilike', searchTerm],
       //  ['phone', 'ilike', searchTerm],],
-      domain: [['customer', '=', 'true'], '|', ['name', 'ilike', searchTerm], ['city', 'ilike', searchTerm]],
-      fields: ['company_name', 'name', 'city', 'mobile', 'phone', 'id'],
+      domain: [
+        ['customer', '=', 'true'],
+        '|',
+        ['name', 'ilike', searchTerm],
+        ['city', 'ilike', searchTerm],
+      ],
+      fields: DD.customer,
       limit: 200,
       offset: 0,
     };
@@ -341,8 +301,13 @@ export default class DataProvider {
       console.log('wrong search term');
     }
     const params = {
-      domain: [['active', '=', 'true'], '|', ['name', 'ilike', searchTerm], ['tag_ids', 'ilike', searchTerm]],
-      fields: ['contact_name', 'name', 'title_action', 'phone', 'city', 'type', 'id', 'date_deadline'],
+      domain: [
+        ['active', '=', 'true'],
+        '|',
+        ['name', 'ilike', searchTerm],
+        ['city', 'ilike', searchTerm],
+      ],
+      fields: DD.lead,
       limit: 200,
       offset: 0,
     };
@@ -365,18 +330,7 @@ export default class DataProvider {
   getLeads(index = 0) {
     const params = {
       domain: [['active', '=', 'true'], ['user_id', '=', this.getUserId()]],
-      fields: [
-        'contact_name',
-        'name',
-        'title_action',
-        'phone',
-        'partner_name',
-        'city',
-        'type',
-        'email_from',
-        'id',
-        'date_deadline',
-      ],
+      fields: DD.lead,
       limit: maxRecords,
       offset: index,
       order: 'id desc',
@@ -401,18 +355,7 @@ export default class DataProvider {
   getLeadbyStage(stageid, index = 0) {
     const params = {
       domain: ['&', ['active', '=', 'true'], ['stage_id', '=', stageid]],
-      fields: [
-        'contact_name',
-        'name',
-        'title_action',
-        'phone',
-        'partner_name',
-        'city',
-        'email_from',
-        'id',
-        'type',
-        'date_deadline',
-      ],
+      fields: DD.lead,
       limit: maxRecords,
       offset: index,
       order: 'id desc',
@@ -429,38 +372,6 @@ export default class DataProvider {
     });
   }
 
-  /**
-   * @deprecated use getLeads method specifiy the offset
-   * @param {*} index
-   */
-  getLeadsBeginIndex(index) {
-    const params = {
-      domain: [['active', '=', 'true']],
-      fields: [
-        'contact_name',
-        'name',
-        'title_action',
-        'phone',
-        'partner_name',
-        'city',
-        'type',
-        'email_from',
-        'id',
-      ],
-      limit: 20,
-      offset: index,
-    };
-
-    return new Promise((resolve, reject) => {
-      this.odoo.search_read('crm.lead', params, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  }
 
   /**
    * retrieve products
@@ -498,7 +409,11 @@ export default class DataProvider {
       products.push(productId);
     }
     const params = {
-      domain: [['active', '=', 'true'], ['sale_ok', '=', 'true'], ['id', '=', products]],
+      domain: [
+        ['active', '=', 'true'],
+        ['sale_ok', '=', 'true'],
+        ['id', '=', products],
+      ],
       fields: DD.productDetail,
       limit: maxRecords,
       order: 'id desc',
@@ -523,7 +438,15 @@ export default class DataProvider {
   getActivities(index = 0) {
     const params = {
       domain: [['active', '=', 'true'], ['date_deadline', '>', '1900-01-01']],
-      fields: ['id', 'name', 'date_deadline', 'email_from', 'phone', 'mobile', 'contact_name'],
+      fields: [
+        'id',
+        'name',
+        'date_deadline',
+        'email_from',
+        'phone',
+        'mobile',
+        'contact_name',
+      ],
       limit: 200,
       offset: index,
     };
@@ -547,7 +470,16 @@ export default class DataProvider {
   getLeadNote(leadId) {
     const params = {
       domain: [['model', '=', 'crm.lead'], ['res_id', '=', leadId]],
-      fields: ['id', 'date', 'record_name', 'subject', 'body', 'needaction', 'subtype_id', 'message_type'],
+      fields: [
+        'id',
+        'date',
+        'record_name',
+        'subject',
+        'body',
+        'needaction',
+        'subtype_id',
+        'message_type',
+      ],
       limit: maxRecords,
       offset: 0,
     };
@@ -670,8 +602,10 @@ export default class DataProvider {
    * @param {any} activity
    */
   logActivity(activity) {
+    throw new Error('Not implemented');
+    /*
     if (activity === undefined) {
-      throw (new Error('Wrong argument'));
+      throw new Error('Wrong argument');
     }
 
     const model = 'crm.activity.log';
@@ -685,7 +619,7 @@ export default class DataProvider {
       args: activity,
     };
 
-    /*
+    
     return new Promise((resolve, reject) => {
       this.odoo.rpc_call(endpoint, params, (err, data) => {
         if (err) {
@@ -697,9 +631,8 @@ export default class DataProvider {
       });
     });
     */
-
+    /*
     const type = activity.next_activity_id;
-    const temp = ReferenceData.getInstance().getActivityTypes();
     let subtype = 0;
     temp.forEach((act) => {
       if (act.id === type) {
@@ -746,6 +679,7 @@ export default class DataProvider {
         console.log(err);
         return false;
       });
+    */
   }
 
   /**
@@ -775,11 +709,12 @@ export default class DataProvider {
    */
   getCompanyInfo(id) {
     if (id === undefined) {
-      throw (new Error('invalid lead id'));
+      throw new Error('invalid user id');
     }
     if (!Array.isArray(id)) {
       id = [id];
     }
+
     const params = {
       ids: id,
       fields: ['id', 'name', 'country_id', 'currency_id', 'state_id'],
@@ -860,7 +795,7 @@ export default class DataProvider {
       kwargs: {},
       model,
       method: 'retrieve_sales_dashboard',
-      args: [this.getUserId],
+      args: [this.getUserId()],
     };
 
     return new Promise((resolve, reject) => {
@@ -879,7 +814,7 @@ export default class DataProvider {
    */
   getLeadStages() {
     const params = {
-      fields: ['id', 'name', 'sequence'],
+      fields: DD.leadStage,
       order: 'sequence asc',
     };
 
@@ -949,7 +884,7 @@ export default class DataProvider {
   getChannels(partnerid) {
     const params = {
       domain: [['channel_partner_ids', '=', partnerid]],
-      fields: ['name', 'id'],
+      fields: DD.mailChannel,
     };
 
     return new Promise((resolve, reject) => {
@@ -1006,7 +941,7 @@ export default class DataProvider {
    */
   getCommissionSummary(months = 2) {
     const date = new Date();
-    date.setDate(date.getDate() - (months * 31));
+    date.setDate(date.getDate() - months * 31);
     const params = {
       domain: [['end_date', '>', date]],
       fields: DD.commissionSummary,
@@ -1107,6 +1042,35 @@ export default class DataProvider {
 
     return new Promise((resolve, reject) => {
       this.odoo.search_read('mail.channel', params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+
+  /**
+   * mark the message as read
+   * @param {number} id
+   */
+  markMessageRead(id) {
+    const model = 'mail.message';
+    const endpoint = '/web/dataset/call_kw';
+
+    const params = {
+      kwargs: {
+        context: this.context,
+      },
+      model,
+      method: 'set_message_done',
+      args: [id],
+    };
+
+    return new Promise((resolve, reject) => {
+      this.odoo.rpc_call(endpoint, params, (err, data) => {
         if (err) {
           reject(err);
         } else {
