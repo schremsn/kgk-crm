@@ -11,6 +11,7 @@ export const reducers = combineReducers({
   commission: require('./CommissionRedux').reducer,
   message: require('./MessageRedux').reducer,
   auth: require('./AuthRedux').reducer,
+  lead: require('./LeadRedux').reducer,
 });
 
 export default () => {

@@ -16,6 +16,9 @@ import WebViewScreen from '../Containers/WebViewScreen';
 import MoreScreen from '../Containers/MoreScreen';
 import MessagesListScreen from '../Containers/MessagesListScreen';
 import MessageDetailScreen from '../Containers/MessageDetailScreen';
+import LeadStagesScreen from '../Containers/LeadStagesScreen';
+import LeadDetailScreen from '../Containers/LeadDetailScreen';
+import LeadListScreen from '../Containers/LeadListScreen';
 
 const HomeStack = StackNavigator({
   CommissionListScreen: { screen: CommissionListScreen },
@@ -52,7 +55,9 @@ const MoreStack = StackNavigator({
   MoreScreen: { screen: MoreScreen },
   ProductsListScreen: { screen: ProductsListScreen },
   ProductDetailScreen: { screen: ProductDetailScreen },
-  WebViewScreen: { screen: WebViewScreen },
+  LeadStagesScreen: { screen: LeadStagesScreen },
+  LeadDetailScreen: { screen: LeadDetailScreen },
+  LeadListScreen: { screen: LeadListScreen },
 }, {
   headerMode: 'none',
   initialRouteName: 'MoreScreen',

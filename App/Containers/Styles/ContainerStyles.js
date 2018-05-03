@@ -127,4 +127,32 @@ export default StyleSheet.create({
     paddingTop: 10,
     paddingLeft: 10,
   },
+  // style lead statges
+  boxLeadStage: {
+    // borderWidth: 1,
+    // borderColor: Colors.border,
+    borderRadius: 10,
+    padding: Metrics.baseMargin,
+    marginBottom: 20,
+    backgroundColor: Colors.bloodOrange
+  },
+  boxLeadTitle: {
+    ...Fonts.style.h2,
+    color: Colors.snow,
+  },
+  boxLeadContent: {
+    ...Fonts.style.h3,
+    color: Colors.snow,
+    paddingBottom: 10
+  },
+  // style lead list
+  boxSearch: {
+    paddingBottom: 20
+  },
+  inputSearch: {
+    backgroundColor: Colors.snow,
+    borderRadius: 20,
+    paddingLeft: 20
+  },
+
 });

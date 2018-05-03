@@ -46,6 +46,9 @@
   "status": "Trạng thái",
   "changed_by": "Được thay đổi bởi",
   "id":"Id",
-  "end_date":"Ngày kết thúc"
-
+  "end_date":"Ngày kết thúc",
+  // lead stages
+  "lead stages": "Lead Stages",
+  "lead list": "Lead List",
+  "lead detail": "Lead Detail"
 }

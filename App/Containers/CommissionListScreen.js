@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { RefreshControl, Text, Image, View, TouchableOpacity, ListView, Alert, BackHandler } from 'react-native';
+import { RefreshControl, Text, Image, View, TouchableOpacity, ListView, Alert, BackHandler, NetInfo } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import numeral from 'numeral';
@@ -21,15 +21,54 @@ class CommissionListScreen extends Component {
     this.renderCommission = this.renderCommission.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
     this.handleBackAndroid = this.handleBackAndroid.bind(this);
+    this.handleCheckNetwork = this.handleCheckNetwork.bind(this);
+    this.handleConnectivityChange = this.handleConnectivityChange.bind(this);
   }
   componentWillMount() {
-    this.getCommissionList();
+    this.handleCheckNetwork()
   }
   componentDidMount() {
     BackHandler.addEventListener('backPress', this.handleBackAndroid);
+
+    NetInfo.isConnected.addEventListener(
+      'connectionChange',
+      this.handleConnectivityChange
+    );
   }
   componentWillUnmount() {
     BackHandler.removeEventListener('backPress');
+    NetInfo.isConnected.removeEventListener(
+      'connectionChange',
+      this.handleConnectivityChange
+    );
+  }
+  handleCheckNetwork(){
+    NetInfo.isConnected.fetch().then(isConnected => {
+      console.log('netword status', isConnected)
+      if (isConnected) {
+        this.getCommissionList();
+      } else {
+        Alert.alert(
+          'Alert',
+          'Network is not connected!',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => true,
+              style: 'cancel',
+            },
+            {
+              text: 'RETRY',
+              onPress: () => {
+                setTimeout(() => {
+                  this.handleCheckNetwork()
+                }, 2000)
+              },
+            },
+          ],
+        );
+      }
+    });
   }
   handleBackAndroid() {
     Alert.alert(
@@ -42,7 +81,7 @@ class CommissionListScreen extends Component {
           style: 'cancel',
         },
         {
-          text: 'OK',
+          text: 'RETRY',
           onPress: () => {
             BackHandler.exitApp();
           },
@@ -50,6 +89,31 @@ class CommissionListScreen extends Component {
       ],
     );
     return true;
+  }
+  handleConnectivityChange(isConnected) {
+    console.log(isConnected)
+    if(!isConnected){
+      Alert.alert(
+        'Alert',
+        'Network is not connected!',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => true,
+            style: 'cancel',
+          },
+          {
+            text: 'RETRY',
+            onPress: () => {
+              setTimeout(() => {
+                this.handleCheckNetwork()
+              }, 2000)
+            },
+          },
+        ],
+      );
+    }
+
   }
   getCommissionList(isRefreshed) {
     this.props.getCommissionSummary(0, (list) => {

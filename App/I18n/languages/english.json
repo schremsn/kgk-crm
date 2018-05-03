@@ -47,5 +47,9 @@
   "status": "Status",
   "changed_by": "Changed by",
   "id": "Id",
-  "end_date":"End date"
+  "end_date":"End date",
+  // lead stages
+  "lead stages": "Lead Stages",
+  "lead list": "Lead List",
+  "lead detail": "Lead Detail"
 }
