@@ -63,21 +63,16 @@ class LeadListScreen extends Component {
         {/*<Text style={styles.sectionText}>title_action: {item.title_action}</Text>*/}
         <Text style={styles.sectionText}>city: {item.city}</Text>
         <Text style={styles.sectionText}>phone: {item.phone}</Text>
-          {/*'type',*/}
-          {/*'email_from',*/}
-          {/*'date_deadline',*/}
       </TouchableOpacity>
     );
   }
   onChangeSearchLead(content){
-    this.setState({isLoading: true})
     this.props.searchLead(content, (list)=>{
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
       const dataSource = ds.cloneWithRows(list);
       this.setState({
         list,
         dataSource,
-        isLoading: false
       });
     })
   }

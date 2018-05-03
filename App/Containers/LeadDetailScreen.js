@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView, Text, Image } from 'react-native';
+import {View, ScrollView, Text, Image, TouchableOpacity, BackHandler, Alert} from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import styles from './Styles/ContainerStyles';
 import { Images, Metrics } from './../Themes';
 import { getLead } from '../Redux/LeadRedux';
 import Header from '../Components/Header';
+import {Colors} from "../Themes";
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Communications from 'react-native-communications';
 
 const data = [
   { name: 'id', value: 'Id' },
@@ -45,6 +48,25 @@ class LeadDetailScreen extends Component {
       </View>
     );
   }
+  handleCallPhone(phone){
+    Alert.alert(
+      'Confirm',
+      `Do you want to call ${phone} ?`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => true,
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            Communications.phonecall(phone, true)
+          },
+        },
+      ],
+    );
+  }
   renderRows(rowData) {
     return (
       data.map(item => (
@@ -56,7 +78,16 @@ class LeadDetailScreen extends Component {
             {
               item.name === 'stage_id'
               ? <Text style={styles.rowInfo}>{rowData.stage_id[0]}</Text>
-              : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
+              : (item.name === 'phone' || item.name === 'mobile')
+                ? <View style={styles.boxLeadPhone}>
+                  <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
+                  {
+                    rowData[item.name] && <TouchableOpacity style={styles.buttonCallPhone} onPress={() => this.handleCallPhone(rowData[item.name])}>
+                      <Ionicons name='ios-call-outline' size={25} color={Colors.banner} />
+                    </TouchableOpacity>
+                  }
+                </View>
+                : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
             }
           </View>
         </View>))

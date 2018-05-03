@@ -28,7 +28,6 @@ class LeadStagesScreen extends Component {
   }
   getPipelineCount(isRefreshed) {
     this.props.getPipelineCount((list) => {
-      console.log(list)
       this.setState({
         list,
         isLoading: false
@@ -56,12 +55,11 @@ class LeadStagesScreen extends Component {
     );
   }
   render() {
-    const { isLoading, isRefreshing, leadStages, list } = this.state;
+    const { isLoading, isRefreshing, leadStages } = this.state;
     return (
       <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title="lead stages" onPress={() => this.props.navigation.goBack(null)} />
-
+        <Header title="pipeline" onPress={() => this.props.navigation.goBack(null)} />
         {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
@@ -103,7 +101,7 @@ LeadStagesScreen.propTypes = {
   getPipelineCount: PropTypes.func.isRequired,
 };
 LeadStagesScreen.navigationOptions = {
-  title: I18n.t('commission list'),
+  title: I18n.t('pipeline'),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeadStagesScreen);

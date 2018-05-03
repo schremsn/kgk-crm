@@ -48,7 +48,7 @@
   "id":"Id",
   "end_date":"Ngày kết thúc",
   // lead stages
-  "lead stages": "Lead Stages",
+  "pipeline": "Pipeline",
   "lead list": "Lead List",
   "lead detail": "Lead Detail"
 }

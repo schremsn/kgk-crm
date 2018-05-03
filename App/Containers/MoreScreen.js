@@ -31,7 +31,7 @@ export default class MoreScreen extends Component {
         </TouchableOpacity>
         <TouchableOpacity style={[styles.buttonBox, { bottom: 240 }]} onPress={() => this.props.navigation.navigate('LeadStagesScreen')}>
           <Text style={styles.text}>
-            {I18n.t('lead stages')}
+            {I18n.t('pipeline')}
           </Text>
           <View style={styles.button}>
             <Ionicons name="ios-podium-outline" size={25} color={Colors.snow} />

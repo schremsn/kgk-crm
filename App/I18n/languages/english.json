@@ -49,7 +49,7 @@
   "id": "Id",
   "end_date":"End date",
   // lead stages
-  "lead stages": "Lead Stages",
+  "pipeline": "Pipeline",
   "lead list": "Lead List",
   "lead detail": "Lead Detail"
 }

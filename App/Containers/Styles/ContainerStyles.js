@@ -134,7 +134,7 @@ export default StyleSheet.create({
     borderRadius: 10,
     padding: Metrics.baseMargin,
     marginBottom: 20,
-    backgroundColor: Colors.bloodOrange
+    backgroundColor: Colors.facebook
   },
   boxLeadTitle: {
     ...Fonts.style.h2,
@@ -154,5 +154,13 @@ export default StyleSheet.create({
     borderRadius: 20,
     paddingLeft: 20
   },
-
+  // style lead detail
+  boxLeadPhone: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  buttonCallPhone: {
+    padding: 5,
+    marginLeft: 30
+  }
 });
