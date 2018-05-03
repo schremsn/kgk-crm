@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput, KeyboardAvoidingView } from 'react-native';
 import I18n from 'react-native-i18n';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './Styles/ContainerStyles';
 import { Images, Colors } from './../Themes';
 import { getLeads, getLeadbyStage, searchLead } from '../Redux/LeadRedux';
@@ -15,12 +16,14 @@ class LeadListScreen extends Component {
     this.state = {
       isLoading: true,
       isRefreshing: false,
+      searchContent: ''
     };
     this.getLeadsList = this.getLeadsList.bind(this);
     // this.getLeadsListNextPage = this.getLeadsListNextPage.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
     this.onChangeSearchLead = this.onChangeSearchLead.bind(this);
     this.renderProduct = this.renderProduct.bind(this);
+    this.handleSearchLead = this.handleSearchLead.bind(this);
   }
   componentWillMount() {
     this.getLeadsList();
@@ -61,13 +64,17 @@ class LeadListScreen extends Component {
         <Text style={styles.sectionText}>Contact: {item.contact_name}</Text>
         {/*<Text style={styles.sectionText}>email_from: {item.email_from}</Text>*/}
         {/*<Text style={styles.sectionText}>title_action: {item.title_action}</Text>*/}
-        <Text style={styles.sectionText}>city: {item.city}</Text>
-        <Text style={styles.sectionText}>phone: {item.phone}</Text>
+        <Text style={styles.sectionText}>City: {item.city}</Text>
+        <Text style={styles.sectionText}>Phone: {item.phone}</Text>
       </TouchableOpacity>
     );
   }
-  onChangeSearchLead(content){
-    this.props.searchLead(content, (list)=>{
+  onChangeSearchLead(searchContent){
+    this.setState({ searchContent})
+  }
+  handleSearchLead(){
+    const { searchContent } = this.state;
+    this.props.searchLead(searchContent, (list)=>{
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
       const dataSource = ds.cloneWithRows(list);
       this.setState({
@@ -80,16 +87,20 @@ class LeadListScreen extends Component {
     const { isLoading, isRefreshing, dataSource } = this.state;
     return (
       <View style={styles.container}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title="lead list" onPress={() => this.props.navigation.goBack(null)} />
+        <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
+        <Header title='lead list' onPress={() => this.props.navigation.goBack(null)} />
         <View style={styles.boxSearch}>
           <TextInput
             style={styles.inputSearch}
-            underlineColorAndroid="transparent"
+            underlineColorAndroid='transparent'
             placeholder={'Search for name, city'}
             onChangeText={(value) => this.onChangeSearchLead(value)}
+            returnKeyType={'search'}
+            onEndEditing={this.handleSearchLead}
           />
-
+          <TouchableOpacity style={styles.buttonSearch} onPress={() => this.handleSearchLead()}>
+            <Ionicons name='ios-search-outline' size={25} color={Colors.banner} />
+          </TouchableOpacity>
         </View>
         {
           isLoading

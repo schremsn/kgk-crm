@@ -154,6 +154,15 @@ export default StyleSheet.create({
     borderRadius: 20,
     paddingLeft: 20
   },
+  buttonSearch: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    paddingTop: 12,
+    paddingBottom: 11,
+    paddingRight: 20,
+    paddingLeft: 25,
+  },
   // style lead detail
   boxLeadPhone: {
     flexDirection: 'row',
