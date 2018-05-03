@@ -17,7 +17,7 @@ class LeadStagesScreen extends Component {
       leadStages: props.leadStages || [],
       isLoading: false,
       isRefreshing: false,
-      list: []
+      list: {}
     };
     this.getPipelineCount = this.getPipelineCount.bind(this);
     this.renderLeadStage = this.renderLeadStage.bind(this);
@@ -43,6 +43,7 @@ class LeadStagesScreen extends Component {
     this.getPipelineCount('isRefreshed');
   }
   renderLeadStage(item) {
+    const countCurrentStage = this.state.list[item.id] || 0
     return (
       <TouchableOpacity
         key={item.id}
@@ -50,17 +51,12 @@ class LeadStagesScreen extends Component {
         style={styles.boxLeadStage}
       >
         <Text style={styles.boxLeadTitle}>{item.name.toUpperCase()}</Text>
-        <Text style={styles.boxLeadContent}>{item.sequence}</Text>
+        <Text style={styles.boxLeadContent}>{countCurrentStage}</Text>
       </TouchableOpacity>
     );
   }
   render() {
     const { isLoading, isRefreshing, leadStages, list } = this.state;
-    list.forEach((item)=>{
-      console.log(item)
-
-
-    })
     return (
       <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
@@ -99,7 +95,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getPipelineCount: () => { dispatch(pipelineCount()); },
+  getPipelineCount: (cb) => { dispatch(pipelineCount(cb)); },
 });
 
 LeadStagesScreen.propTypes = {

@@ -83,7 +83,11 @@ export const pipelineCount = (cb) => (dispatch) => {
     .then((list) => {
       console.log(list)
       // dispatch(Creators.getLeadStagesSuccess(list));
-      if (cb) { cb(list); }
+      if (cb) {
+        console.log(1)
+        cb(list);
+
+      }
     })
     .catch(() => {
       // dispatch(Creators.getLeadStagesFailure());
