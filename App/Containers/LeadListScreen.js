@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput, KeyboardAvoidingView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './Styles/ContainerStyles';
@@ -11,12 +11,13 @@ import ProgressBar from '../Components/ProgressBar';
 import Header from '../Components/Header';
 
 class LeadListScreen extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isLoading: true,
       isRefreshing: false,
-      searchContent: ''
+      searchContent: '',
+      stageName: props.navigation.state.params.stageName
     };
     this.getLeadsList = this.getLeadsList.bind(this);
     // this.getLeadsListNextPage = this.getLeadsListNextPage.bind(this);
@@ -60,12 +61,13 @@ class LeadListScreen extends Component {
     return (
       <TouchableOpacity onPress={() => { this.props.navigation.navigate('LeadDetailScreen', { leadId: item.id }); }} style={styles.sectionHeaderContainer}>
         <Text style={styles.sectionHeader}>{item.name}</Text>
-        <Text style={styles.sectionText}>Customer: {item.partner_name}</Text>
-        <Text style={styles.sectionText}>Contact: {item.contact_name}</Text>
+        <Text style={styles.sectionText}>{I18n.t('id')}: {item.id}</Text>
+        <Text style={styles.sectionText}>{I18n.t('customer')}: {item.partner_name}</Text>
+        <Text style={styles.sectionText}>{I18n.t('contact')}: {item.contact_name}</Text>
         {/*<Text style={styles.sectionText}>email_from: {item.email_from}</Text>*/}
         {/*<Text style={styles.sectionText}>title_action: {item.title_action}</Text>*/}
-        <Text style={styles.sectionText}>City: {item.city}</Text>
-        <Text style={styles.sectionText}>Phone: {item.phone}</Text>
+        <Text style={styles.sectionText}>{I18n.t('city')}: {item.city}</Text>
+        <Text style={styles.sectionText}>{I18n.t('phone')}: {item.phone}</Text>
       </TouchableOpacity>
     );
   }
@@ -84,16 +86,16 @@ class LeadListScreen extends Component {
     })
   }
   render() {
-    const { isLoading, isRefreshing, dataSource } = this.state;
+    const { isLoading, isRefreshing, dataSource, stageName } = this.state;
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
-        <Header title='lead list' onPress={() => this.props.navigation.goBack(null)} />
+        <Header title={stageName} onPress={() => this.props.navigation.goBack(null)} />
         <View style={styles.boxSearch}>
           <TextInput
             style={styles.inputSearch}
             underlineColorAndroid='transparent'
-            placeholder={'Search for name, city'}
+            placeholder={I18n.t('search for name, city')}
             onChangeText={(value) => this.onChangeSearchLead(value)}
             returnKeyType={'search'}
             onEndEditing={this.handleSearchLead}
@@ -132,9 +134,6 @@ class LeadListScreen extends Component {
   }
 }
 
-LeadListScreen.navigationOptions = {
-  title: I18n.t('product list'),
-};
 LeadListScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   getLeads: PropTypes.func.isRequired,

@@ -90,25 +90,23 @@ const MessagesStack = StackNavigator({
 
 const AppStack = TabNavigator(
   {
-    Home: { screen: HomeStack },
-    Status: { screen: CommissionStack },
-    Message: { screen: MessagesStack },
-    More: { screen: MoreStack },
+    [I18n.t('home')] : { screen: HomeStack },
+    [I18n.t('status')]: { screen: CommissionStack },
+    [I18n.t('message')]: { screen: MessagesStack },
+    [I18n.t('more')]: { screen: MoreStack },
   },
   {
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
-        if (routeName === 'Home') {
+        if (routeName === I18n.t('home')) {
           iconName = `ios-home${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Status') {
+        } else if (routeName === I18n.t('status')) {
           iconName = `ios-list-box${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Products') {
-          iconName = `ios-list-box${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Message') {
+        } else if (routeName === I18n.t('message')) {
           iconName = `ios-mail${focused ? '' : '-outline'}`;
-        } else if (routeName === 'More') {
+        } else if (routeName === I18n.t('more')) {
           iconName = `ios-options${focused ? '' : '-outline'}`;
         }
 

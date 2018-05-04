@@ -42,7 +42,7 @@ export default class MoreScreen extends Component {
             {I18n.t('product list')}
           </Text>
           <View style={styles.button}>
-            <Ionicons name="ios-podium-outline" size={25} color={Colors.snow} />
+            <Ionicons name="ios-list-box-outline" size={25} color={Colors.snow} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonBox} onPress={() => { this.toggleMenu(); }}>

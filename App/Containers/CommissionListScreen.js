@@ -71,31 +71,14 @@ class CommissionListScreen extends Component {
     });
   }
   handleBackAndroid() {
-    Alert.alert(
-      'Alert',
-      'Do you want to quit the app?',
-      [
-        {
-          text: 'Cancel',
-          onPress: () => true,
-          style: 'cancel',
-        },
-        {
-          text: 'RETRY',
-          onPress: () => {
-            BackHandler.exitApp();
-          },
-        },
-      ],
-    );
-    return true;
+    this.props.navigation.goBack(null)
+    return true
   }
   handleConnectivityChange(isConnected) {
-    console.log(isConnected)
     if(!isConnected){
       Alert.alert(
-        'Alert',
-        'Network is not connected!',
+        I18n.t('Alert'),
+        I18n.t('Network is not connected'),
         [
           {
             text: 'Cancel',

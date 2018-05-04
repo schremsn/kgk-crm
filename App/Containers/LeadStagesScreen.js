@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
 import I18n from 'react-native-i18n';
-
 import styles from './Styles/ContainerStyles';
 import { Images, Colors } from './../Themes';
 import ProgressBar from '../Components/ProgressBar';
@@ -46,10 +45,10 @@ class LeadStagesScreen extends Component {
     return (
       <TouchableOpacity
         key={item.id}
-        onPress={() => { this.props.navigation.navigate('LeadListScreen', { stageId: item.id }); }}
+        onPress={() => { this.props.navigation.navigate('LeadListScreen', { stageId: item.id, stageName: item.name }); }}
         style={styles.boxLeadStage}
       >
-        <Text style={styles.boxLeadTitle}>{item.name.toUpperCase()}</Text>
+        <Text style={styles.boxLeadTitle}>{I18n.t(item.name).toUpperCase()}</Text>
         <Text style={styles.boxLeadContent}>{countCurrentStage}</Text>
       </TouchableOpacity>
     );
@@ -57,13 +56,14 @@ class LeadStagesScreen extends Component {
   render() {
     const { isLoading, isRefreshing, leadStages } = this.state;
     return (
-      <View style={[styles.container]}>
+      <View style={[styles.container, ]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title="pipeline" onPress={() => this.props.navigation.goBack(null)} />
+        <Header title='pipeline' onPress={() => this.props.navigation.goBack(null)} />
         {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
             : <ScrollView
+              style={styles.mainContainer}
               refreshControl={
                 <RefreshControl
                   refreshing={isRefreshing}

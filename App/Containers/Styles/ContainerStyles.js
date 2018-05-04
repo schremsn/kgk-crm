@@ -17,7 +17,7 @@ export default StyleSheet.create({
     height: Metrics.screenHeight,
   },
   mainContainer: {
-
+    paddingBottom: 60
   },
   description: {
     marginVertical: Metrics.doubleSection,
@@ -171,5 +171,18 @@ export default StyleSheet.create({
   buttonCallPhone: {
     padding: 5,
     marginLeft: 30
+  },
+  boxActions: {
+    position: 'absolute',
+    bottom: 70,
+    left: 0,
+    right: 0,
+    top: 0,
+    backgroundColor: '#5f3e63b0',
+    justifyContent: 'flex-end'
+  },
+  boxActionContent: {
+    backgroundColor: 'white',
+    paddingBottom: 10,
   }
 });
