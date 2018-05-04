@@ -210,35 +210,13 @@ export default class DataProvider {
       lead['tag_ids'] = temp;
       lead.delete('tag');
     }
-    // set default for lead
-    lead.set('user_id', this.getUserId());
-    lead.set('type', 'opportunity');
-    lead.set('source', this.getUserId());
     */
 
     lead['user_id'] = this.getUserId();
     lead['type'] = 'opportunity';
-    lead['source'] = this.getUserId();
-    /*
-    mapLead = new Map();
-    mapLead.set('name', 'app created');
-    mapLead.set('partner_id', 10);
-    mapLead.set('type', 'opportunity');
-    mapLead.set('source', this.getUserId());
+    lead['source'] = this.getPartnerId();
 
-    console.log(mapLead);
-    */
-    // convert lead map to array
-    const newLead = Object.create(null);
-    mapLead.forEach((value, key) => {
-      Object.defineProperty(newLead, key, {
-        enumerable: true,
-        configurable: true,
-        get() {
-          return value;
-        },
-      });
-    });
+    console.log(lead);
     
     return new Promise((resolve, reject) => {
       this.odoo.create('crm.lead', lead,  (err, data) => {
@@ -872,24 +850,10 @@ export default class DataProvider {
   }
 
   /**
-   * HACK need to reevaluate
-   * @param {number} userId
+   * return current users partner id
    */
-  getPartnerId(userId) {
-    const params = {
-      ids: userId,
-      fields: ['partner_id'],
-    };
-
-    return new Promise((resolve, reject) => {
-      this.odoo.get('res.users', params, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
+  getPartnerId() {
+    return this.odoo.partnerId;
   }
 
   /*
@@ -917,9 +881,8 @@ export default class DataProvider {
    * retrieve messages for the user
    */
   async getMessages() {
-    const partnerid = await this.getPartnerId(this.getUserId());
-    const { partner_id: id } = partnerid[0];
-    const channels = await this.getChannels(id[0]);
+    const partnerid = this.getPartnerId();
+    const channels = await this.getChannels(partnerid);
     const channelIds = [];
     if (channels) {
       channels.forEach((channel) => {
