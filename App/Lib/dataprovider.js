@@ -90,7 +90,7 @@ export default class DataProvider {
    * id or an array of ids
    * @param {*} id
    */
-  getCustomer(id) {
+  getCustomerDetail(id) {
     if (!Array.isArray(id)) {
       id = [id];
     }
@@ -195,8 +195,9 @@ export default class DataProvider {
     if (lead === undefined) {
       throw new Error('Invalid argument');
     }
-    // resolve many-to-many relationship for tags
-    const tag = lead.get('tag');
+    
+    /* resolve many-to-many relationship for tags
+    const tag = lead.tag;
     if (tag) {
       const temp = Object.create(null);
       Object.defineProperty(temp, 4, {
@@ -206,27 +207,19 @@ export default class DataProvider {
           return tag;
         },
       });
-      lead.set('tag_ids', temp);
+      lead['tag_ids'] = temp;
       lead.delete('tag');
     }
-    // set default for lead
-    lead.set('user_id', this.getUserId());
-    lead.set('type', 'opportunity');
+    */
 
-    // convert lead map to array
-    const newLead = Object.create(null);
-    lead.forEach((value, key) => {
-      Object.defineProperty(newLead, key, {
-        enumerable: true,
-        configurable: true,
-        get() {
-          return value;
-        },
-      });
-    });
+    lead['user_id'] = this.getUserId();
+    lead['type'] = 'opportunity';
+    lead['source'] = this.getPartnerId();
 
+    console.log(lead);
+    
     return new Promise((resolve, reject) => {
-      this.odoo.create('crm.lead', newLead, (err, data) => {
+      this.odoo.create('crm.lead', lead,  (err, data) => {
         if (err) {
           reject(err);
         } else {
@@ -245,8 +238,7 @@ export default class DataProvider {
       throw new Error('Invalid argument');
     }
 
-    console.log(typeof lead);
-    const id = lead.id;
+    const { id } = lead;
 
     return new Promise((resolve, reject) => {
       this.odoo.update('crm.lead', id, lead, (err, data) => {
@@ -265,7 +257,7 @@ export default class DataProvider {
    */
   searchCustomer(searchTerm) {
     if (typeof searchTerm !== 'string') {
-      console.log('wrong search term');
+      throw new Error('wrong search term');
     }
     const params = {
       // domain: ['&', '|', '|', ['customer', '=', 'true'], ['name', 'ilike', searchTerm], ['city', 'ilike', searchTerm],
@@ -277,7 +269,7 @@ export default class DataProvider {
         ['city', 'ilike', searchTerm],
       ],
       fields: DD.customer,
-      limit: 200,
+      limit: maxRecords,
       offset: 0,
     };
 
@@ -298,7 +290,7 @@ export default class DataProvider {
    */
   searchLead(searchTerm) {
     if (typeof searchTerm !== 'string') {
-      console.log('wrong search term');
+      throw new Error('wrong search term');
     }
     const params = {
       domain: [
@@ -308,7 +300,7 @@ export default class DataProvider {
         ['city', 'ilike', searchTerm],
       ],
       fields: DD.lead,
-      limit: 200,
+      limit: maxRecords,
       offset: 0,
     };
 
@@ -408,6 +400,7 @@ export default class DataProvider {
     } else {
       products.push(productId);
     }
+
     const params = {
       domain: [
         ['active', '=', 'true'],
@@ -857,24 +850,10 @@ export default class DataProvider {
   }
 
   /**
-   * HACK need to reevaluate
-   * @param {number} userId
+   * return current users partner id
    */
-  getPartnerId(userId) {
-    const params = {
-      ids: userId,
-      fields: ['partner_id'],
-    };
-
-    return new Promise((resolve, reject) => {
-      this.odoo.get('res.users', params, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
+  getPartnerId() {
+    return this.odoo.partnerId;
   }
 
   /*
@@ -902,9 +881,8 @@ export default class DataProvider {
    * retrieve messages for the user
    */
   async getMessages() {
-    const partnerid = await this.getPartnerId(this.getUserId());
-    const { partner_id: id } = partnerid[0];
-    const channels = await this.getChannels(id[0]);
+    const partnerid = this.getPartnerId();
+    const channels = await this.getChannels(partnerid);
     const channelIds = [];
     if (channels) {
       channels.forEach((channel) => {

@@ -106,7 +106,6 @@ export default class DD {
     'id',
     'email',
     'comment',
-    'company_name',
     'contact_address',
     'is_company',
     'street',
@@ -114,6 +113,7 @@ export default class DD {
     'website',
     'zip',
     'state',
+    'identification_id',
   ]
 
   static lead = [

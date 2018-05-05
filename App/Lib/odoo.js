@@ -40,6 +40,7 @@ Odoo.prototype.connect = function (cb) {
       if (data.error) {
         cb(data.error, null);
       } else {
+        this.partnerId = data.result.partner_id;
         this.uid = data.result.uid;
         this.session_id = data.result.session_id;
         this.context = data.result.user_context;
