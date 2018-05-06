@@ -87,4 +87,7 @@
   "Do you want to quit the app": "Do you want to quit the app ?",
   "Network is not connected": "Network is not connected !",
   "Do you want to call": "Do you want to call",
+  // contacts
+  "Company": "Company",
+  "Contacts": "Contacts",
 }

@@ -12,13 +12,13 @@ import LoginScreen from '../Containers/LoginScreen';
 import CommissionListScreen from '../Containers/CommissionListScreen';
 import ProductsListScreen from '../Containers/ProductsListScreen';
 import ProductDetailScreen from '../Containers/ProductDetailScreen';
-import WebViewScreen from '../Containers/WebViewScreen';
 import MoreScreen from '../Containers/MoreScreen';
 import MessagesListScreen from '../Containers/MessagesListScreen';
 import MessageDetailScreen from '../Containers/MessageDetailScreen';
 import LeadStagesScreen from '../Containers/LeadStagesScreen';
 import LeadDetailScreen from '../Containers/LeadDetailScreen';
 import LeadListScreen from '../Containers/LeadListScreen';
+import ContactsListScreen from '../Containers/ContactsListScreen';
 
 const HomeStack = StackNavigator({
   CommissionListScreen: { screen: CommissionListScreen },
@@ -58,6 +58,7 @@ const MoreStack = StackNavigator({
   ProductDetailScreen: { screen: ProductDetailScreen },
   CommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
   CommissionStatusListScreen: { screen: CommissionStatusListScreen },
+  ContactsListScreen: { screen: ContactsListScreen },
 }, {
   headerMode: 'none',
   initialRouteName: 'MoreScreen',

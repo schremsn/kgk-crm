@@ -12,6 +12,7 @@ export const reducers = combineReducers({
   message: require('./MessageRedux').reducer,
   auth: require('./AuthRedux').reducer,
   lead: require('./LeadRedux').reducer,
+  contacts: require('./ContactsRedux').reducer,
 });
 
 export default () => {

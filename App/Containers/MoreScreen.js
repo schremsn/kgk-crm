@@ -21,12 +21,20 @@ export default class MoreScreen extends Component {
     return (
       <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <TouchableOpacity style={[styles.buttonBox, { bottom: 310 }]} onPress={() => this.props.navigation.navigate('ProductsListScreen')}>
+        <TouchableOpacity style={[styles.buttonBox, { bottom: 380 }]} onPress={() => this.props.navigation.navigate('ProductsListScreen')}>
           <Text style={styles.text}>
             {I18n.t('account')}
           </Text>
           <View style={styles.button}>
             <Ionicons name="ios-person-outline" size={25} color={Colors.snow} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.buttonBox, { bottom: 310 }]} onPress={() => this.props.navigation.navigate('ContactsListScreen')}>
+          <Text style={styles.text}>
+            {I18n.t('Contacts')}
+          </Text>
+          <View style={styles.button}>
+            <Ionicons name="ios-contacts-outline" size={25} color={Colors.snow} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.buttonBox, { bottom: 240 }]} onPress={() => this.props.navigation.navigate('CommissionStatusListScreen')}>
