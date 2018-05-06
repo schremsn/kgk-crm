@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, ScrollView } from 'react-native';
 import I18n from 'react-native-i18n';
 import moment from 'moment';
-
-import styles from './Styles/ContainerStyles';
 import { Images, Colors } from './../Themes';
+import styles from './Styles/ContainerStyles';
 import ProgressBar from '../Components/ProgressBar';
+import Header from '../Components/Header';
 import { getCommissionStatus } from '../Redux/CommissionRedux';
 
 class CommissionStatusListScreen extends Component {
@@ -73,6 +73,7 @@ class CommissionStatusListScreen extends Component {
     return (
       <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
+        <Header title='st' onPress={() => this.props.navigation.goBack(null)} />
         {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />

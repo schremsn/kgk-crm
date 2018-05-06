@@ -62,7 +62,6 @@ export const login = ({ username, password }, cb) => (dispatch) => {
       dispatch(getUserInfo());
       dispatch(getMailChannels(info));
       dispatch(getCommissionStatus(info.uid));
-      dispatch(getLeadStages());
       dispatch(Creators.loginSuccess(info));
     })
     .catch((error) => {
