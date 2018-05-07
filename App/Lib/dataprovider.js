@@ -726,22 +726,25 @@ export default class DataProvider {
 
   /**
    * mark the lead as lost
-   * @param {number} leadId
+   * @param {lead} lead
    */
-  markLeadLost(leadId) {
-    const model = 'crm.lead';
-    const endpoint = '/web/dataset/call_kw';
-    const params = {
-      kwargs: {
-        context: this.context,
-      },
-      model,
-      method: 'action_set_lost',
-      args: [[leadId]],
-    };
+  markLeadLost(lead) {
+    if (lead === undefined) {
+      throw new Error('Invalid argument');
+    } else if (lead.id === undefined) {
+      throw new Error('Invalid argument - no id');
+    }
+    const { id, lost_reason } = lead;
+
+    const lostLead = {
+      id: id,
+      lost_reason: lost_reason,
+      active: false,
+      probability: 0.0,
+    }
 
     return new Promise((resolve, reject) => {
-      this.odoo.rpc_call(endpoint, params, (err, data) => {
+      this.odoo.update('crm.lead', id, lostLead, (err, data) => {
         if (err) {
           reject(err);
         } else {
@@ -753,9 +756,10 @@ export default class DataProvider {
 
   /**
    * mark the lead as won
-   * @param {number} leadId
+   * @param {lead} lead
    */
-  markLeadWon(leadId) {
+  markLeadWon(lead) {
+    const { id } = lead;
     const model = 'crm.lead';
     const endpoint = '/web/dataset/call_kw';
     const params = {
@@ -764,7 +768,7 @@ export default class DataProvider {
       },
       model,
       method: 'action_set_won',
-      args: [[leadId]],
+      args: [[id]],
     };
 
     return new Promise((resolve, reject) => {
@@ -835,7 +839,7 @@ export default class DataProvider {
       },
       model,
       method: 'pipeline_count',
-      args: [this.getUserId],
+      args: [this.getUserId()],
     };
 
     return new Promise((resolve, reject) => {
