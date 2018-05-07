@@ -168,4 +168,9 @@ export default class DD {
     'name',
     'sequence',
   ]
+
+  static reason = [
+    'id',
+    'name',
+  ]
 }
