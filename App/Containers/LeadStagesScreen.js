@@ -56,7 +56,7 @@ class LeadStagesScreen extends Component {
         onPress={() => { this.props.navigation.navigate('LeadListScreen', { stageId: item.id, stageName: item.name }); }}
         style={styles.boxLeadStage}
       >
-        <Text style={styles.boxLeadTitle}>{I18n.t(item.name).toUpperCase()}</Text>
+        <Text style={styles.boxLeadTitle}>{item.name.toUpperCase()}</Text>
         <Text style={styles.boxLeadContent}>{countCurrentStage}</Text>
       </TouchableOpacity>
     );

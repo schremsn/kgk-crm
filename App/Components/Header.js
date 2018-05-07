@@ -17,7 +17,7 @@ export default class Header extends Component {
         >
           <Image source={Images.backButton} />
         </TouchableOpacity>
-        <Text style={styles.textTitle}>{I18n.t(this.props.title).toUpperCase()}</Text>
+        <Text style={styles.textTitle}>{this.props.title.toUpperCase()}</Text>
       </View>
     );
   }

@@ -101,7 +101,7 @@ class LeadDetailScreen extends Component {
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
-        <Header title='lead detail' onPress={() => this.props.navigation.goBack(null)} />
+        <Header title={I18n.t('lead detail')} onPress={() => this.props.navigation.goBack(null)} />
         <ScrollView style={[styles.mainContainer]}>
           {leadDetail[0] && this.renderCard('Lead Information', leadDetail[0])}
         </ScrollView>
