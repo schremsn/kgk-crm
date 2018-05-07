@@ -1057,4 +1057,22 @@ export default class DataProvider {
       });
     });
   }
+
+
+  getLostReasons() {
+    const params = {
+      fields: DD.reason,
+      order: 'name',
+    };
+
+    return new Promise((resolve, reject) => {
+      this.odoo.search_read('crm.lost.reason', params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
 }

@@ -12,13 +12,13 @@ import LoginScreen from '../Containers/LoginScreen';
 import CommissionListScreen from '../Containers/CommissionListScreen';
 import ProductsListScreen from '../Containers/ProductsListScreen';
 import ProductDetailScreen from '../Containers/ProductDetailScreen';
-import WebViewScreen from '../Containers/WebViewScreen';
 import MoreScreen from '../Containers/MoreScreen';
 import MessagesListScreen from '../Containers/MessagesListScreen';
 import MessageDetailScreen from '../Containers/MessageDetailScreen';
 import LeadStagesScreen from '../Containers/LeadStagesScreen';
 import LeadDetailScreen from '../Containers/LeadDetailScreen';
 import LeadListScreen from '../Containers/LeadListScreen';
+import ContactsListScreen from '../Containers/ContactsListScreen';
 
 const HomeStack = StackNavigator({
   CommissionListScreen: { screen: CommissionListScreen },
@@ -35,12 +35,13 @@ const HomeStack = StackNavigator({
     },
   },
 });
-const CommissionStack = StackNavigator({
-  CommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
-  CommissionStatusListScreen: { screen: CommissionStatusListScreen },
+const PipelineStack = StackNavigator({
+  LeadStagesScreen: { screen: LeadStagesScreen },
+  LeadDetailScreen: { screen: LeadDetailScreen },
+  LeadListScreen: { screen: LeadListScreen },
 }, {
   headerMode: 'none',
-  initialRouteName: 'CommissionStatusListScreen',
+  initialRouteName: 'LeadStagesScreen',
   navigationOptions: {
     headerStyle: {
       backgroundColor: Colors.background,
@@ -55,9 +56,9 @@ const MoreStack = StackNavigator({
   MoreScreen: { screen: MoreScreen },
   ProductsListScreen: { screen: ProductsListScreen },
   ProductDetailScreen: { screen: ProductDetailScreen },
-  LeadStagesScreen: { screen: LeadStagesScreen },
-  LeadDetailScreen: { screen: LeadDetailScreen },
-  LeadListScreen: { screen: LeadListScreen },
+  CommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
+  CommissionStatusListScreen: { screen: CommissionStatusListScreen },
+  ContactsListScreen: { screen: ContactsListScreen },
 }, {
   headerMode: 'none',
   initialRouteName: 'MoreScreen',
@@ -91,7 +92,7 @@ const MessagesStack = StackNavigator({
 const AppStack = TabNavigator(
   {
     [I18n.t('home')] : { screen: HomeStack },
-    [I18n.t('status')]: { screen: CommissionStack },
+    [I18n.t('pipeline')]: { screen: PipelineStack },
     [I18n.t('message')]: { screen: MessagesStack },
     [I18n.t('more')]: { screen: MoreStack },
   },
@@ -102,8 +103,8 @@ const AppStack = TabNavigator(
         let iconName;
         if (routeName === I18n.t('home')) {
           iconName = `ios-home${focused ? '' : '-outline'}`;
-        } else if (routeName === I18n.t('status')) {
-          iconName = `ios-list-box${focused ? '' : '-outline'}`;
+        } else if (routeName === I18n.t('pipeline')) {
+          iconName = `ios-podium${focused ? '' : '-outline'}`;
         } else if (routeName === I18n.t('message')) {
           iconName = `ios-mail${focused ? '' : '-outline'}`;
         } else if (routeName === I18n.t('more')) {

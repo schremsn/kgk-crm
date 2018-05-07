@@ -4,7 +4,6 @@ import DataProvider from '../Lib/dataprovider';
 import ReferenceData from '../Data/referencedata';
 import { Alert } from 'react-native';
 import { getCommissionStatus } from './CommissionRedux';
-import { getLeadStages } from './LeadRedux';
 
 const dataprovider = DataProvider.getInstance();
 
@@ -61,8 +60,6 @@ export const login = ({ username, password }, cb) => (dispatch) => {
       cb(info);
       dispatch(getUserInfo());
       dispatch(getMailChannels(info));
-      dispatch(getCommissionStatus(info.uid));
-      dispatch(getLeadStages());
       dispatch(Creators.loginSuccess(info));
     })
     .catch((error) => {

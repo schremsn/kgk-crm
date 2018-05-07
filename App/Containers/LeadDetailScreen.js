@@ -130,7 +130,7 @@ class LeadDetailScreen extends Component {
           </TouchableHighlight>
             : <TouchableOpacity style={[styles.buttonBox]} onPress={() => this.setState({isShowActions: true})}>
               <View style={styles.button}>
-                <Ionicons name="ios-add-outline" size={25} color={Colors.snow} />
+                <Ionicons name="ios-more-outline" size={25} color={Colors.snow} />
               </View>
             </TouchableOpacity>
         }

@@ -6,15 +6,14 @@ import I18n from 'react-native-i18n';
 import styles from './Styles/ContainerStyles';
 import { Images, Colors } from './../Themes';
 import ProgressBar from '../Components/ProgressBar';
-import { pipelineCount } from '../Redux/LeadRedux';
-import Header from '../Components/Header';
+import { pipelineCount, getLeadStages } from '../Redux/LeadRedux';
 
 class LeadStagesScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       leadStages: props.leadStages || [],
-      isLoading: false,
+      isLoading: true,
       isRefreshing: false,
       list: {}
     };
@@ -24,6 +23,7 @@ class LeadStagesScreen extends Component {
   }
   componentWillMount() {
     this.getPipelineCount();
+    this.getLeadStages();
   }
   getPipelineCount(isRefreshed) {
     this.props.getPipelineCount((list) => {
@@ -35,6 +35,14 @@ class LeadStagesScreen extends Component {
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
     }
+  }
+  getLeadStages() {
+    this.props.getLeadStages((leadStages) => {
+      this.setState({
+        leadStages,
+        isLoading: false
+      })
+    });
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
@@ -55,34 +63,30 @@ class LeadStagesScreen extends Component {
   }
   render() {
     const { isLoading, isRefreshing, leadStages } = this.state;
+    console.log(leadStages)
     return (
-      <View style={[styles.container, ]}>
+      <View style={[styles.container ]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title='pipeline' onPress={() => this.props.navigation.goBack(null)} />
-        {
-          isLoading
-            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
-            : <ScrollView
-              style={styles.mainContainer}
-              refreshControl={
-                <RefreshControl
-                  refreshing={isRefreshing}
-                  onRefresh={this.onRefresh}
-                  colors={[Colors.fire]}
-                  tintColor={Colors.snow}
-                  title={`${I18n.t('loading')}...`}
-                  titleColor={Colors.snow}
-                  progressBackgroundColor={Colors.snow}
-                />
-              }
-            >
-              {
-                leadStages.map((item) => (
-                  this.renderLeadStage(item)
-                ))
-              }
-            </ScrollView>
-        }
+        <ScrollView
+          style={styles.mainContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={this.onRefresh}
+              colors={[Colors.fire]}
+              tintColor={Colors.snow}
+              title={`${I18n.t('loading')}...`}
+              titleColor={Colors.snow}
+              progressBackgroundColor={Colors.snow}
+            />
+          }
+        >
+          {
+            leadStages.map((item) => (
+              this.renderLeadStage(item)
+            ))
+          }
+        </ScrollView>
       </View>
     );
   }
@@ -94,6 +98,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getPipelineCount: (cb) => { dispatch(pipelineCount(cb)); },
+  getLeadStages: (cb) => { dispatch(getLeadStages(cb)); },
 });
 
 LeadStagesScreen.propTypes = {

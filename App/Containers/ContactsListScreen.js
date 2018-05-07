@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput } from 'react-native';
 import I18n from 'react-native-i18n';
-import moment from 'moment';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Images, Colors } from './../Themes';
 import styles from './Styles/ContainerStyles';
 import ProgressBar from '../Components/ProgressBar';
 import Header from '../Components/Header';
-import { getCommissionStatus } from '../Redux/CommissionRedux';
+import { getCustomers, searchCustomer } from '../Redux/ContactsRedux';
 
-class CommissionStatusListScreen extends Component {
+class ContactListScreen extends Component {
   constructor() {
     super();
     this.state = {
@@ -18,16 +18,18 @@ class CommissionStatusListScreen extends Component {
       isRefreshing: false,
       list: [],
     };
-    this.getCommissionStatusList = this.getCommissionStatusList.bind(this);
-    this.getCommissionStatusListNextPage = this.getCommissionStatusListNextPage.bind(this);
+    this.getCustomersList = this.getCustomersList.bind(this);
+    this.getCustomersListNextPage = this.getCustomersListNextPage.bind(this);
+    this.handleSearchLead = this.handleSearchLead.bind(this);
     this.renderCommission = this.renderCommission.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
+    this.onChangeSearchLead = this.onChangeSearchLead.bind(this);
   }
   componentWillMount() {
-    this.getCommissionStatusList();
+    this.getCustomersList();
   }
-  getCommissionStatusList(isRefreshed) {
-    this.props.getCommissionStatus(0, (list) => {
+  getCustomersList(isRefreshed) {
+    this.props.getCustomers(0, (list) => {
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
       const dataSource = ds.cloneWithRows(list);
       this.setState({
@@ -40,8 +42,8 @@ class CommissionStatusListScreen extends Component {
       this.setState({ isRefreshing: false });
     }
   }
-  getCommissionStatusListNextPage() {
-    this.props.getCommissionStatus(0, (list) => {
+  getCustomersListNextPage() {
+    this.props.getCustomers(0, (list) => {
       const data = this.state.list;
       list.map(item => data.push(item));
       this.setState({
@@ -51,20 +53,33 @@ class CommissionStatusListScreen extends Component {
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
-    this.getCommissionStatusList('isRefreshed');
+    this.getCustomersList('isRefreshed');
+  }
+  onChangeSearchLead(searchContent){
+    this.setState({ searchContent})
+  }
+  handleSearchLead(){
+    const { searchContent } = this.state;
+    this.props.searchCustomer(searchContent, (list)=>{
+      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+      const dataSource = ds.cloneWithRows(list);
+      this.setState({
+        list,
+        dataSource,
+      });
+    })
   }
   renderCommission(item) {
     return (
       <TouchableOpacity
-        onPress={() => { this.props.navigation.navigate('CommissionStatusDetailScreen', { commissionDetail: item }); }}
         style={styles.sectionHeaderContainer}
       >
         <Text style={styles.sectionHeader}>{item.id}</Text>
-        <Text style={styles.sectionText}>{I18n.t('identifier')}: {item.identifier}</Text>
-        <Text style={styles.sectionText}>{I18n.t('partner')}: {item.partner[1]}</Text>
-        <Text style={styles.sectionText}>{I18n.t('customer')}: {item.customer}</Text>
-        <Text style={styles.sectionText}>{I18n.t('update_date')}: {item.update_date && moment(item.update_date).format('MM-DD-YYYY')}</Text>
-        <Text style={styles.sectionText}>{I18n.t('issue')}: {item.issue}</Text>
+        <Text style={styles.sectionText}>{I18n.t('Company')}: {item.company_name}</Text>
+        <Text style={styles.sectionText}>{I18n.t('name')}: {item.name}</Text>
+        <Text style={styles.sectionText}>{I18n.t('City')}: {item.city}</Text>
+        <Text style={styles.sectionText}>{I18n.t('Mobile')}: {item.mobile}</Text>
+        <Text style={styles.sectionText}>{I18n.t('Phone')}: {item.phone}</Text>
       </TouchableOpacity>
     );
   }
@@ -73,14 +88,27 @@ class CommissionStatusListScreen extends Component {
     return (
       <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title='st' onPress={() => this.props.navigation.goBack(null)} />
+        <Header title='Contacts' onPress={() => this.props.navigation.goBack(null)} />
+        <View style={styles.boxSearch}>
+          <TextInput
+            style={styles.inputSearch}
+            underlineColorAndroid='transparent'
+            placeholder={I18n.t('search for name, city')}
+            onChangeText={(value) => this.onChangeSearchLead(value)}
+            returnKeyType={'search'}
+            onEndEditing={this.handleSearchLead}
+          />
+          <TouchableOpacity style={styles.buttonSearch} onPress={() => this.handleSearchLead()}>
+            <Ionicons name='ios-search-outline' size={25} color={Colors.banner} />
+          </TouchableOpacity>
+        </View>
         {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
             : <ListView
               style={styles.mainContainer}
               enableEmptySections
-              onEndReached={() => this.getCommissionStatusListNextPage()}
+              onEndReached={() => this.getCustomersListNextPage()}
               onEndReachedThreshold={1200}
               dataSource={dataSource}
               renderRow={item => this.renderCommission(item)}
@@ -105,19 +133,17 @@ class CommissionStatusListScreen extends Component {
 }
 
 const mapStateToProps = state => ({
-  offset: state.product.offset,
+  offset: state.contacts.offset,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getCommissionStatus: (offset, cb) => { dispatch(getCommissionStatus(offset, cb)); },
+  getCustomers: (offset, cb) => { dispatch(getCustomers(offset, cb)); },
+  searchCustomer: (searchTerm, cb) => { dispatch(searchCustomer(searchTerm, cb)); },
 });
 
-CommissionStatusListScreen.propTypes = {
+ContactListScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getCommissionStatus: PropTypes.func.isRequired,
-};
-CommissionStatusListScreen.navigationOptions = {
-  title: I18n.t('commission list'),
+  getCustomers: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommissionStatusListScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactListScreen);
