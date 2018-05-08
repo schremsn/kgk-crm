@@ -39,10 +39,21 @@ export default StyleSheet.create({
   progressBar: {
     backgroundColor: 'transparent',
     flex: 1,
-    minHeight: Metrics.screenHeight,
-    paddingBottom: 100,
     justifyContent: 'center',
     alignItems: 'center',
+    minHeight: Metrics.screenHeight,
+    paddingBottom: 100,
+  },
+  progressBarLoading: {
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 100
   },
   seperator: {
     backgroundColor: '#8E8E8E',

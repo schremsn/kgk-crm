@@ -21,6 +21,21 @@ export const INITIAL_STATE = Immutable({
   offset: 0,
 });
 
+export const createCustomer = (data) => {
+  return new Promise((resolve, reject) => {
+    dataprovider.createCustomer(data)
+      .then((data) => {
+        resolve(data);
+        console.log('getCustomers', data);
+        // dispatch(Creators.getUserInfoSuccess(data))
+      })
+      .catch((err) => {
+        reject(err)
+        console.log(`error user ${err}`);
+      });
+  })
+
+};
 export const getCustomers = (offset = 0, cb) => (dispatch, getState) => {
   dataprovider.getCustomers(offset)
     .then((data) => {
@@ -31,16 +46,20 @@ export const getCustomers = (offset = 0, cb) => (dispatch, getState) => {
     .catch((err) => {
       console.log(`error user ${err}`);
     });
-};export const searchCustomer = (searchTerm, cb) => (dispatch, getState) => {
-  dataprovider.searchCustomer(searchTerm)
-    .then((data) => {
-      cb(data);
-      console.log('searchCustomer', data);
-      // dispatch(Creators.getUserInfoSuccess(data))
-    })
-    .catch((err) => {
-      console.log(`error user ${err}`);
-    });
+};
+export const searchCustomer = (searchTerm, cb) => {
+  return new Promise((resolve, reject) => {
+    dataprovider.searchCustomer(searchTerm)
+      .then((data) => {
+        resolve(data);
+        console.log('searchCustomer', data);
+        // dispatch(Creators.getUserInfoSuccess(data))
+      })
+      .catch((err) => {
+        reject(err)
+        console.log(`error user ${err}`);
+      });
+  })
 };
 
 /* ------------- Reducers ------------- */

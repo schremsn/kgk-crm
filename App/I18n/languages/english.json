@@ -90,4 +90,12 @@
   // contacts
   "Company": "Company",
   "Contacts": "Contacts",
+  // add contacts
+  "optional": "optional",
+  "required": "required",
+  "Province": "Province",
+  "Website": "Website",
+  "Create contacts is success": "Create contacts is success",
+  "Is Company": "Is Company",
+  "identification id": "Identification Id",
 }

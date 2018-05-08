@@ -88,6 +88,14 @@
   // contacts
   "Company": "Công ty",
   "Contacts": "Danh bạ",
+  // add contacts
+  "optional": "Không bắt buộc",
+  "required": "Bắt buộc",
+  "Province": "Tỉnh",
+  "Website": "Website",
+  "Create contacts is success": "Tạo danh bạ thành công",
+  "Is Company": "Là Công ty",
+  "identification id": "Mã nhận biết",
 
 
 }
