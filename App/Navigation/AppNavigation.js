@@ -93,7 +93,7 @@ const MessagesStack = StackNavigator({
 
 const AppStack = TabNavigator(
   {
-    [I18n.t('home')] : { screen: HomeStack },
+    [I18n.t('home')]: { screen: HomeStack },
     [I18n.t('pipeline')]: { screen: PipelineStack },
     [I18n.t('message')]: { screen: MessagesStack },
     [I18n.t('more')]: { screen: MoreStack },

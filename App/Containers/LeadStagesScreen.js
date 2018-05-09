@@ -15,7 +15,7 @@ class LeadStagesScreen extends Component {
       leadStages: props.leadStages || [],
       isLoading: true,
       isRefreshing: false,
-      list: {}
+      list: {},
     };
     this.getPipelineCount = this.getPipelineCount.bind(this);
     this.renderLeadStage = this.renderLeadStage.bind(this);
@@ -29,8 +29,8 @@ class LeadStagesScreen extends Component {
     this.props.getPipelineCount((list) => {
       this.setState({
         list,
-        isLoading: false
-      })
+        isLoading: false,
+      });
     });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
@@ -40,8 +40,8 @@ class LeadStagesScreen extends Component {
     this.props.getLeadStages((leadStages) => {
       this.setState({
         leadStages,
-        isLoading: false
-      })
+        isLoading: false,
+      });
     });
   }
   onRefresh() {
@@ -49,7 +49,7 @@ class LeadStagesScreen extends Component {
     this.getPipelineCount('isRefreshed');
   }
   renderLeadStage(item) {
-    const countCurrentStage = this.state.list[item.id] || 0
+    const countCurrentStage = this.state.list[item.id] || 0;
     return (
       <TouchableOpacity
         key={item.id}
@@ -63,9 +63,9 @@ class LeadStagesScreen extends Component {
   }
   render() {
     const { isLoading, isRefreshing, leadStages } = this.state;
-    console.log(leadStages)
+    console.log(leadStages);
     return (
-      <View style={[styles.container ]}>
+      <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <ScrollView
           style={styles.mainContainer}
@@ -82,7 +82,7 @@ class LeadStagesScreen extends Component {
           }
         >
           {
-            leadStages.map((item) => (
+            leadStages.map(item => (
               this.renderLeadStage(item)
             ))
           }
@@ -93,7 +93,7 @@ class LeadStagesScreen extends Component {
 }
 
 const mapStateToProps = state => ({
-  leadStages: state.lead.list
+  leadStages: state.lead.list,
 });
 
 const mapDispatchToProps = dispatch => ({

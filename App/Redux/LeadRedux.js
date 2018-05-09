@@ -23,10 +23,10 @@ export const INITIAL_STATE = Immutable({
   error: null,
 });
 
-export const getLeadStages = (cb) => (dispatch) => {
+export const getLeadStages = cb => (dispatch) => {
   dataprovider.getLeadStages()
     .then((list) => {
-      console.log(list)
+      console.log(list);
       dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) { cb(list); }
     })
@@ -34,10 +34,10 @@ export const getLeadStages = (cb) => (dispatch) => {
       dispatch(Creators.getLeadStagesFailure());
     });
 };
-export const getLeads = (cb) => (dispatch) => {
+export const getLeads = cb => (dispatch) => {
   dataprovider.getLeads()
     .then((list) => {
-      console.log('get leads', list)
+      console.log('get leads', list);
       // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) { cb(list); }
     })
@@ -48,7 +48,7 @@ export const getLeads = (cb) => (dispatch) => {
 export const getLead = (leadId, cb) => (dispatch) => {
   dataprovider.getLead(leadId)
     .then((list) => {
-      console.log('get lead by id', list)
+      console.log('get lead by id', list);
       // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) { cb(list); }
     })
@@ -59,7 +59,7 @@ export const getLead = (leadId, cb) => (dispatch) => {
 export const getLeadbyStage = (stageid, cb) => (dispatch) => {
   dataprovider.getLeadbyStage(stageid)
     .then((list) => {
-      console.log('get lead by stage', list)
+      console.log('get lead by stage', list);
       // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) { cb(list); }
     })
@@ -70,7 +70,7 @@ export const getLeadbyStage = (stageid, cb) => (dispatch) => {
 export const searchLead = (searchTerm, cb) => (dispatch) => {
   dataprovider.searchLead(searchTerm)
     .then((list) => {
-      console.log('search leads', list)
+      console.log('search leads', list);
       // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) { cb(list); }
     })
@@ -78,15 +78,14 @@ export const searchLead = (searchTerm, cb) => (dispatch) => {
       // dispatch(Creators.getLeadStagesFailure());
     });
 };
-export const pipelineCount = (cb) => (dispatch) => {
+export const pipelineCount = cb => (dispatch) => {
   dataprovider.pipelineCount()
     .then((list) => {
-      console.log(list)
+      console.log(list);
       // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) {
-        console.log(1)
+        console.log(1);
         cb(list);
-
       }
     })
     .catch(() => {

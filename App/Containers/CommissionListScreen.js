@@ -25,26 +25,26 @@ class CommissionListScreen extends Component {
     this.handleConnectivityChange = this.handleConnectivityChange.bind(this);
   }
   componentWillMount() {
-    this.handleCheckNetwork()
+    this.handleCheckNetwork();
   }
   componentDidMount() {
     BackHandler.addEventListener('backPress', this.handleBackAndroid);
 
     NetInfo.isConnected.addEventListener(
       'connectionChange',
-      this.handleConnectivityChange
+      this.handleConnectivityChange,
     );
   }
   componentWillUnmount() {
     BackHandler.removeEventListener('backPress');
     NetInfo.isConnected.removeEventListener(
       'connectionChange',
-      this.handleConnectivityChange
+      this.handleConnectivityChange,
     );
   }
-  handleCheckNetwork(){
-    NetInfo.isConnected.fetch().then(isConnected => {
-      console.log('netword status', isConnected)
+  handleCheckNetwork() {
+    NetInfo.isConnected.fetch().then((isConnected) => {
+      console.log('netword status', isConnected);
       if (isConnected) {
         this.getCommissionList();
       } else {
@@ -61,8 +61,8 @@ class CommissionListScreen extends Component {
               text: 'RETRY',
               onPress: () => {
                 setTimeout(() => {
-                  this.handleCheckNetwork()
-                }, 2000)
+                  this.handleCheckNetwork();
+                }, 2000);
               },
             },
           ],
@@ -71,11 +71,11 @@ class CommissionListScreen extends Component {
     });
   }
   handleBackAndroid() {
-    this.props.navigation.goBack(null)
-    return true
+    this.props.navigation.goBack(null);
+    return true;
   }
   handleConnectivityChange(isConnected) {
-    if(!isConnected){
+    if (!isConnected) {
       Alert.alert(
         I18n.t('Alert'),
         I18n.t('Network is not connected'),
@@ -89,14 +89,13 @@ class CommissionListScreen extends Component {
             text: 'RETRY',
             onPress: () => {
               setTimeout(() => {
-                this.handleCheckNetwork()
-              }, 2000)
+                this.handleCheckNetwork();
+              }, 2000);
             },
           },
         ],
       );
     }
-
   }
   getCommissionList(isRefreshed) {
     this.props.getCommissionSummary(0, (list) => {

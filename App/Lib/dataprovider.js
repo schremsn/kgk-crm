@@ -123,8 +123,7 @@ export default class DataProvider {
     }
     if (!Array.isArray(id)) {
       leadId = [id];
-    }
-    else {
+    } else {
       leadId = id;
     }
 
@@ -195,7 +194,7 @@ export default class DataProvider {
     if (lead === undefined) {
       throw new Error('Invalid argument');
     }
-    
+
     /* resolve many-to-many relationship for tags
     const tag = lead.tag;
     if (tag) {
@@ -212,14 +211,14 @@ export default class DataProvider {
     }
     */
 
-    lead['user_id'] = this.getUserId();
-    lead['type'] = 'opportunity';
-    lead['source'] = this.getPartnerId();
+    lead.user_id = this.getUserId();
+    lead.type = 'opportunity';
+    lead.source = this.getPartnerId();
 
     console.log(lead);
-    
+
     return new Promise((resolve, reject) => {
-      this.odoo.create('crm.lead', lead,  (err, data) => {
+      this.odoo.create('crm.lead', lead, (err, data) => {
         if (err) {
           reject(err);
         } else {
@@ -613,7 +612,7 @@ export default class DataProvider {
       args: activity,
     };
 
-    
+
     return new Promise((resolve, reject) => {
       this.odoo.rpc_call(endpoint, params, (err, data) => {
         if (err) {
@@ -738,11 +737,11 @@ export default class DataProvider {
     const { id, lost_reason } = lead;
 
     const lostLead = {
-      id: id,
-      lost_reason: lost_reason,
+      id,
+      lost_reason,
       active: false,
       probability: 0.0,
-    }
+    };
 
     return new Promise((resolve, reject) => {
       this.odoo.update('crm.lead', id, lostLead, (err, data) => {
