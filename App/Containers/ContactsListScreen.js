@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput, Modal, TouchableHighlight } from 'react-native';
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Images, Colors, Metrics } from './../Themes';
+import { Images, Colors } from './../Themes';
 import styles from './Styles/ContainerStyles';
 import ProgressBar from '../Components/ProgressBar';
 import Header from '../Components/Header';
@@ -55,20 +55,20 @@ class ContactListScreen extends Component {
     this.setState({ isRefreshing: true });
     this.getCustomersList('isRefreshed');
   }
-  onChangeSearchLead(searchContent){
-    this.setState({ searchContent})
+  onChangeSearchLead(searchContent) {
+    this.setState({ searchContent });
   }
-  handleSearchLead(){
+  handleSearchLead() {
     const { searchContent } = this.state;
     searchCustomer(searchContent)
-      .then( list => {
+      .then((list) => {
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
         const dataSource = ds.cloneWithRows(list);
         this.setState({
           list,
           dataSource,
         });
-      })
+      });
   }
   renderCommission(item) {
     return (
@@ -93,21 +93,21 @@ class ContactListScreen extends Component {
         <View style={styles.boxSearch}>
           <TextInput
             style={styles.inputSearch}
-            underlineColorAndroid='transparent'
+            underlineColorAndroid="transparent"
             placeholder={I18n.t('search for name, city')}
-            onChangeText={(value) => this.onChangeSearchLead(value)}
-            returnKeyType={'search'}
+            onChangeText={value => this.onChangeSearchLead(value)}
+            returnKeyType="search"
             onEndEditing={this.handleSearchLead}
           />
           <TouchableOpacity style={styles.buttonSearch} onPress={() => this.handleSearchLead()}>
-            <Ionicons name='ios-search-outline' size={25} color={Colors.banner} />
+            <Ionicons name="ios-search-outline" size={25} color={Colors.banner} />
           </TouchableOpacity>
         </View>
         {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
             : <ListView
-              style={[styles.mainContainer, { marginBottom: 60}]}
+              style={[styles.mainContainer, { marginBottom: 60 }]}
               enableEmptySections
               // onEndReached={() => this.getCustomersListNextPage()}
               onEndReachedThreshold={1200}
@@ -132,7 +132,8 @@ class ContactListScreen extends Component {
           style={[styles.buttonBox]}
           onPress={() => {
             this.props.navigation.navigate('ContactsAddScreen');
-        }}>
+        }}
+        >
           <View style={styles.button}>
             <Ionicons name="ios-add-outline" size={25} color={Colors.snow} />
           </View>

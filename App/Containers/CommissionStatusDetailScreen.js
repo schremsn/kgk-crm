@@ -32,7 +32,7 @@ class CommissionStatusDetailScreen extends Component {
     this.state = {
       commissionDetail: props.navigation.state.params.commissionDetail,
       isLoading: true,
-      isRefreshing: false
+      isRefreshing: false,
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);

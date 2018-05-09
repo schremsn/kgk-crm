@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import {View, ScrollView, Text, Image, TouchableOpacity, BackHandler, Alert, TouchableHighlight} from 'react-native'
-import I18n from 'react-native-i18n'
-import { connect } from 'react-redux'
-import styles from './Styles/ContainerStyles'
-import { Images, Metrics } from './../Themes'
-import { getLead } from '../Redux/LeadRedux'
-import Header from '../Components/Header'
-import {Colors} from '../Themes'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import Communications from 'react-native-communications'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { View, ScrollView, Text, Image, TouchableOpacity, BackHandler, Alert, TouchableHighlight } from 'react-native';
+import I18n from 'react-native-i18n';
+import { connect } from 'react-redux';
+import styles from './Styles/ContainerStyles';
+import { Images, Metrics } from './../Themes';
+import { getLead } from '../Redux/LeadRedux';
+import Header from '../Components/Header';
+import { Colors } from '../Themes';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Communications from 'react-native-communications';
 import FullButton from '../Components/FullButton';
 import * as Animatable from 'react-native-animatable';
 
@@ -26,32 +26,32 @@ const data = [
   { name: 'zip', value: I18n.t('Zip') },
   { name: 'email_from', value: I18n.t('Email') },
   { name: 'description', value: I18n.t('Description') },
-  { name: 'stage_id', value: I18n.t('Stage') }
-]
+  { name: 'stage_id', value: I18n.t('Stage') },
+];
 class LeadDetailScreen extends Component {
-  constructor () {
-    super()
+  constructor() {
+    super();
     this.state = {
       leadDetail: [],
-      isShowActions: false
-    }
-    this.renderCard = this.renderCard.bind(this)
-    this.renderRows = this.renderRows.bind(this)
+      isShowActions: false,
+    };
+    this.renderCard = this.renderCard.bind(this);
+    this.renderRows = this.renderRows.bind(this);
   }
-  componentWillMount () {
-    const { leadId } = this.props.navigation.state.params
+  componentWillMount() {
+    const { leadId } = this.props.navigation.state.params;
     this.props.getLeadById(leadId, (leadDetail) => {
-      this.setState({ leadDetail })
-    })
+      this.setState({ leadDetail });
+    });
   }
-  renderCard (cardTitle, rowData) {
+  renderCard(cardTitle, rowData) {
     return (
-      <View style={{paddingBottom: 100}}>
+      <View style={{ paddingBottom: 100 }}>
         {this.renderRows(rowData)}
       </View>
-    )
+    );
   }
-  handleCallPhone (phone) {
+  handleCallPhone(phone) {
     Alert.alert(
       I18n.t('Confirm'),
       `${I18n.t('Do you want to call')} ${phone} ?`,
@@ -59,18 +59,18 @@ class LeadDetailScreen extends Component {
         {
           text: 'Cancel',
           onPress: () => true,
-          style: 'cancel'
+          style: 'cancel',
         },
         {
           text: 'OK',
           onPress: () => {
-            Communications.phonecall(phone, true)
-          }
-        }
-      ]
-    )
+            Communications.phonecall(phone, true);
+          },
+        },
+      ],
+    );
   }
-  renderRows (rowData) {
+  renderRows(rowData) {
     return (
       data.map(item => (
         <View key={item.name} style={styles.rowContainer}>
@@ -86,7 +86,7 @@ class LeadDetailScreen extends Component {
                   <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
                   {
                     rowData[item.name] && <TouchableOpacity style={styles.buttonCallPhone} onPress={() => this.handleCallPhone(rowData[item.name])}>
-                      <Ionicons name='ios-call-outline' size={25} color={Colors.banner} />
+                      <Ionicons name="ios-call-outline" size={25} color={Colors.banner} />
                     </TouchableOpacity>
                   }
                 </View>
@@ -94,13 +94,13 @@ class LeadDetailScreen extends Component {
             }
           </View>
         </View>))
-    )
+    );
   }
-  render () {
-    const { leadDetail, isShowActions } = this.state
+  render() {
+    const { leadDetail, isShowActions } = this.state;
     return (
       <View style={styles.container}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
+        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title={I18n.t('lead detail')} onPress={() => this.props.navigation.goBack(null)} />
         <ScrollView style={[styles.mainContainer]}>
           {leadDetail[0] && this.renderCard('Lead Information', leadDetail[0])}
@@ -108,12 +108,13 @@ class LeadDetailScreen extends Component {
         {
           isShowActions
             ? <TouchableHighlight
-              onPress={() => this.setState({isShowActions: false})}
+              onPress={() => this.setState({ isShowActions: false })}
               activeOpacity={1}
-              underlayColor={'#5f3e63b0'}
-              style={styles.boxActions}>
+              underlayColor="#5f3e63b0"
+              style={styles.boxActions}
+            >
               <Animatable.View
-                animation={'fadeInUpBig'}
+                animation="fadeInUpBig"
                 iterationCount={1}
                 duration={300}
                 direction="normal"
@@ -125,27 +126,27 @@ class LeadDetailScreen extends Component {
                 <FullButton text={I18n.t('Mark won')} />
                 <FullButton text={I18n.t('Mark lost')} />
                 <FullButton text={I18n.t('Save')} />
-                <FullButton text={I18n.t('Cancel')} onPress={() => this.setState({isShowActions: false})} />
+                <FullButton text={I18n.t('Cancel')} onPress={() => this.setState({ isShowActions: false })} />
               </Animatable.View>
-          </TouchableHighlight>
-            : <TouchableOpacity style={[styles.buttonBox]} onPress={() => this.setState({isShowActions: true})}>
+              </TouchableHighlight>
+            : <TouchableOpacity style={[styles.buttonBox]} onPress={() => this.setState({ isShowActions: true })}>
               <View style={styles.button}>
                 <Ionicons name="ios-more-outline" size={25} color={Colors.snow} />
               </View>
             </TouchableOpacity>
         }
       </View>
-    )
+    );
   }
 }
 
 LeadDetailScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getLeadById: PropTypes.func.isRequired
-}
+  getLeadById: PropTypes.func.isRequired,
+};
 
 const mapDispatchToProps = dispatch => ({
-  getLeadById: (leadId, cb) => { dispatch(getLead(leadId, cb)) }
-})
+  getLeadById: (leadId, cb) => { dispatch(getLead(leadId, cb)); },
+});
 
-export default connect(null, mapDispatchToProps)(LeadDetailScreen)
+export default connect(null, mapDispatchToProps)(LeadDetailScreen);
