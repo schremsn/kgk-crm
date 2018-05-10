@@ -9,6 +9,7 @@ import { Images, Colors } from './../Themes';
 import { getLeads, getLeadbyStage, searchLead } from '../Redux/LeadRedux';
 import ProgressBar from '../Components/ProgressBar';
 import Header from '../Components/Header';
+import LeadStagesScreen from './LeadStagesScreen';
 
 class LeadListScreen extends Component {
   constructor(props) {
@@ -35,7 +36,6 @@ class LeadListScreen extends Component {
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
       const dataSource = ds.cloneWithRows(list);
       this.setState({
-        list,
         dataSource,
         isLoading: false,
       });
@@ -80,7 +80,6 @@ class LeadListScreen extends Component {
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
       const dataSource = ds.cloneWithRows(list);
       this.setState({
-        list,
         dataSource,
       });
     });
@@ -92,7 +91,7 @@ class LeadListScreen extends Component {
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={stageName} onPress={() => this.props.navigation.goBack(null)} />
+        <Header title={stageName} onPress={() => this.props.navigation.popToTop('LeadStagesScreen')} />
         <View style={styles.boxSearch}>
           <TextInput
             style={styles.inputSearch}

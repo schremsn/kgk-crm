@@ -18,6 +18,7 @@ import MessageDetailScreen from '../Containers/MessageDetailScreen';
 import LeadStagesScreen from '../Containers/LeadStagesScreen';
 import LeadDetailScreen from '../Containers/LeadDetailScreen';
 import LeadListScreen from '../Containers/LeadListScreen';
+import LeadEditScreen from '../Containers/LeadEditScreen';
 import ContactsListScreen from '../Containers/ContactsListScreen';
 import ContactsAddScreen from '../Containers/ContactsAddScreen';
 
@@ -40,6 +41,7 @@ const PipelineStack = StackNavigator({
   LeadStagesScreen: { screen: LeadStagesScreen },
   LeadDetailScreen: { screen: LeadDetailScreen },
   LeadListScreen: { screen: LeadListScreen },
+  LeadEditScreen: { screen: LeadEditScreen },
 }, {
   headerMode: 'none',
   initialRouteName: 'LeadStagesScreen',

@@ -12,7 +12,7 @@ class LeadStagesScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      leadStages: props.leadStages || [],
+      leadStages: [],
       isLoading: true,
       isRefreshing: false,
       list: {},
@@ -37,12 +37,13 @@ class LeadStagesScreen extends Component {
     }
   }
   getLeadStages() {
-    this.props.getLeadStages((leadStages) => {
-      this.setState({
-        leadStages,
-        isLoading: false,
+    getLeadStages()
+      .then((leadStages) => {
+        this.setState({
+          leadStages,
+          isLoading: false,
+        });
       });
-    });
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
@@ -63,7 +64,6 @@ class LeadStagesScreen extends Component {
   }
   render() {
     const { isLoading, isRefreshing, leadStages } = this.state;
-    console.log(leadStages);
     return (
       <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
@@ -98,7 +98,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getPipelineCount: (cb) => { dispatch(pipelineCount(cb)); },
-  getLeadStages: (cb) => { dispatch(getLeadStages(cb)); },
 });
 
 LeadStagesScreen.propTypes = {
