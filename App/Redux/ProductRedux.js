@@ -29,7 +29,7 @@ export const initState = () => (dispatch) => {
 };
 
 export const getProducts = (offset, cb) => (dispatch, getState) => {
-  console.log(getState)
+  console.log(getState);
   dataprovider.getProducts(offset)
     .then((list) => {
       dispatch(Creators.productSuccess(list, offset));

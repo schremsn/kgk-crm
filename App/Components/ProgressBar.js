@@ -12,7 +12,7 @@ import I18n from 'react-native-i18n';
 import { Colors, Metrics } from '../Themes';
 import styles from '../Containers/Styles/ContainerStyles';
 
-const ProgressBar = ({isRefreshing, onRefresh}) => (
+const ProgressBar = ({ isRefreshing, onRefresh }) => (
   <ScrollView
     style={styles.mainContainer}
     showsHorizontalScrollIndicator={false}

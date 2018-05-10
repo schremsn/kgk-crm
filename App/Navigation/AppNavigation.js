@@ -18,7 +18,9 @@ import MessageDetailScreen from '../Containers/MessageDetailScreen';
 import LeadStagesScreen from '../Containers/LeadStagesScreen';
 import LeadDetailScreen from '../Containers/LeadDetailScreen';
 import LeadListScreen from '../Containers/LeadListScreen';
+import LeadEditScreen from '../Containers/LeadEditScreen';
 import ContactsListScreen from '../Containers/ContactsListScreen';
+import ContactsAddScreen from '../Containers/ContactsAddScreen';
 
 const HomeStack = StackNavigator({
   CommissionListScreen: { screen: CommissionListScreen },
@@ -39,6 +41,7 @@ const PipelineStack = StackNavigator({
   LeadStagesScreen: { screen: LeadStagesScreen },
   LeadDetailScreen: { screen: LeadDetailScreen },
   LeadListScreen: { screen: LeadListScreen },
+  LeadEditScreen: { screen: LeadEditScreen },
 }, {
   headerMode: 'none',
   initialRouteName: 'LeadStagesScreen',
@@ -59,6 +62,7 @@ const MoreStack = StackNavigator({
   CommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
   CommissionStatusListScreen: { screen: CommissionStatusListScreen },
   ContactsListScreen: { screen: ContactsListScreen },
+  ContactsAddScreen: { screen: ContactsAddScreen },
 }, {
   headerMode: 'none',
   initialRouteName: 'MoreScreen',
@@ -91,7 +95,7 @@ const MessagesStack = StackNavigator({
 
 const AppStack = TabNavigator(
   {
-    [I18n.t('home')] : { screen: HomeStack },
+    [I18n.t('home')]: { screen: HomeStack },
     [I18n.t('pipeline')]: { screen: PipelineStack },
     [I18n.t('message')]: { screen: MessagesStack },
     [I18n.t('more')]: { screen: MoreStack },

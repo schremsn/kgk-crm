@@ -4,7 +4,7 @@ import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Images, Colors } from '../Themes';
 import styles from './Styles/ContainerStyles';
-import LeadStagesScreen from "./LeadStagesScreen";
+import LeadStagesScreen from './LeadStagesScreen';
 
 export default class MoreScreen extends Component {
   constructor() {
@@ -53,7 +53,7 @@ export default class MoreScreen extends Component {
             <Ionicons name="ios-list-box-outline" size={25} color={Colors.snow} />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonBox} onPress={() => { this.toggleMenu(); }}>
+        <TouchableOpacity style={styles.buttonBox} onPress={() => { this.props.navigation.navigate('Auth'); }}>
           <Text style={styles.text}>
             {I18n.t('logOut')}
           </Text>
@@ -68,4 +68,4 @@ export default class MoreScreen extends Component {
 }
 MoreScreen.navigationOptions = {
   title: I18n.t('more'),
-}
+};

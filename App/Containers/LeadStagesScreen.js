@@ -12,10 +12,10 @@ class LeadStagesScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      leadStages: props.leadStages || [],
+      leadStages: [],
       isLoading: true,
       isRefreshing: false,
-      list: {}
+      list: {},
     };
     this.getPipelineCount = this.getPipelineCount.bind(this);
     this.renderLeadStage = this.renderLeadStage.bind(this);
@@ -29,43 +29,43 @@ class LeadStagesScreen extends Component {
     this.props.getPipelineCount((list) => {
       this.setState({
         list,
-        isLoading: false
-      })
+        isLoading: false,
+      });
     });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
     }
   }
   getLeadStages() {
-    this.props.getLeadStages((leadStages) => {
-      this.setState({
-        leadStages,
-        isLoading: false
-      })
-    });
+    getLeadStages()
+      .then((leadStages) => {
+        this.setState({
+          leadStages,
+          isLoading: false,
+        });
+      });
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
     this.getPipelineCount('isRefreshed');
   }
   renderLeadStage(item) {
-    const countCurrentStage = this.state.list[item.id] || 0
+    const countCurrentStage = this.state.list[item.id] || 0;
     return (
       <TouchableOpacity
         key={item.id}
         onPress={() => { this.props.navigation.navigate('LeadListScreen', { stageId: item.id, stageName: item.name }); }}
         style={styles.boxLeadStage}
       >
-        <Text style={styles.boxLeadTitle}>{I18n.t(item.name).toUpperCase()}</Text>
+        <Text style={styles.boxLeadTitle}>{item.name.toUpperCase()}</Text>
         <Text style={styles.boxLeadContent}>{countCurrentStage}</Text>
       </TouchableOpacity>
     );
   }
   render() {
     const { isLoading, isRefreshing, leadStages } = this.state;
-    console.log(leadStages)
     return (
-      <View style={[styles.container ]}>
+      <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <ScrollView
           style={styles.mainContainer}
@@ -82,7 +82,7 @@ class LeadStagesScreen extends Component {
           }
         >
           {
-            leadStages.map((item) => (
+            leadStages.map(item => (
               this.renderLeadStage(item)
             ))
           }
@@ -93,12 +93,11 @@ class LeadStagesScreen extends Component {
 }
 
 const mapStateToProps = state => ({
-  leadStages: state.lead.list
+  leadStages: state.lead.list,
 });
 
 const mapDispatchToProps = dispatch => ({
   getPipelineCount: (cb) => { dispatch(pipelineCount(cb)); },
-  getLeadStages: (cb) => { dispatch(getLeadStages(cb)); },
 });
 
 LeadStagesScreen.propTypes = {

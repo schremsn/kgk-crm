@@ -42,7 +42,7 @@ export default class MessageDetailScreen extends Component {
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title="message detail" onPress={() => this.props.navigation.goBack(null)} />
+        <Header title={I18n.t('message detail')} onPress={() => this.props.navigation.goBack(null)} />
         <ScrollView style={styles.mainContainer}>
           {this.renderCard(messageDetail)}
           <View style={{ paddingVertical: Metrics.doubleBaseMargin }}>

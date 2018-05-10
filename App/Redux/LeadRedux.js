@@ -9,6 +9,7 @@ const dataprovider = DataProvider.getInstance();
 const { Types, Creators } = createActions({
   messageRequest: ['data'],
   getLeadStagesSuccess: ['list'],
+  getLostReasonsSuccess: ['listReasonLost'],
   getLeadStagesFailure: null,
 });
 
@@ -21,23 +22,64 @@ export const INITIAL_STATE = Immutable({
   list: [],
   offset: 0,
   error: null,
+  listReasonLost: [],
 });
 
-export const getLeadStages = (cb) => (dispatch) => {
+
+export const getLeadStages = () => new Promise((resolve, reject) => {
   dataprovider.getLeadStages()
     .then((list) => {
-      console.log(list)
-      dispatch(Creators.getLeadStagesSuccess(list));
-      if (cb) { cb(list); }
+      resolve(list);
     })
-    .catch(() => {
-      dispatch(Creators.getLeadStagesFailure());
+    .catch((error) => {
+      reject(error);
     });
-};
-export const getLeads = (cb) => (dispatch) => {
+});
+export const updateLead = lead => new Promise((resolve, reject) => {
+  dataprovider.updateLead(lead)
+    .then((res) => {
+      resolve(res);
+    })
+    .catch((error) => {
+      reject(error);
+    });
+});
+export const getLostReasons = () => dispatch => new Promise((resolve, reject) => {
+  dataprovider.getLostReasons()
+    .then((list) => {
+      resolve(list);
+      console.log('getLostReasonsSuccess', list);
+      dispatch(Creators.getLostReasonsSuccess(list));
+    })
+    .catch((error) => {
+      reject(error);
+    });
+});
+export const markLeadWon = lead => new Promise((resolve, reject) => {
+  dataprovider.markLeadWon(lead)
+    .then((res) => {
+      resolve(res);
+    })
+    .catch((err) => {
+      reject(err);
+    });
+});
+export const markLeadLost = lead => new Promise((resolve, reject) => {
+  console.log(lead);
+  dataprovider.markLeadLost(lead)
+    .then((res) => {
+      console.log(res);
+      resolve(res);
+    })
+    .catch((err) => {
+      console.log(err);
+      reject(err);
+    });
+});
+export const getLeads = cb => (dispatch) => {
   dataprovider.getLeads()
     .then((list) => {
-      console.log('get leads', list)
+      console.log('get leads', list);
       // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) { cb(list); }
     })
@@ -48,7 +90,7 @@ export const getLeads = (cb) => (dispatch) => {
 export const getLead = (leadId, cb) => (dispatch) => {
   dataprovider.getLead(leadId)
     .then((list) => {
-      console.log('get lead by id', list)
+      console.log('get lead by id', list);
       // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) { cb(list); }
     })
@@ -59,7 +101,7 @@ export const getLead = (leadId, cb) => (dispatch) => {
 export const getLeadbyStage = (stageid, cb) => (dispatch) => {
   dataprovider.getLeadbyStage(stageid)
     .then((list) => {
-      console.log('get lead by stage', list)
+      console.log('get lead by stage', list);
       // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) { cb(list); }
     })
@@ -70,7 +112,7 @@ export const getLeadbyStage = (stageid, cb) => (dispatch) => {
 export const searchLead = (searchTerm, cb) => (dispatch) => {
   dataprovider.searchLead(searchTerm)
     .then((list) => {
-      console.log('search leads', list)
+      console.log('search leads', list);
       // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) { cb(list); }
     })
@@ -78,15 +120,14 @@ export const searchLead = (searchTerm, cb) => (dispatch) => {
       // dispatch(Creators.getLeadStagesFailure());
     });
 };
-export const pipelineCount = (cb) => (dispatch) => {
+export const pipelineCount = cb => (dispatch) => {
   dataprovider.pipelineCount()
     .then((list) => {
-      console.log(list)
+      console.log(list);
       // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) {
-        console.log(1)
+        console.log(1);
         cb(list);
-
       }
     })
     .catch(() => {
@@ -104,6 +145,10 @@ export const getLeadStagesSuccess = (state, action) => {
   const { list } = action;
   return state.merge({ list });
 };
+export const getLostReasonsSuccess = (state, action) => {
+  const { listReasonLost } = action;
+  return state.merge({ listReasonLost });
+};
 // Something went wrong somewhere.
 export const getLeadStagesFailure = state =>
   state.merge({ list: [] });
@@ -114,4 +159,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.MESSAGE_REQUEST]: request,
   [Types.GET_LEAD_STAGES_SUCCESS]: getLeadStagesSuccess,
   [Types.GET_LEAD_STAGES_FAILURE]: getLeadStagesFailure,
+  [Types.GET_LOST_REASONS_SUCCESS]: getLostReasonsSuccess,
 });

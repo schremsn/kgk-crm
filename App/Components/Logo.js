@@ -8,7 +8,6 @@ export default class Logo extends Component {
     return (
       <View style={styles.container}>
         <Image source={logoImg} style={styles.image} resizeMode="center" />
-        <Text style={styles.text}>KGK CRM</Text>
       </View>
     );
   }

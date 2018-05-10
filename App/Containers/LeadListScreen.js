@@ -9,6 +9,7 @@ import { Images, Colors } from './../Themes';
 import { getLeads, getLeadbyStage, searchLead } from '../Redux/LeadRedux';
 import ProgressBar from '../Components/ProgressBar';
 import Header from '../Components/Header';
+import LeadStagesScreen from './LeadStagesScreen';
 
 class LeadListScreen extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class LeadListScreen extends Component {
       isLoading: true,
       isRefreshing: false,
       searchContent: '',
-      stageName: props.navigation.state.params.stageName
+      stageName: props.navigation.state.params.stageName,
     };
     this.getLeadsList = this.getLeadsList.bind(this);
     // this.getLeadsListNextPage = this.getLeadsListNextPage.bind(this);
@@ -35,7 +36,6 @@ class LeadListScreen extends Component {
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
       const dataSource = ds.cloneWithRows(list);
       this.setState({
-        list,
         dataSource,
         isLoading: false,
       });
@@ -64,44 +64,45 @@ class LeadListScreen extends Component {
         <Text style={styles.sectionText}>{I18n.t('id')}: {item.id}</Text>
         <Text style={styles.sectionText}>{I18n.t('customer')}: {item.partner_name}</Text>
         <Text style={styles.sectionText}>{I18n.t('contact')}: {item.contact_name}</Text>
-        {/*<Text style={styles.sectionText}>email_from: {item.email_from}</Text>*/}
-        {/*<Text style={styles.sectionText}>title_action: {item.title_action}</Text>*/}
+        {/* <Text style={styles.sectionText}>email_from: {item.email_from}</Text> */}
+        {/* <Text style={styles.sectionText}>title_action: {item.title_action}</Text> */}
         <Text style={styles.sectionText}>{I18n.t('city')}: {item.city}</Text>
         <Text style={styles.sectionText}>{I18n.t('phone')}: {item.phone}</Text>
       </TouchableOpacity>
     );
   }
-  onChangeSearchLead(searchContent){
-    this.setState({ searchContent})
+  onChangeSearchLead(searchContent) {
+    this.setState({ searchContent });
   }
-  handleSearchLead(){
+  handleSearchLead() {
     const { searchContent } = this.state;
-    this.props.searchLead(searchContent, (list)=>{
+    this.props.searchLead(searchContent, (list) => {
       const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
       const dataSource = ds.cloneWithRows(list);
       this.setState({
-        list,
         dataSource,
       });
-    })
+    });
   }
   render() {
-    const { isLoading, isRefreshing, dataSource, stageName } = this.state;
+    const {
+      isLoading, isRefreshing, dataSource, stageName,
+    } = this.state;
     return (
       <View style={styles.container}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
-        <Header title={stageName} onPress={() => this.props.navigation.goBack(null)} />
+        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
+        <Header title={stageName} onPress={() => this.props.navigation.popToTop('LeadStagesScreen')} />
         <View style={styles.boxSearch}>
           <TextInput
             style={styles.inputSearch}
-            underlineColorAndroid='transparent'
+            underlineColorAndroid="transparent"
             placeholder={I18n.t('search for name, city')}
-            onChangeText={(value) => this.onChangeSearchLead(value)}
-            returnKeyType={'search'}
+            onChangeText={value => this.onChangeSearchLead(value)}
+            returnKeyType="search"
             onEndEditing={this.handleSearchLead}
           />
           <TouchableOpacity style={styles.buttonSearch} onPress={() => this.handleSearchLead()}>
-            <Ionicons name='ios-search-outline' size={25} color={Colors.banner} />
+            <Ionicons name="ios-search-outline" size={25} color={Colors.banner} />
           </TouchableOpacity>
         </View>
         {

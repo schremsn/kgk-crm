@@ -7,6 +7,7 @@
    "username": "Username",
    "password": "Password",
    "cancel": "Cancel",
+   "OK": "OK",
    "welcome": "Welcome",
    "login": "Login",
    "search": "Search",
@@ -75,6 +76,8 @@
   "Stage": "Stage",
   "Cancel": "Cancel",
   "Save": "Save",
+  "Update": "Update",
+  "Edit": "Edit",
   "Mark lost": "Mark lost",
   "Mark won": "Mark won",
   "Log activity": "Log activity",
@@ -90,4 +93,19 @@
   // contacts
   "Company": "Company",
   "Contacts": "Contacts",
+  // add contacts
+  "optional": "optional",
+  "required": "required",
+  "Province": "Province",
+  "Website": "Website",
+  "Create contacts is success": "Create contacts is success",
+  "Is Company": "Is Company",
+  "identification id": "Identification Id",
+  // Edit lead
+  "Edit Lead": "Edit Lead",
+  "Update lead is success": "Update lead is success",
+  "Update lead is error": "Update lead is error",
+  "Mark lead won is success": "Mark lead won is success",
+  "Mark lead lost is success": "Mark lead lost is success",
+
 }

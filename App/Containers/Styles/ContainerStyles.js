@@ -1,5 +1,13 @@
 import { StyleSheet } from 'react-native';
+import t from 'tcomb-form-native';
+import _ from 'lodash';
 import { Fonts, Colors, Metrics, ApplicationStyles } from '../../Themes/';
+
+// Style Form
+export const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
+
+stylesheet.controlLabel.normal.color = Colors.silver;
+stylesheet.textbox.normal.color = Colors.silver;
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
@@ -17,7 +25,7 @@ export default StyleSheet.create({
     height: Metrics.screenHeight,
   },
   mainContainer: {
-    paddingBottom: 60
+    marginBottom: 60,
   },
   description: {
     marginVertical: Metrics.doubleSection,
@@ -39,10 +47,21 @@ export default StyleSheet.create({
   progressBar: {
     backgroundColor: 'transparent',
     flex: 1,
-    minHeight: Metrics.screenHeight,
-    paddingBottom: 100,
     justifyContent: 'center',
     alignItems: 'center',
+    minHeight: Metrics.screenHeight,
+    paddingBottom: 100,
+  },
+  progressBarLoading: {
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 100,
   },
   seperator: {
     backgroundColor: '#8E8E8E',
@@ -67,6 +86,11 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
 
+  },
+  boxButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   text: {
     paddingRight: 20,
@@ -115,6 +139,7 @@ export default StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     backgroundColor: Colors.silver,
+
   },
   rowInfo: {
     fontSize: Fonts.size.regular,
@@ -134,7 +159,7 @@ export default StyleSheet.create({
     borderRadius: 10,
     padding: Metrics.baseMargin,
     marginBottom: 20,
-    backgroundColor: Colors.facebook
+    backgroundColor: Colors.facebook,
   },
   boxLeadTitle: {
     ...Fonts.style.h2,
@@ -143,16 +168,20 @@ export default StyleSheet.create({
   boxLeadContent: {
     ...Fonts.style.h3,
     color: Colors.snow,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   // style lead list
   boxSearch: {
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   inputSearch: {
     backgroundColor: Colors.snow,
     borderRadius: 20,
-    paddingLeft: 20
+    paddingLeft: 20,
+  },
+  inputText: {
+    backgroundColor: 'transparent',
+    paddingLeft: 20,
   },
   buttonSearch: {
     position: 'absolute',
@@ -166,11 +195,28 @@ export default StyleSheet.create({
   // style lead detail
   boxLeadPhone: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   buttonCallPhone: {
     padding: 5,
-    marginLeft: 30
+    marginLeft: 30,
+  },
+  boxPicker: {
+    position: 'absolute',
+    bottom: 70,
+    left: 0,
+    right: 0,
+    top: 0,
+    backgroundColor: '#5f3e63b0',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+  },
+  boxPickerContent: {
+    backgroundColor: 'white',
+    width: '90%',
+    padding: 10,
+    borderRadius: 10,
   },
   boxActions: {
     position: 'absolute',
@@ -179,10 +225,10 @@ export default StyleSheet.create({
     right: 0,
     top: 0,
     backgroundColor: '#5f3e63b0',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   boxActionContent: {
     backgroundColor: 'white',
     paddingBottom: 10,
-  }
+  },
 });

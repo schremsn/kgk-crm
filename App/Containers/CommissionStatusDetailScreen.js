@@ -32,7 +32,7 @@ class CommissionStatusDetailScreen extends Component {
     this.state = {
       commissionDetail: props.navigation.state.params.commissionDetail,
       isLoading: true,
-      isRefreshing: false
+      isRefreshing: false,
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
@@ -103,7 +103,7 @@ class CommissionStatusDetailScreen extends Component {
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title="status detail" onPress={() => this.props.navigation.goBack(null)} />
+        <Header title={I18n.t('status detail')} onPress={() => this.props.navigation.goBack(null)} />
         <ScrollView style={styles.mainContainer}>
           {this.renderCard(I18n.t('commission_information'), commissionDetail)}
           {
