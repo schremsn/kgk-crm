@@ -93,8 +93,7 @@ export default class DD {
     'stage_id',
     'tag_ids',
     'probability',
-    'product',
-    'external_status',
+    'date_deadline',
   ]
 
   static customer = ['company_name', 'name', 'city', 'mobile', 'phone', 'id']
