@@ -345,7 +345,7 @@ export default class DataProvider {
    */
   getLeadbyStage(stageid, index = 0) {
     const params = {
-      domain: ['&', ['active', '=', 'true'], ['stage_id', '=', stageid]],
+      domain: [['active', '=', 'true'], ['stage_id', '=', stageid], ['user_id', '=', this.getUserId()]],
       fields: DD.lead,
       limit: maxRecords,
       offset: index,
