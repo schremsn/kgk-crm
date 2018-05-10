@@ -6,7 +6,8 @@
   "forgotPassword": "Quên mật khẩu",
   "username": "Tên đăng nhập",
   "password": "Mật khẩu",
-  "cancel": "Cancel",
+  "cancel": "Hủy",
+  "OK": "Đồng ý",
   "login": "Đăng nhập",
   "search": "Tìm kiếm",
   "name": "Tên",
@@ -74,6 +75,8 @@
   "Lead name":"Tên chỉ dẫn",
   "Cancel": "Hủy",
   "Save": "Lưu",
+  "Edit": "Sửa",
+  "Update": "Cập nhật",
   "Mark lost": "Đánh dấu thất bại",
   "Mark won": "Đánh dấu thành công",
   "Log activity": "Nhật ký hoạt động",
@@ -96,6 +99,10 @@
   "Create contacts is success": "Tạo danh bạ thành công",
   "Is Company": "Là Công ty",
   "identification id": "Mã nhận biết",
-
-
+  // Edit lead
+  "Edit Lead": "Thay đổi chỉ dẫn",
+  "Update lead is success": "Cập nhật chỉ dẫn thành công",
+  "Update lead is error": "Cập nhật chỉ dẫn thất bại",
+  "Mark lead won is success": "Đánh dấu chỉ dẫn thắng thành công",
+  "Mark lead lost is success": "Đánh dấu chỉ dẫn thất bị thành công",
 }

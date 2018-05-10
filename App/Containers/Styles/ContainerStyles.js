@@ -25,7 +25,7 @@ export default StyleSheet.create({
     height: Metrics.screenHeight,
   },
   mainContainer: {
-    paddingBottom: 60,
+    marginBottom: 60,
   },
   description: {
     marginVertical: Metrics.doubleSection,
@@ -87,6 +87,11 @@ export default StyleSheet.create({
     justifyContent: 'center',
 
   },
+  boxButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
   text: {
     paddingRight: 20,
     color: 'white',
@@ -134,6 +139,7 @@ export default StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     backgroundColor: Colors.silver,
+
   },
   rowInfo: {
     fontSize: Fonts.size.regular,
@@ -173,6 +179,10 @@ export default StyleSheet.create({
     borderRadius: 20,
     paddingLeft: 20,
   },
+  inputText: {
+    backgroundColor: 'transparent',
+    paddingLeft: 20,
+  },
   buttonSearch: {
     position: 'absolute',
     right: 0,
@@ -190,6 +200,23 @@ export default StyleSheet.create({
   buttonCallPhone: {
     padding: 5,
     marginLeft: 30,
+  },
+  boxPicker: {
+    position: 'absolute',
+    bottom: 70,
+    left: 0,
+    right: 0,
+    top: 0,
+    backgroundColor: '#5f3e63b0',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+  },
+  boxPickerContent: {
+    backgroundColor: 'white',
+    width: '90%',
+    padding: 10,
+    borderRadius: 10,
   },
   boxActions: {
     position: 'absolute',

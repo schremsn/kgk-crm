@@ -735,6 +735,7 @@ export default class DataProvider {
     }
     const { id, lost_reason } = lead;
 
+    console.log('check', lead)
     const lostLead = {
       id,
       lost_reason,

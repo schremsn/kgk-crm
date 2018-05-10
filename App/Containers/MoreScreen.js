@@ -53,7 +53,7 @@ export default class MoreScreen extends Component {
             <Ionicons name="ios-list-box-outline" size={25} color={Colors.snow} />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonBox} onPress={() => { this.toggleMenu(); }}>
+        <TouchableOpacity style={styles.buttonBox} onPress={() => { this.props.navigation.navigate('Auth'); }}>
           <Text style={styles.text}>
             {I18n.t('logOut')}
           </Text>

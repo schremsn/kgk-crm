@@ -16,6 +16,7 @@ export default StyleSheet.create({
     left: 0,
     top: 0,
   },
+
   textTitle: {
     color: Colors.snow,
     fontSize: 23,
