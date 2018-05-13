@@ -18,6 +18,8 @@ export default class UserInput extends Component {
           returnKeyType={this.props.returnKeyType}
           placeholderTextColor="white"
           underlineColorAndroid="transparent"
+          onEndEditing={this.props.onEndEditing}
+          keyboardType={this.props.keyboardType}
           onChangeText={value => this.props.onChangeText((value))}
         />
       </View>
@@ -32,7 +34,10 @@ UserInput.propTypes = {
   autoCorrect: PropTypes.bool,
   autoCapitalize: PropTypes.string,
   returnKeyType: PropTypes.string,
+  keyboardType: PropTypes.string,
+  value: PropTypes.string,
   onChangeText: PropTypes.func,
+  onEndEditing: PropTypes.func,
 };
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -48,7 +53,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   inputWrapper: {
-    flex: 1,
+    height: 63,
   },
   inlineImg: {
     position: 'absolute',
