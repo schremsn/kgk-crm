@@ -2,26 +2,25 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactNative, {
-  View, ActivityIndicator, Image, Animated, ScrollView, TouchableHighlight,
+  View, ActivityIndicator, Image, TouchableHighlight,
   Platform, Text, TextInput, Modal, TouchableOpacity,
 } from 'react-native';
 import I18n from 'react-native-i18n';
 import t from 'tcomb-form-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 import Toast from 'react-native-easy-toast';
-import { Images, Colors, Metrics } from './../Themes';
+import { Images, Colors } from './../Themes';
 import styles, { stylesheet, stylesheetMultiLine } from './Styles/ContainerStyles';
-import Header from '../Components/Header';
-import { pipelineCount, createLead } from '../Redux/LeadRedux';
-import RoundedButton from '../Components/RoundedButton';
 import ContactsAddScreen from './ContactsAddScreen';
 import ContactsListScreen from './ContactsListScreen';
+import Header from '../Components/Header';
+import RoundedButton from '../Components/RoundedButton';
+import { pipelineCount, createLead } from '../Redux/LeadRedux';
+
 
 
 const { Form } = t.form;
-
 
 class LeadAddScreen extends Component {
   constructor(props) {
