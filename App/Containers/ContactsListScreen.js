@@ -126,7 +126,7 @@ class ContactListScreen extends Component {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
             : <ListView
-              style={[styles.mainContainer, { marginBottom: 60 }]}
+              style={[styles.mainContainer, { marginBottom: this.props.isModal ? 20 : 60 }]}
               enableEmptySections
               // onEndReached={() => this.getCustomersListNextPage()}
               onEndReachedThreshold={1200}

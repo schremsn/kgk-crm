@@ -99,10 +99,6 @@ export default class ContactsAddScreen extends Component {
           label: I18n.t('Email'),
           error: 'Email is Not Correct',
           stylesheet,
-          onFocus: (event: Event) => {
-            console.log(event)
-            this.scrollToInput(ReactNative.findNodeHandle(event.target));
-          },
         },
       },
       i18n: {
@@ -111,7 +107,6 @@ export default class ContactsAddScreen extends Component {
       },
       // auto: 'placeholders'
     };
-    this.scrollToInput = this.scrollToInput.bind(this);
   }
 
   onChange(value) {
@@ -137,10 +132,6 @@ export default class ContactsAddScreen extends Component {
         });
     }
   }
-  scrollToInput(reactNode: any) {
-    console.log(reactNode)
-    this.scroll.props.scrollToFocusedInput(reactNode);
-  }
   render() {
     const { value, isLoading } = this.state;
     return (
@@ -163,8 +154,8 @@ export default class ContactsAddScreen extends Component {
           </View>
         }
         <KeyboardAwareScrollView
-          style={{ marginBottom: 70}}
-          innerRef={(ref) => { this.scroll = ref; }}
+          style={{ marginBottom: this.props.isModal ? 120 : 70 }}
+          innerRef={(ref) => { this.scrollView = ref; }}
         >
           <Form
             ref={(c) => { this.form = c; }}
@@ -182,7 +173,7 @@ export default class ContactsAddScreen extends Component {
 
 ContactsAddScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  isModall: PropTypes.bool,
+  isModal: PropTypes.bool,
   onShowAddContactModal: PropTypes.func,
 };
 

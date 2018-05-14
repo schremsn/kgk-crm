@@ -16,9 +16,7 @@ import ContactsAddScreen from './ContactsAddScreen';
 import ContactsListScreen from './ContactsListScreen';
 import Header from '../Components/Header';
 import RoundedButton from '../Components/RoundedButton';
-import { pipelineCount, createLead } from '../Redux/LeadRedux';
-
-
+import { createLead } from '../Redux/LeadRedux';
 
 const { Form } = t.form;
 
@@ -31,6 +29,7 @@ class LeadAddScreen extends Component {
         stage_id: '1',
         description: '',
       },
+      customerName: '',
       isLoading: false,
       isModalSearchContact: false,
       isModalAddContact: false,
@@ -62,8 +61,6 @@ class LeadAddScreen extends Component {
           mode: 'dropdown',
         },
         description: {
-          label: I18n.t('notes'),
-          stylesheet: stylesheetMultiLine,
           template: this.templateInputNotes,
         },
       },
@@ -125,6 +122,7 @@ class LeadAddScreen extends Component {
       this.setState({
         isModalSearchContact: false,
         value: { ...this.state.value, partner_id: parseInt(value.id, 0) },
+        customerName: value.name,
       });
     }
   }
@@ -139,7 +137,7 @@ class LeadAddScreen extends Component {
     this.scrollView.props.scrollToFocusedInput(node, extraHeight, 100);
   }
   templateInputCustomer() {
-    const value = this.state.value.partner_id ? this.state.value.partner_id.toString() : '';
+    const value = this.state.customerName;
     return (
       <View >
         <Text style={styles.labelFormCustom}>Customer</Text>
@@ -275,9 +273,5 @@ const mapStateToProps = state => ({
   leadStages: state.lead.list,
 });
 
-const mapDispatchToProps = dispatch => ({
-  getPipelineCount: (cb) => { dispatch(pipelineCount(cb)); },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LeadAddScreen);
+export default connect(mapStateToProps, null)(LeadAddScreen);
 

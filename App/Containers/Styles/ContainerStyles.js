@@ -14,12 +14,6 @@ stylesheet.textbox.notEditable.height = 45;
 stylesheet.textbox.error.color = Colors.silver;
 stylesheet.select.normal.color = Colors.silver;
 
-export const stylesheetMultiLine = _.cloneDeep(t.form.Form.stylesheet);
-
-stylesheetMultiLine.textbox.normal.color = Colors.silver;
-stylesheetMultiLine.textbox.normal.height = 80;
-stylesheetMultiLine.controlLabel.normal.color = Colors.silver;
-
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   applicationView: {
