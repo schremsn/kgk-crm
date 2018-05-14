@@ -171,6 +171,10 @@ class LeadDetailScreen extends Component {
             text={I18n.t('Mark lost')}
             onPress={() => this.setState({ isSelectLostReason: true })}
           />
+          <FullButton
+            text={I18n.t('Cancel')}
+            onPress={() => this.setState({ isShowActions: false })}
+          />
 
         </Animatable.View>
 
