@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
+import ReactNative, {
   View, ActivityIndicator, Image, KeyboardAvoidingView, ScrollView, ToastAndroid,
   Platform,
 } from 'react-native';
 import I18n from 'react-native-i18n';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 import t from 'tcomb-form-native';
 import { Images, Colors, Metrics } from './../Themes';
 import styles, { stylesheet } from './Styles/ContainerStyles';
@@ -30,69 +32,6 @@ const Person = t.struct({
   email: t.maybe(t.String),
   comment: t.maybe(t.String),
 });
-const options = {
-  hasError: true,
-  fields: {
-    is_company: {
-      label: `${I18n.t('Is Company')} ( ${I18n.t('required')} )`,
-      stylesheet,
-    },
-    name: {
-      label: `${I18n.t('name')} ( ${I18n.t('required')} )`,
-      stylesheet,
-    },
-    identification_id: {
-      label: I18n.t('identification id'),
-      stylesheet,
-    },
-    street: {
-      label: I18n.t('Street'),
-      stylesheet,
-    },
-    street2: {
-      label: I18n.t('Street2'),
-      stylesheet,
-    },
-    city: {
-      label: `${I18n.t('city')} ( ${I18n.t('required')} )`,
-      stylesheet,
-    },
-    code_zip: {
-      label: I18n.t('Zip'),
-      stylesheet,
-    },
-    phone: {
-      label: I18n.t('phone'),
-      stylesheet,
-    },
-    mobile: {
-      label: I18n.t('mobile'),
-      stylesheet,
-    },
-    website: {
-      label: I18n.t('Website'),
-      stylesheet,
-    },
-    state: {
-      label: I18n.t('Province'),
-      stylesheet,
-    },
-    comment: {
-      label: I18n.t('notes'),
-      stylesheet,
-    },
-    email: {
-      label: I18n.t('Email'),
-      error: 'Email is Not Correct',
-      stylesheet,
-    },
-  },
-  i18n: {
-    optional: ` ( ${I18n.t('optional')} )`,
-    required: '',
-  },
-  // auto: 'placeholders'
-};
 
 export default class ContactsAddScreen extends Component {
   constructor() {
@@ -105,6 +44,74 @@ export default class ContactsAddScreen extends Component {
     };
     this.onChange = this.onChange.bind(this);
     this.onPress = this.onPress.bind(this);
+    this.options = {
+      hasError: true,
+      fields: {
+        is_company: {
+          label: `${I18n.t('Is Company')} ( ${I18n.t('required')} )`,
+          stylesheet,
+        },
+        name: {
+          label: `${I18n.t('name')} ( ${I18n.t('required')} )`,
+          stylesheet,
+        },
+        identification_id: {
+          label: I18n.t('identification id'),
+          stylesheet,
+        },
+        street: {
+          label: I18n.t('Street'),
+          stylesheet,
+        },
+        street2: {
+          label: I18n.t('Street2'),
+          stylesheet,
+        },
+        city: {
+          label: `${I18n.t('city')} ( ${I18n.t('required')} )`,
+          stylesheet,
+        },
+        code_zip: {
+          label: I18n.t('Zip'),
+          stylesheet,
+        },
+        phone: {
+          label: I18n.t('phone'),
+          stylesheet,
+        },
+        mobile: {
+          label: I18n.t('mobile'),
+          stylesheet,
+        },
+        website: {
+          label: I18n.t('Website'),
+          stylesheet,
+        },
+        state: {
+          label: I18n.t('Province'),
+          stylesheet,
+        },
+        comment: {
+          label: I18n.t('notes'),
+          stylesheet,
+        },
+        email: {
+          label: I18n.t('Email'),
+          error: 'Email is Not Correct',
+          stylesheet,
+          onFocus: (event: Event) => {
+            console.log(event)
+            this.scrollToInput(ReactNative.findNodeHandle(event.target));
+          },
+        },
+      },
+      i18n: {
+        optional: ` ( ${I18n.t('optional')} )`,
+        required: '',
+      },
+      // auto: 'placeholders'
+    };
+    this.scrollToInput = this.scrollToInput.bind(this);
   }
 
   onChange(value) {
@@ -118,7 +125,11 @@ export default class ContactsAddScreen extends Component {
         .then(() => {
           this.setState({ isLoading: false });
           ToastAndroid.show(I18n.t('Create contacts is success'), ToastAndroid.SHORT);
-          this.props.navigation.replace('ContactsListScreen');
+          if (this.props.isModal) {
+            this.props.onShowAddContactModal(false);
+          } else {
+            this.props.navigation.replace('ContactsListScreen');
+          }
         })
         .catch((error) => {
           this.setState({ isLoading: false });
@@ -126,34 +137,44 @@ export default class ContactsAddScreen extends Component {
         });
     }
   }
+  scrollToInput(reactNode: any) {
+    console.log(reactNode)
+    this.scroll.props.scrollToFocusedInput(reactNode);
+  }
   render() {
     const { value, isLoading } = this.state;
     return (
-      <View style={[styles.container]}>
+      <View style={[styles.containerHasForm]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('Contacts')} onPress={() => this.props.navigation.popToTop()} />
+        <Header
+          title={I18n.t('Add Contact')}
+          onPress={() => {
+          if (this.props.isModal) {
+            this.props.onShowAddContactModal(false);
+          } else {
+            this.props.navigation.popToTop();
+          }
+        }}
+        />
         {
           isLoading &&
           <View style={[styles.progressBarLoading]}>
             <ActivityIndicator size="large" color={Platform.OS === 'ios' ? 'white' : Colors.fire} />
           </View>
         }
-        <ScrollView style={[styles.mainContainer, {
-          height: Metrics.screenHeight,
-          marginBottom: 60,
-        }]}
+        <KeyboardAwareScrollView
+          style={{ marginBottom: 70}}
+          innerRef={(ref) => { this.scroll = ref; }}
         >
-          <KeyboardAvoidingView behavior="padding">
-            <Form
-              ref={(c) => { this.form = c; }}
-              type={Person}
-              options={options}
-              value={value}
-              onChange={this.onChange}
-            />
-            <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
-          </KeyboardAvoidingView>
-        </ScrollView>
+          <Form
+            ref={(c) => { this.form = c; }}
+            type={Person}
+            options={this.options}
+            value={value}
+            onChange={this.onChange}
+          />
+          <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
+        </KeyboardAwareScrollView>
       </View>
     );
   }
@@ -161,5 +182,7 @@ export default class ContactsAddScreen extends Component {
 
 ContactsAddScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
+  isModall: PropTypes.bool,
+  onShowAddContactModal: PropTypes.func,
 };
 

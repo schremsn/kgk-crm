@@ -8,7 +8,7 @@ import Communications from 'react-native-communications';
 import * as Animatable from 'react-native-animatable';
 import Toast from 'react-native-easy-toast';
 import styles from './Styles/ContainerStyles';
-import { Images, Metrics, Colors } from './../Themes';
+import { Images, Colors } from './../Themes';
 import { getLead, markLeadWon, markLeadLost } from '../Redux/LeadRedux';
 import Header from '../Components/Header';
 

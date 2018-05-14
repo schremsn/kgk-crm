@@ -1,9 +1,11 @@
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { TabNavigator, TabBarBottom, StackNavigator, SwitchNavigator } from 'react-navigation';
+import { TabNavigator, StackNavigator, SwitchNavigator } from 'react-navigation';
 import I18n from 'react-native-i18n';
 
 import { Colors } from '../Themes';
+
+import TabBarBottom from '../Components/TabBarBottom';
 
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen';
 import CommissionStatusDetailScreen from '../Containers/CommissionStatusDetailScreen';
@@ -19,6 +21,7 @@ import LeadStagesScreen from '../Containers/LeadStagesScreen';
 import LeadDetailScreen from '../Containers/LeadDetailScreen';
 import LeadListScreen from '../Containers/LeadListScreen';
 import LeadEditScreen from '../Containers/LeadEditScreen';
+import LeadAddScreen from '../Containers/LeadAddScreen';
 import ContactsListScreen from '../Containers/ContactsListScreen';
 import ContactsAddScreen from '../Containers/ContactsAddScreen';
 
@@ -42,6 +45,7 @@ const PipelineStack = StackNavigator({
   LeadDetailScreen: { screen: LeadDetailScreen },
   LeadListScreen: { screen: LeadListScreen },
   LeadEditScreen: { screen: LeadEditScreen },
+  LeadAddScreen: { screen: LeadAddScreen },
 }, {
   headerMode: 'none',
   initialRouteName: 'LeadStagesScreen',

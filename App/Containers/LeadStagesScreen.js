@@ -5,25 +5,30 @@ import { View, Text, Image, TouchableOpacity, RefreshControl, ScrollView } from 
 import I18n from 'react-native-i18n';
 import styles from './Styles/ContainerStyles';
 import { Images, Colors } from './../Themes';
-import ProgressBar from '../Components/ProgressBar';
 import { pipelineCount, getLeadStages } from '../Redux/LeadRedux';
 
 class LeadStagesScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      leadStages: [],
+      leadStages: props.leadStages,
       isLoading: true,
       isRefreshing: false,
       list: {},
     };
     this.getPipelineCount = this.getPipelineCount.bind(this);
+    this.getLeadStages = this.getLeadStages.bind(this);
     this.renderLeadStage = this.renderLeadStage.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
   }
   componentWillMount() {
     this.getPipelineCount();
     this.getLeadStages();
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.leadStages) {
+      this.setState({ leadStages: nextProps.leadStages });
+    }
   }
   getPipelineCount(isRefreshed) {
     this.props.getPipelineCount((list) => {
@@ -37,13 +42,7 @@ class LeadStagesScreen extends Component {
     }
   }
   getLeadStages() {
-    getLeadStages()
-      .then((leadStages) => {
-        this.setState({
-          leadStages,
-          isLoading: false,
-        });
-      });
+    this.props.getLeadStages();
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
@@ -98,11 +97,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getPipelineCount: (cb) => { dispatch(pipelineCount(cb)); },
+  getLeadStages: () => { dispatch(getLeadStages()); },
 });
 
 LeadStagesScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
+  leadStages: PropTypes.array.isRequired,
   getPipelineCount: PropTypes.func.isRequired,
+  getLeadStages: PropTypes.func.isRequired,
 };
 LeadStagesScreen.navigationOptions = {
   title: I18n.t('pipeline'),

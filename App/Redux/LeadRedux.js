@@ -7,7 +7,6 @@ const dataprovider = DataProvider.getInstance();
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  messageRequest: ['data'],
   getLeadStagesSuccess: ['list'],
   getLostReasonsSuccess: ['listReasonLost'],
   getLeadStagesFailure: null,
@@ -26,17 +25,28 @@ export const INITIAL_STATE = Immutable({
 });
 
 
-export const getLeadStages = () => new Promise((resolve, reject) => {
+export const getLeadStages = () => dispatch => new Promise((resolve, reject) => {
   dataprovider.getLeadStages()
     .then((list) => {
       resolve(list);
+      dispatch(Creators.getLeadStagesSuccess(list));
+    })
+    .catch((error) => {
+      reject(error);
+      dispatch(Creators.getLeadStagesFailure());
+    });
+});
+export const updateLead = lead => new Promise((resolve, reject) => {
+  dataprovider.updateLead(lead)
+    .then((res) => {
+      resolve(res);
     })
     .catch((error) => {
       reject(error);
     });
 });
-export const updateLead = lead => new Promise((resolve, reject) => {
-  dataprovider.updateLead(lead)
+export const createLead = lead => new Promise((resolve, reject) => {
+  dataprovider.createLead(lead)
     .then((res) => {
       resolve(res);
     })
@@ -102,11 +112,10 @@ export const getLeadbyStage = (stageid, cb) => (dispatch) => {
   dataprovider.getLeadbyStage(stageid)
     .then((list) => {
       console.log('get lead by stage', list);
-      // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) { cb(list); }
     })
     .catch(() => {
-      // dispatch(Creators.getLeadStagesFailure());
+      dispatch(Creators.getLeadStagesFailure());
     });
 };
 export const searchLead = (searchTerm, cb) => (dispatch) => {
@@ -137,12 +146,11 @@ export const pipelineCount = cb => (dispatch) => {
 /* ------------- Reducers ------------- */
 
 // request the data from an api
-export const request = (state, { params }) =>
-  state.merge({ offset: 0 });
 
 // successful api lookup
 export const getLeadStagesSuccess = (state, action) => {
   const { list } = action;
+  console.log(list);
   return state.merge({ list });
 };
 export const getLostReasonsSuccess = (state, action) => {
@@ -156,7 +164,6 @@ export const getLeadStagesFailure = state =>
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.MESSAGE_REQUEST]: request,
   [Types.GET_LEAD_STAGES_SUCCESS]: getLeadStagesSuccess,
   [Types.GET_LEAD_STAGES_FAILURE]: getLeadStagesFailure,
   [Types.GET_LOST_REASONS_SUCCESS]: getLostReasonsSuccess,

@@ -63,6 +63,7 @@
   "contact": "Contact",
   "city": "City",
   "Contact": "Contact",
+  "Add Contact": "Add Contact",
   "Customer": "Customer",
   "Phone": "Phone",
   "Mobile": "Mobile",
@@ -103,8 +104,11 @@
   "identification id": "Identification Id",
   // Edit lead
   "Edit Lead": "Edit Lead",
+  "Add Lead": "Add Lead",
   "Update lead is success": "Update lead is success",
+  "Add lead is success": "Add lead is success",
   "Update lead is error": "Update lead is error",
+  "Add lead is error": "Add lead is error",
   "Mark lead won is success": "Mark lead won is success",
   "Mark lead lost is success": "Mark lead lost is success",
 

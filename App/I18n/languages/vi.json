@@ -62,6 +62,7 @@
   "contact": "Liên hệ",
   "city": "Thành phố",
   "Contact": "Liên hệ",
+  "Add Contact": "Thêm liên hệ",
   "Customer": "Khách hàng",
   "Phone": "Số điện thoại",
   "Mobile": "Di động",
@@ -101,8 +102,11 @@
   "identification id": "Mã nhận biết",
   // Edit lead
   "Edit Lead": "Thay đổi chỉ dẫn",
+  "Add Lead": "Tạo chỉ dẫn",
   "Update lead is success": "Cập nhật chỉ dẫn thành công",
+  "Add lead is success": "Tạo chỉ dẫn thành công",
   "Update lead is error": "Cập nhật chỉ dẫn thất bại",
+  "Add lead is error": "Tạo chỉ dẫn thất bại",
   "Mark lead won is success": "Đánh dấu chỉ dẫn thắng thành công",
   "Mark lead lost is success": "Đánh dấu chỉ dẫn thất bị thành công",
 }

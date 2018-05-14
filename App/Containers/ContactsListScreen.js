@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput } from 'react-native';
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput, KeyboardAvoidingView } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Images, Colors } from './../Themes';
@@ -16,12 +16,14 @@ class ContactListScreen extends Component {
     this.state = {
       isLoading: true,
       isRefreshing: false,
+      isKeyboard: false,
+      searchContent: '',
       list: [],
     };
     this.getCustomersList = this.getCustomersList.bind(this);
     this.getCustomersListNextPage = this.getCustomersListNextPage.bind(this);
     this.handleSearchLead = this.handleSearchLead.bind(this);
-    this.renderCommission = this.renderCommission.bind(this);
+    this.renderContact = this.renderContact.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
     this.onChangeSearchLead = this.onChangeSearchLead.bind(this);
   }
@@ -60,20 +62,28 @@ class ContactListScreen extends Component {
   }
   handleSearchLead() {
     const { searchContent } = this.state;
-    searchCustomer(searchContent)
-      .then((list) => {
-        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-        const dataSource = ds.cloneWithRows(list);
-        this.setState({
-          list,
-          dataSource,
+    if(searchContent.length > 0){
+      searchCustomer(searchContent)
+        .then((list) => {
+          const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+          const dataSource = ds.cloneWithRows(list);
+          this.setState({
+            list,
+            dataSource,
+            isKeyboard: false
+          });
         });
-      });
+    }
   }
-  renderCommission(item) {
+  renderContact(item) {
     return (
       <TouchableOpacity
         style={styles.sectionHeaderContainer}
+        onPress={() => {
+          if (this.props.isModal) {
+            this.props.onSelectContact(item);
+          }
+        }}
       >
         <Text style={styles.sectionHeader}>{item.id}</Text>
         <Text style={styles.sectionText}>{I18n.t('Company')}: {item.company_name}</Text>
@@ -85,12 +95,21 @@ class ContactListScreen extends Component {
     );
   }
   render() {
-    const { isLoading, isRefreshing, dataSource } = this.state;
+    const { isLoading, isRefreshing, isKeyboard, dataSource } = this.state;
     return (
       <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('Contacts')} onPress={() => this.props.navigation.goBack(null)} />
-        <View style={styles.boxSearch}>
+        <Header
+          title={I18n.t('Contacts')}
+          onPress={() => {
+          if (this.props.isModal) {
+            this.props.onSelectContact(null);
+          } else {
+            this.props.navigation.goBack(null);
+          }
+        }}
+        />
+        <KeyboardAvoidingView behavior="height" style={styles.boxSearch}>
           <TextInput
             style={styles.inputSearch}
             underlineColorAndroid="transparent"
@@ -102,7 +121,7 @@ class ContactListScreen extends Component {
           <TouchableOpacity style={styles.buttonSearch} onPress={() => this.handleSearchLead()}>
             <Ionicons name="ios-search-outline" size={25} color={Colors.banner} />
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
         {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
@@ -112,7 +131,7 @@ class ContactListScreen extends Component {
               // onEndReached={() => this.getCustomersListNextPage()}
               onEndReachedThreshold={1200}
               dataSource={dataSource}
-              renderRow={item => this.renderCommission(item)}
+              renderRow={item => this.renderContact(item)}
               renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
               // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
               refreshControl={
@@ -131,7 +150,11 @@ class ContactListScreen extends Component {
         <TouchableOpacity
           style={[styles.buttonBox]}
           onPress={() => {
-            this.props.navigation.navigate('ContactsAddScreen');
+            if (this.props.isModal) {
+              this.props.onShowAddContactModal(true);
+            } else {
+              this.props.navigation.navigate('ContactsAddScreen');
+            }
         }}
         >
           <View style={styles.button}>
@@ -155,6 +178,9 @@ const mapDispatchToProps = dispatch => ({
 ContactListScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   getCustomers: PropTypes.func.isRequired,
+  onSelectContact: PropTypes.func,
+  onShowAddContactModal: PropTypes.func,
+  isModal: PropTypes.bool,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactListScreen);
