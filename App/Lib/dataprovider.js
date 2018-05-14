@@ -259,13 +259,14 @@ export default class DataProvider {
       throw new Error('wrong search term');
     }
     const params = {
-      // domain: ['&', '|', '|', ['customer', '=', 'true'], ['name', 'ilike', searchTerm], ['city', 'ilike', searchTerm],
-      //  ['phone', 'ilike', searchTerm],],
       domain: [
+        '&',
         ['customer', '=', 'true'],
         '|',
         ['name', 'ilike', searchTerm],
+        '|',
         ['city', 'ilike', searchTerm],
+        ['phone', 'ilike', searchTerm],
       ],
       fields: DD.customer,
       limit: maxRecords,
@@ -293,9 +294,11 @@ export default class DataProvider {
     }
     const params = {
       domain: [
-        ['active', '=', 'true'],
-        '|',
-        ['name', 'ilike', searchTerm],
+        '&', '&',
+        ['active', '=', true],
+        ['user_id', '=', this.getUserId()], '|',
+        ['name', 'ilike', searchTerm], '|',
+        ['partner_name', 'ilike', searchTerm],
         ['city', 'ilike', searchTerm],
       ],
       fields: DD.lead,
@@ -735,7 +738,7 @@ export default class DataProvider {
     }
     const { id, lost_reason } = lead;
 
-    console.log('check', lead)
+    console.log('check', lead);
     const lostLead = {
       id,
       lost_reason,
