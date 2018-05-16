@@ -8,6 +8,11 @@ export const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
 
 stylesheet.controlLabel.normal.color = Colors.silver;
 stylesheet.textbox.normal.color = Colors.silver;
+stylesheet.textbox.normal.height = 45;
+stylesheet.textboxView.normal.height = 45;
+stylesheet.textbox.notEditable.height = 45;
+stylesheet.textbox.error.color = Colors.silver;
+stylesheet.select.normal.color = Colors.silver;
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
@@ -23,6 +28,9 @@ export default StyleSheet.create({
   container: {
     padding: Metrics.doubleBaseMargin,
     height: Metrics.screenHeight,
+  },
+  containerHasForm: {
+    padding: Metrics.doubleBaseMargin,
   },
   mainContainer: {
     marginBottom: 60,
@@ -231,4 +239,32 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     paddingBottom: 10,
   },
+  // form
+  inputFormCustom: {
+    borderWidth: 1,
+    borderColor: 'white',
+    color: 'white',
+    paddingLeft: 10,
+    fontSize: 17,
+    borderRadius: 4,
+    height: 45,
+    marginTop: 10,
+    marginBottom: 12,
+  },
+  labelFormCustom: {
+    fontSize: 17, color: 'white', fontWeight: '700',
+  },
+  iconInputFormCustom: {
+    position: 'absolute',
+    height: 45,
+    top: 33,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 45,
+    right: 0,
+    borderTopRightRadius: 4,
+    borderBottomRightRadius: 4,
+    backgroundColor: 'white',
+  },
+
 });

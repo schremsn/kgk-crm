@@ -76,7 +76,6 @@ export default class DD {
   static leadDetail = [
     'contact_name',
     'name',
-    'title_action',
     'phone',
     'partner_name',
     'mobile',
@@ -93,7 +92,8 @@ export default class DD {
     'stage_id',
     'tag_ids',
     'probability',
-    'date_deadline',
+    'product',
+    'external_status',
   ]
 
   static customer = ['company_name', 'name', 'city', 'mobile', 'phone', 'id']
@@ -119,7 +119,6 @@ export default class DD {
   static lead = [
     'contact_name',
     'name',
-    'title_action',
     'phone',
     'partner_name',
     'city',

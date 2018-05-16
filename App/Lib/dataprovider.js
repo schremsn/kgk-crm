@@ -63,7 +63,7 @@ export default class DataProvider {
 
   /**
    * @params {number} optional sepcify the offset to read from
-   * get a list of 200 customers
+   * get a list of customers
    */
   getCustomers(offset = 0) {
     const params = {
@@ -215,7 +215,6 @@ export default class DataProvider {
     lead.type = 'opportunity';
     lead.source = this.getPartnerId();
 
-    console.log(lead);
 
     return new Promise((resolve, reject) => {
       this.odoo.create('crm.lead', lead, (err, data) => {
@@ -259,13 +258,14 @@ export default class DataProvider {
       throw new Error('wrong search term');
     }
     const params = {
-      // domain: ['&', '|', '|', ['customer', '=', 'true'], ['name', 'ilike', searchTerm], ['city', 'ilike', searchTerm],
-      //  ['phone', 'ilike', searchTerm],],
       domain: [
+        '&',
         ['customer', '=', 'true'],
         '|',
         ['name', 'ilike', searchTerm],
+        '|',
         ['city', 'ilike', searchTerm],
+        ['phone', 'ilike', searchTerm],
       ],
       fields: DD.customer,
       limit: maxRecords,
@@ -293,9 +293,11 @@ export default class DataProvider {
     }
     const params = {
       domain: [
-        ['active', '=', 'true'],
-        '|',
-        ['name', 'ilike', searchTerm],
+        '&', '&',
+        ['active', '=', true],
+        ['user_id', '=', this.getUserId()], '|',
+        ['name', 'ilike', searchTerm], '|',
+        ['partner_name', 'ilike', searchTerm],
         ['city', 'ilike', searchTerm],
       ],
       fields: DD.lead,
@@ -345,7 +347,7 @@ export default class DataProvider {
    */
   getLeadbyStage(stageid, index = 0) {
     const params = {
-      domain: ['&', ['active', '=', 'true'], ['stage_id', '=', stageid]],
+      domain: [['active', '=', 'true'], ['stage_id', '=', stageid], ['user_id', '=', this.getUserId()]],
       fields: DD.lead,
       limit: maxRecords,
       offset: index,
@@ -541,13 +543,12 @@ export default class DataProvider {
   }
 
   /**
-   * converts a lead to an oppotunity, if the customerId is provided it is linked to that customer otherwise a new customer will be created
+   * converts a lead to an oppotunity, if the customerId is provided it is linked to that
+   * customer otherwise a new customer will be created
    * @param {number} leadId
    * @param {number} customerId
    */
   convertLead(leadId, customerId) {
-    console.log(`callMethod: ${leadId} ${customerId}`);
-
     const model = 'crm.lead';
     const endpoint = '/web/dataset/call_kw';
     const params = {
@@ -571,7 +572,6 @@ export default class DataProvider {
       // first convert lead to opportunity
       this.odoo.rpc_call(endpoint, params, (err, data) => {
         if (err) {
-          console.log('convert error');
           reject(err);
         } else {
           resolve(data);
@@ -580,7 +580,6 @@ export default class DataProvider {
       // assign the customer
       this.odoo.rpc_call(endpoint, paramsPartner, (err, data) => {
         if (err) {
-          console.log('assign error');
           reject(err);
         } else {
           resolve(data);
@@ -735,7 +734,7 @@ export default class DataProvider {
     }
     const { id, lost_reason } = lead;
 
-    console.log('check', lead)
+    console.log('check', lead);
     const lostLead = {
       id,
       lost_reason,
@@ -923,7 +922,8 @@ export default class DataProvider {
    */
   getCommissionSummary(months = 2) {
     const date = new Date();
-    date.setDate(date.getDate() - months * 31);
+    date.setDate(date.getDate() - (months * 31));
+
     const params = {
       domain: [['end_date', '>', date]],
       fields: DD.commissionSummary,

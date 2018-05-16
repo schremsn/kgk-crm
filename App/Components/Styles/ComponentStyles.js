@@ -44,7 +44,7 @@ export default StyleSheet.create({
   },
   btnEye: {
     position: 'absolute',
-    top: 80,
+    top: 70,
     right: 28,
   },
   iconEye: {

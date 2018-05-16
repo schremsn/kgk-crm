@@ -9,7 +9,7 @@ import { Images, Colors } from './../Themes';
 import { getLeads, getLeadbyStage, searchLead } from '../Redux/LeadRedux';
 import ProgressBar from '../Components/ProgressBar';
 import Header from '../Components/Header';
-import LeadStagesScreen from './LeadStagesScreen';
+import CircleButton from '../Components/CircleButton';
 
 class LeadListScreen extends Component {
   constructor(props) {
@@ -84,6 +84,17 @@ class LeadListScreen extends Component {
       });
     });
   }
+  get renderAddButton() {
+    return (
+      <View style={styles.buttonBox}>
+        <CircleButton
+          onPress={() => { this.props.navigation.navigate('LeadAddScreen'); }}
+          icon="ios-add-outline"
+        />
+      </View>
+
+    );
+  }
   render() {
     const {
       isLoading, isRefreshing, dataSource, stageName,
@@ -129,6 +140,9 @@ class LeadListScreen extends Component {
                 />
               }
             />
+        }
+        {
+          this.renderAddButton
         }
       </View>
     );
