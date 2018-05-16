@@ -24,6 +24,7 @@ import LeadEditScreen from '../Containers/LeadEditScreen';
 import LeadAddScreen from '../Containers/LeadAddScreen';
 import ContactsListScreen from '../Containers/ContactsListScreen';
 import ContactsAddScreen from '../Containers/ContactsAddScreen';
+import ContactDetailScreen from '../Containers/ContactDetailScreen';
 
 const HomeStack = StackNavigator({
   CommissionListScreen: { screen: CommissionListScreen },
@@ -67,6 +68,7 @@ const MoreStack = StackNavigator({
   CommissionStatusListScreen: { screen: CommissionStatusListScreen },
   ContactsListScreen: { screen: ContactsListScreen },
   ContactsAddScreen: { screen: ContactsAddScreen },
+  ContactDetailScreen: { screen: ContactDetailScreen },
 }, {
   headerMode: 'none',
   initialRouteName: 'MoreScreen',

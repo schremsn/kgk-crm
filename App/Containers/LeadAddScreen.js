@@ -11,7 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
 import { Images, Colors } from './../Themes';
-import styles, { stylesheet, stylesheetMultiLine } from './Styles/ContainerStyles';
+import styles, { stylesheet } from './Styles/ContainerStyles';
 import ContactsAddScreen from './ContactsAddScreen';
 import ContactsListScreen from './ContactsListScreen';
 import Header from '../Components/Header';
@@ -28,8 +28,9 @@ class LeadAddScreen extends Component {
         name: '',
         stage_id: '1',
         description: '',
+        partner_id: this.props.navigation.state.params.contactId || null,
       },
-      customerName: '',
+      customerName: this.props.navigation.state.params.contactName || '',
       isLoading: false,
       isModalSearchContact: false,
       isModalAddContact: false,
@@ -60,6 +61,10 @@ class LeadAddScreen extends Component {
           stylesheet,
           mode: 'dropdown',
         },
+        external_status: {
+          label: I18n.t('Partner status'),
+          stylesheet,
+        },
         description: {
           template: this.templateInputNotes,
         },
@@ -85,6 +90,7 @@ class LeadAddScreen extends Component {
     const type = t.struct({
       name: t.String,
       partner_id: t.Number,
+      external_status: t.String,
       stage_id: t.enums(stateOptions, 'dropdown'),
       description: t.maybe(t.String),
     });
@@ -140,13 +146,16 @@ class LeadAddScreen extends Component {
     const value = this.state.customerName;
     return (
       <View >
-        <Text style={styles.labelFormCustom}>Customer</Text>
+        <Text style={styles.labelForm}>Customer</Text>
         <TextInput
-          style={[styles.inputFormCustom, { backgroundColor: '#e2e2e2', color: 'black' }]}
+          style={styles.inputFormDisable}
           value={value}
           editable={false}
         />
-        <TouchableOpacity style={styles.iconInputFormCustom} onPress={() => { this.setState({ isModalSearchContact: true }); }}>
+        <TouchableOpacity
+          style={styles.iconInputFormCustom}
+          onPress={() => { this.setState({ isModalSearchContact: true }); }}
+        >
           <Ionicons name="ios-open-outline" size={25} color={Colors.panther} />
         </TouchableOpacity>
       </View>
@@ -156,9 +165,9 @@ class LeadAddScreen extends Component {
     const value = this.state.value.description ? this.state.value.description : '';
     return (
       <View >
-        <Text style={styles.labelFormCustom}>Notes</Text>
+        <Text style={styles.labelForm}>Notes</Text>
         <TextInput
-          style={[styles.inputFormCustom, { height: 'auto' }]}
+          style={styles.inputFormMulti}
           value={value}
           multiline
           numberOfLines={3}
@@ -166,7 +175,7 @@ class LeadAddScreen extends Component {
             const valueNew = { ...this.state.value, description: text };
             this.setState({ value: valueNew });
           }}
-          ref={c => this.refNode = c}
+          ref={(c) => { this.refNode = c; }}
           onFocus={(event) => {
             this.scrollToInput(event, this.refNode);
           }}
@@ -231,7 +240,10 @@ class LeadAddScreen extends Component {
         keyboardShouldPersistTaps
       >
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('Add Lead')} onPress={() => this.props.navigation.goBack(null)} />
+        <Header
+          title={I18n.t('Add Lead')}
+          onPress={() => { this.props.navigation.goBack(null); }}
+        />
         <Toast ref={(c) => { this.toast = c; }} />
         {
           isLoading &&
@@ -255,12 +267,8 @@ class LeadAddScreen extends Component {
           }
           <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
-        {
-          this.renderModal
-        }
-        {
-          this.renderAddContactModal
-        }
+        { this.renderModal }
+        { this.renderAddContactModal }
       </View>
     );
   }

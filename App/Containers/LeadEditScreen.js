@@ -14,6 +14,7 @@ import styles, { stylesheet } from './Styles/ContainerStyles';
 import Header from '../Components/Header';
 import { updateLead } from '../Redux/LeadRedux';
 import RoundedButton from '../Components/RoundedButton';
+import ProgressBar from '../Components/ProgressBar';
 
 
 const { Form } = t.form;
@@ -164,9 +165,9 @@ class LeadEditScreen extends Component {
     const value = this.state.value.description ? this.state.value.description : '';
     return (
       <View >
-        <Text style={styles.labelFormCustom}>Notes</Text>
+        <Text style={styles.labelForm}>Notes</Text>
         <TextInput
-          style={[styles.inputFormCustom, { height: 'auto' }]}
+          style={styles.inputFormMulti}
           value={value}
           multiline
           numberOfLines={3}
@@ -185,12 +186,6 @@ class LeadEditScreen extends Component {
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title={I18n.t('Edit Lead')} onPress={() => this.props.navigation.goBack(null)} />
         <Toast ref={(c) => { this.toast = c; }} />
-        {
-          isLoading &&
-          <View style={[styles.progressBarLoading]}>
-            <ActivityIndicator size="large" color={Platform.OS === 'ios' ? 'white' : Colors.fire} />
-          </View>
-        }
         <KeyboardAwareScrollView
           style={{ marginBottom: 60 }}
           innerRef={(ref) => { this.scrollView = ref; }}
@@ -207,6 +202,9 @@ class LeadEditScreen extends Component {
           }
           <RoundedButton onPress={this.onPress} text={I18n.t('Update')} />
         </KeyboardAwareScrollView>
+        {
+          isLoading && <ProgressBar isSubmitLoading />
+        }
       </View>
     );
   }

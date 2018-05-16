@@ -92,7 +92,9 @@
   // contacts
   "Company": "Công ty",
   "Contacts": "Danh bạ",
-  // add contacts
+  "Contact Detail": "Chi tiết Danh bạ",
+  "Contact Address": "Địa chỉ Danh bạ",
+    // add contacts
   "optional": "Không bắt buộc",
   "required": "Bắt buộc",
   "Province": "Tỉnh",

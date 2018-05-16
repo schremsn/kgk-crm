@@ -63,7 +63,6 @@
   "contact": "Contact",
   "city": "City",
   "Contact": "Contact",
-  "Add Contact": "Add Contact",
   "Customer": "Customer",
   "Phone": "Phone",
   "Mobile": "Mobile",
@@ -94,14 +93,18 @@
   // contacts
   "Company": "Company",
   "Contacts": "Contacts",
+  "Contact Detail": "Contact Detail",
   // add contacts
+  "Add Contact": "Add Contact",
   "optional": "optional",
   "required": "required",
   "Province": "Province",
   "Website": "Website",
   "Create contacts is success": "Create contacts is success",
   "Is Company": "Is Company",
+  "Contact Address": "Contact Address",
   "identification id": "Identification Id",
+
   // Edit lead
   "Edit Lead": "Edit Lead",
   "Add Lead": "Add Lead",

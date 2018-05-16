@@ -240,7 +240,7 @@ export default StyleSheet.create({
     paddingBottom: 10,
   },
   // form
-  inputFormCustom: {
+  inputForm: {
     borderWidth: 1,
     borderColor: 'white',
     color: 'white',
@@ -251,8 +251,33 @@ export default StyleSheet.create({
     marginTop: 10,
     marginBottom: 12,
   },
-  labelFormCustom: {
-    fontSize: 17, color: 'white', fontWeight: '700',
+  inputFormMulti: {
+    borderWidth: 1,
+    borderColor: 'white',
+    color: 'white',
+    paddingLeft: 10,
+    fontSize: 17,
+    borderRadius: 4,
+    height: 'auto',
+    marginTop: 10,
+    marginBottom: 12,
+  },
+  inputFormDisable: {
+    borderWidth: 1,
+    borderColor: 'white',
+    paddingLeft: 10,
+    fontSize: 17,
+    borderRadius: 4,
+    height: 45,
+    marginTop: 10,
+    marginBottom: 12,
+    backgroundColor: '#e2e2e2',
+    color: 'black',
+  },
+  labelForm: {
+    fontSize: 17,
+    color: 'white',
+    fontWeight: '700',
   },
   iconInputFormCustom: {
     position: 'absolute',

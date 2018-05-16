@@ -44,6 +44,17 @@ export const getCustomers = (offset = 0, cb) => (dispatch, getState) => {
       console.log(`error user ${err}`);
     });
 };
+export const getCustomerDetail = id => new Promise((resolve, reject) => {
+  dataprovider.getCustomerDetail(id)
+    .then((data) => {
+      resolve(data);
+      console.log('getCustomerDetail', data);
+    })
+    .catch((err) => {
+      reject(err);
+      console.log(`error user ${err}`);
+    });
+});
 export const searchCustomer = (searchTerm, cb) => new Promise((resolve, reject) => {
   dataprovider.searchCustomer(searchTerm)
     .then((data) => {
