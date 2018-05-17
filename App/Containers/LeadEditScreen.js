@@ -155,26 +155,25 @@ class LeadEditScreen extends Component {
   onChange(value) {
     this.setState({ value });
   }
-  onPress (){
+  onPress() {
     const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
-    console.log(value);
-    // if (value) {
-    //   this.setState({ isLoading: true });
-    //   updateLead(value)
-    //     .then(() => {
-    //       this.toast.show(I18n.t('Update lead is success'), 1000);
-    //       setTimeout(() => {
-    //         this.setState({ isLoading: false });
-    //         this.props.navigation.replace('LeadDetailScreen', { leadId: value.id });
-    //       }, 1000);
-    //     })
-    //     .catch(() => {
-    //       this.toast.show(I18n.t('Update lead is error'), 1000);
-    //       setTimeout(() => {
-    //         this.setState({ isLoading: false });
-    //       }, 1000);
-    //     });
-    // }
+    if (value) {
+      this.setState({ isLoading: true });
+      updateLead(value)
+        .then(() => {
+          this.toast.show(I18n.t('Update lead is success'), 1000);
+          setTimeout(() => {
+            this.setState({ isLoading: false });
+            this.props.navigation.replace('LeadDetailScreen', { leadId: value.id });
+          }, 1000);
+        })
+        .catch(() => {
+          this.toast.show(I18n.t('Update lead is error'), 1000);
+          setTimeout(() => {
+            this.setState({ isLoading: false });
+          }, 1000);
+        });
+    }
   }
   templateInputNotes() {
     const value = this.state.value.description ? this.state.value.description : '';
