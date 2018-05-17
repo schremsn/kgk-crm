@@ -46,14 +46,15 @@ class CommissionStatusDetailScreen extends Component {
   }
   getCommissionStatusDetail(isRefreshed) {
     const commissionId = this.props.navigation.state.params.commissionDetail.id;
-    this.props.getCommissionStatusDetail(commissionId, (commissionMore) => {
-      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-      const dataSource = ds.cloneWithRows(commissionMore);
-      this.setState({
-        dataSource,
-        isLoading: false,
+    getCommissionStatusDetail(commissionId)
+      .then((commissionMore) => {
+        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+        const dataSource = ds.cloneWithRows(commissionMore);
+        this.setState({
+          dataSource,
+          isLoading: false,
+        });
       });
-    });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
     }
@@ -128,11 +129,7 @@ CommissionStatusDetailScreen.navigationOptions = {
 };
 CommissionStatusDetailScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getCommissionStatusDetail: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  getCommissionStatusDetail: (commissionId, cb) => { dispatch(getCommissionStatusDetail(commissionId, cb)); },
-});
 
-export default connect(null, mapDispatchToProps)(CommissionStatusDetailScreen);
+export default connect(null, null)(CommissionStatusDetailScreen);

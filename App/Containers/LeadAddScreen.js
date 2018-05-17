@@ -45,6 +45,7 @@ class LeadAddScreen extends Component {
     this.templateInputProduct = this.templateInputProduct.bind(this);
     this.templateInputNotes = this.templateInputNotes.bind(this);
     this.onSelectContact = this.onSelectContact.bind(this);
+    this.onSelectProduct = this.onSelectProduct.bind(this);
     this.onShowAddContactModal = this.onShowAddContactModal.bind(this);
     this.scrollToInput = this.scrollToInput.bind(this);
     this.options = {
@@ -104,9 +105,8 @@ class LeadAddScreen extends Component {
     this.setState({ value });
   }
   onPress() {
-    const value = {...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
-    console.log(value)
-    if (value) {
+    if (this.form.getValue()) {
+      const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
       this.setState({ isLoading: true });
       createLead(value)
         .then(() => {

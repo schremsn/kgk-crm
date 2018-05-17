@@ -2,19 +2,21 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  View, ActivityIndicator, Image,
-  Platform, Text, TextInput,
+  View, TouchableOpacity, Image,
+  Modal, Text, TextInput,
 } from 'react-native';
 import I18n from 'react-native-i18n';
 import t from 'tcomb-form-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Images, Colors } from './../Themes';
 import styles, { stylesheet } from './Styles/ContainerStyles';
 import Header from '../Components/Header';
 import { updateLead } from '../Redux/LeadRedux';
 import RoundedButton from '../Components/RoundedButton';
 import ProgressBar from '../Components/ProgressBar';
+import ProductsListScreen from './ProductsListScreen';
 
 
 const { Form } = t.form;
@@ -23,30 +25,35 @@ class LeadEditScreen extends Component {
   constructor(props) {
     super(props);
     const { leadDetail } = props.navigation.state.params;
+    console.log(leadDetail)
     this.state = {
       value: {
-        city: leadDetail.city ? leadDetail.city : '',
-        contact_name: leadDetail.contact_name ? leadDetail.contact_name : '',
-        description: leadDetail.description ? leadDetail.description : '',
-        email_from: leadDetail.email_from ? leadDetail.email_from : '',
+        city: leadDetail.city ? leadDetail.city : null,
+        contact_name: leadDetail.contact_name ? leadDetail.contact_name : null,
+        description: leadDetail.description ? leadDetail.description : null,
+        email_from: leadDetail.email_from ? leadDetail.email_from : null,
         id: leadDetail.id,
-        mobile: leadDetail.mobile ? leadDetail.mobile : '',
-        name: leadDetail.name ? leadDetail.name : '',
-        partner_name: leadDetail.partner_name ? leadDetail.partner_name : '',
-        external_status: leadDetail.external_status ? leadDetail.external_status : '',
-        product: leadDetail.product ? leadDetail.product : '',
-        phone: leadDetail.phone ? leadDetail.phone : '',
-        stage_id: leadDetail.stage_id[0] ? parseInt(leadDetail.stage_id[0], 0) : '',
-        street: leadDetail.street ? leadDetail.street : '',
-        street2: leadDetail.street2 ? leadDetail.street2 : '',
-        zip: leadDetail.zip ? leadDetail.zip : '',
+        mobile: leadDetail.mobile ? leadDetail.mobile : null,
+        name: leadDetail.name ? leadDetail.name : null,
+        partner_name: leadDetail.partner_name ? leadDetail.partner_name : null,
+        external_status: leadDetail.external_status ? leadDetail.external_status : null,
+        product: leadDetail.product[0] ? parseInt(leadDetail.product[0], 0) : null,
+        phone: leadDetail.phone ? leadDetail.phone : null,
+        stage_id: leadDetail.stage_id[0] ? parseInt(leadDetail.stage_id[0], 0) : null,
+        street: leadDetail.street ? leadDetail.street : null,
+        street2: leadDetail.street2 ? leadDetail.street2 : null,
+        zip: leadDetail.zip ? leadDetail.zip : null,
       },
       isLoading: false,
+      isModalSearchProduct: false,
+      productName: leadDetail.product[1] ? leadDetail.product[1] : null,
     };
     this.onChange = this.onChange.bind(this);
+    this.onSelectProduct = this.onSelectProduct.bind(this);
     this.onPress = this.onPress.bind(this);
     this.getTypeForm = this.getTypeForm.bind(this);
     this.templateInputNotes = this.templateInputNotes.bind(this);
+    this.templateInputProduct = this.templateInputProduct.bind(this);
     this.options = {
       hasError: true,
       fields: {
@@ -74,9 +81,7 @@ class LeadEditScreen extends Component {
           editable: false,
         },
         product: {
-          label: I18n.t('product'),
-          stylesheet,
-          editable: false,
+          template: this.templateInputProduct,
         },
         phone: {
           label: I18n.t('Phone'),
@@ -139,7 +144,7 @@ class LeadEditScreen extends Component {
       contact_name: t.maybe(t.String),
       partner_name: t.maybe(t.String),
       external_status: t.maybe(t.String),
-      product: t.maybe(t.String),
+      product: t.maybe(t.Number),
       phone: t.maybe(t.String),
       mobile: t.maybe(t.String),
       street: t.maybe(t.String),
@@ -154,6 +159,19 @@ class LeadEditScreen extends Component {
   }
   onChange(value) {
     this.setState({ value });
+  }
+  onSelectProduct(value) {
+    if (value === null) {
+      this.setState({
+        isModalSearchProduct: false,
+      });
+    } else {
+      this.setState({
+        isModalSearchProduct: false,
+        value: { ...this.state.value, product: parseInt(value.id, 0) },
+        productName: value.name,
+      });
+    }
   }
   onPress() {
     const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
@@ -193,6 +211,46 @@ class LeadEditScreen extends Component {
       </View>
     );
   }
+  templateInputProduct() {
+    const value = this.state.productName;
+    return (
+      <View >
+        <Text style={styles.labelForm}>{I18n.t('product')}</Text>
+        <TextInput
+          style={styles.inputFormDisable}
+          value={value}
+          editable={false}
+        />
+        <TouchableOpacity
+          style={styles.iconInputFormCustom}
+          onPress={() => { this.setState({ isModalSearchProduct: true }); }}
+        >
+          <Ionicons name="ios-open-outline" size={25} color={Colors.panther} />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+  get renderSearchProductModal() {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={this.state.isModalSearchProduct}
+        onRequestClose={() => {
+          this.setState({ isModalSearchProduct: false });
+        }}
+      >
+        <View style={{}}>
+          <ProductsListScreen
+            navigation={this.props.navigation}
+            isModal
+            onSelectProduct={value => this.onSelectProduct(value)}
+          />
+        </View>
+      </Modal>
+    );
+  }
+
   render() {
     const { value, isLoading, type } = this.state;
     return (
@@ -218,6 +276,9 @@ class LeadEditScreen extends Component {
         </KeyboardAwareScrollView>
         {
           isLoading && <ProgressBar isSubmitLoading />
+        }
+        {
+          this.renderSearchProductModal
         }
       </View>
     );

@@ -25,7 +25,7 @@ export const INITIAL_STATE = Immutable({
 });
 
 
-export const getProducts = (index) => new Promise((resolve, reject) => {
+export const getProducts = index => new Promise((resolve, reject) => {
   dataprovider.getProducts(index)
     .then((list) => {
       resolve(list, index);
@@ -97,59 +97,47 @@ export const getLeads = cb => (dispatch) => {
   dataprovider.getLeads()
     .then((list) => {
       console.log('get leads', list);
-      // dispatch(Creators.getLeadStagesSuccess(list));
       if (cb) { cb(list); }
     })
     .catch(() => {
-      // dispatch(Creators.getLeadStagesFailure());
     });
 };
-export const getLead = (leadId, cb) => (dispatch) => {
+export const getLead = (leadId) => new Promise((resolve, reject) => {
   dataprovider.getLead(leadId)
     .then((list) => {
-      console.log('get lead by id', list);
-      // dispatch(Creators.getLeadStagesSuccess(list));
-      if (cb) { cb(list); }
+      resolve(list);
     })
-    .catch(() => {
-      // dispatch(Creators.getLeadStagesFailure());
+    .catch((error) => {
+      reject(error);
     });
-};
-export const getLeadbyStage = (stageid, cb) => (dispatch) => {
-  dataprovider.getLeadbyStage(stageid)
+});
+export const getLeadbyStage = stageId => new Promise((resolve, reject) => {
+  dataprovider.getLeadbyStage(stageId)
     .then((list) => {
-      console.log('get lead by stage', list);
-      if (cb) { cb(list); }
+      resolve(list);
     })
-    .catch(() => {
-      dispatch(Creators.getLeadStagesFailure());
+    .catch((error) => {
+      reject(error);
     });
-};
-export const searchLead = (searchTerm, cb) => (dispatch) => {
+});
+export const searchLead = searchTerm => new Promise((resolve, reject) => {
   dataprovider.searchLead(searchTerm)
     .then((list) => {
-      console.log('search leads', list);
-      // dispatch(Creators.getLeadStagesSuccess(list));
-      if (cb) { cb(list); }
+      resolve(list);
     })
-    .catch(() => {
-      // dispatch(Creators.getLeadStagesFailure());
+    .catch((error) => {
+      reject(error);
     });
-};
-export const pipelineCount = cb => (dispatch) => {
+});
+export const pipelineCount = () => new Promise((resolve, reject) => {
   dataprovider.pipelineCount()
     .then((list) => {
-      console.log(list);
-      // dispatch(Creators.getLeadStagesSuccess(list));
-      if (cb) {
-        console.log(1);
-        cb(list);
-      }
+      resolve(list);
     })
-    .catch(() => {
-      // dispatch(Creators.getLeadStagesFailure());
+    .catch((err) => {
+      reject(err);
     });
-};
+});
 /* ------------- Reducers ------------- */
 
 // request the data from an api

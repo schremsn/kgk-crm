@@ -6,7 +6,7 @@ import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './Styles/ContainerStyles';
 import { Images, Colors } from './../Themes';
-import { getLeads, getLeadbyStage, searchLead } from '../Redux/LeadRedux';
+import { getLeadbyStage, searchLead } from '../Redux/LeadRedux';
 import ProgressBar from '../Components/ProgressBar';
 import Header from '../Components/Header';
 import CircleButton from '../Components/CircleButton';
@@ -32,27 +32,19 @@ class LeadListScreen extends Component {
   }
   getLeadsList(isRefreshed) {
     const { stageId } = this.props.navigation.state.params;
-    this.props.getLeadByStage(stageId, (list) => {
-      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-      const dataSource = ds.cloneWithRows(list);
-      this.setState({
-        dataSource,
-        isLoading: false,
+    getLeadbyStage(stageId)
+      .then((list) => {
+        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+        const dataSource = ds.cloneWithRows(list);
+        this.setState({
+          dataSource,
+          isLoading: false,
+        });
       });
-    });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
     }
   }
-  // getLeadsListNextPage() {
-  //   this.props.getLeads((list) => {
-  //     const data = this.state.list;
-  //     list.map(item => data.push(item));
-  //     this.setState({
-  //       dataSource: this.state.dataSource.cloneWithRows(data),
-  //     });
-  //   });
-  // }
   onRefresh() {
     this.setState({ isRefreshing: true });
     this.getLeadsList('isRefreshed');
@@ -64,8 +56,6 @@ class LeadListScreen extends Component {
         <Text style={styles.sectionText}>{I18n.t('id')}: {item.id}</Text>
         <Text style={styles.sectionText}>{I18n.t('customer')}: {item.partner_name}</Text>
         <Text style={styles.sectionText}>{I18n.t('contact')}: {item.contact_name}</Text>
-        {/* <Text style={styles.sectionText}>email_from: {item.email_from}</Text> */}
-        {/* <Text style={styles.sectionText}>title_action: {item.title_action}</Text> */}
         <Text style={styles.sectionText}>{I18n.t('city')}: {item.city}</Text>
         <Text style={styles.sectionText}>{I18n.t('phone')}: {item.phone}</Text>
       </TouchableOpacity>
@@ -76,13 +66,14 @@ class LeadListScreen extends Component {
   }
   handleSearchLead() {
     const { searchContent } = this.state;
-    this.props.searchLead(searchContent, (list) => {
-      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-      const dataSource = ds.cloneWithRows(list);
-      this.setState({
-        dataSource,
+    searchLead(searchContent)
+      .then((list) => {
+        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+        const dataSource = ds.cloneWithRows(list);
+        this.setState({
+          dataSource,
+        });
       });
-    });
   }
   get renderAddButton() {
     return (
@@ -92,7 +83,6 @@ class LeadListScreen extends Component {
           icon="ios-add-outline"
         />
       </View>
-
     );
   }
   render() {
@@ -151,20 +141,6 @@ class LeadListScreen extends Component {
 
 LeadListScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getLeads: PropTypes.func.isRequired,
-  searchLead: PropTypes.func.isRequired,
-  getLeadByStage: PropTypes.func.isRequired,
-  offset: PropTypes.number.isRequired,
 };
 
-const mapStateToProps = state => ({
-  offset: state.product.offset,
-});
-
-const mapDispatchToProps = dispatch => ({
-  getLeadByStage: (stageid, cb) => { dispatch(getLeadbyStage(stageid, cb)); },
-  getLeads: (cb) => { dispatch(getLeads(cb)); },
-  searchLead: (searchTerm, cb) => { dispatch(searchLead(searchTerm, cb)); },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LeadListScreen);
+export default connect(null, null)(LeadListScreen);

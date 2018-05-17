@@ -51,10 +51,11 @@ class LeadDetailScreen extends Component {
   }
   componentWillMount() {
     const { leadId } = this.props.navigation.state.params;
-    this.props.getLeadById(leadId, (leadDetail) => {
-      console.log(leadDetail)
-      this.setState({ leadDetail: leadDetail[0] });
-    });
+    getLead(leadId)
+      .then((leadDetail) => {
+        console.log(leadDetail)
+        this.setState({ leadDetail: leadDetail[0] });
+      });
   }
   onCallPhone(phone) {
     Alert.alert(
@@ -120,8 +121,8 @@ class LeadDetailScreen extends Component {
           </View>
           <View style={styles.rowInfoContainer}>
             {
-              item.name === 'stage_id'
-                ? <Text style={styles.rowInfo}>{rowData.stage_id[1]}</Text>
+              item.name === 'stage_id' || item.name === 'product'
+                ? <Text style={styles.rowInfo}>{rowData[item.name][1]}</Text>
                 : (item.name === 'phone' || item.name === 'mobile')
                 ?
                   <View style={styles.boxLeadPhone}>
@@ -195,7 +196,7 @@ class LeadDetailScreen extends Component {
             selectedValue={this.state.reasonLost}
             style={{ height: 50, width: '100%' }}
             mode="dropdown"
-            onValueChange={(itemValue, itemIndex) => this.setState({ reasonLost: itemValue })}
+            onValueChange={(itemValue) => this.setState({ reasonLost: itemValue })}
           >
             {
               this.props.listReasonLost.map(item => (
@@ -252,15 +253,12 @@ class LeadDetailScreen extends Component {
 
 LeadDetailScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getLeadById: PropTypes.func.isRequired,
   listReasonLost: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
   listReasonLost: state.lead.listReasonLost,
 });
-const mapDispatchToProps = dispatch => ({
-  getLeadById: (leadId, cb) => { dispatch(getLead(leadId, cb)); },
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(LeadDetailScreen);
+
+export default connect(mapStateToProps, null)(LeadDetailScreen);
