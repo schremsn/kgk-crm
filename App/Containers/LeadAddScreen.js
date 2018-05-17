@@ -55,8 +55,6 @@ class LeadAddScreen extends Component {
           stylesheet,
         },
         partner_id: {
-          label: I18n.t('Customer'),
-          editable: false,
           template: this.templateInputCustomer,
         },
         stage_id: {
@@ -64,14 +62,7 @@ class LeadAddScreen extends Component {
           stylesheet,
           mode: 'dropdown',
         },
-        external_status: {
-          label: I18n.t('Partner status'),
-          stylesheet,
-          editable: false,
-        },
         product: {
-          label: I18n.t('Product'),
-          editable: false,
           template: this.templateInputProduct,
         },
         description: {
@@ -103,8 +94,7 @@ class LeadAddScreen extends Component {
     const type = t.struct({
       name: t.String,
       partner_id: t.Number,
-      external_status: t.String,
-      product: t.String,
+      product: t.Number,
       stage_id: t.enums(stateOptions, 'dropdown'),
       description: t.maybe(t.String),
     });
@@ -114,7 +104,8 @@ class LeadAddScreen extends Component {
     this.setState({ value });
   }
   onPress() {
-    const value = this.form.getValue();
+    const value = {...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
+    console.log(value)
     if (value) {
       this.setState({ isLoading: true });
       createLead(value)

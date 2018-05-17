@@ -159,7 +159,7 @@ class LeadDetailScreen extends Component {
           style={styles.boxActionContent}
         >
 
-          <FullButton text={I18n.t('New lead')} />
+          <FullButton text={I18n.t('New lead')} onPress={() => this.props.navigation.navigate('LeadAddScreen')} />
           <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail })} />
           <FullButton
             text={I18n.t('Log activity')}
