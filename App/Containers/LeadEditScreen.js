@@ -32,6 +32,8 @@ class LeadEditScreen extends Component {
         mobile: props.navigation.state.params.leadDetail.mobile || '',
         name: props.navigation.state.params.leadDetail.name || '',
         partner_name: props.navigation.state.params.leadDetail.partner_name,
+        external_status: props.navigation.state.params.leadDetail.external_status,
+        product: props.navigation.state.params.leadDetail.product,
         phone: props.navigation.state.params.leadDetail.phone || '',
         stage_id: props.navigation.state.params.leadDetail.stage_id[0] || '',
         street: props.navigation.state.params.leadDetail.street || '',
@@ -64,7 +66,16 @@ class LeadEditScreen extends Component {
           label: I18n.t('Customer'),
           stylesheet,
           editable: false,
-
+        },
+        external_status: {
+          label: I18n.t('Partner status'),
+          stylesheet,
+          editable: false,
+        },
+        product: {
+          label: I18n.t('product'),
+          stylesheet,
+          editable: false,
         },
         phone: {
           label: I18n.t('Phone'),
@@ -126,6 +137,8 @@ class LeadEditScreen extends Component {
       name: t.maybe(t.String),
       contact_name: t.maybe(t.String),
       partner_name: t.maybe(t.String),
+      external_status: t.maybe(t.String),
+      product: t.maybe(t.String),
       phone: t.maybe(t.String),
       mobile: t.maybe(t.String),
       street: t.maybe(t.String),

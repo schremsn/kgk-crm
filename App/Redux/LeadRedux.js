@@ -25,6 +25,15 @@ export const INITIAL_STATE = Immutable({
 });
 
 
+export const getProducts = (index) => new Promise((resolve, reject) => {
+  dataprovider.getProducts(index)
+    .then((list) => {
+      resolve(list, index);
+    })
+    .catch((error) => {
+      reject(error);
+    });
+});
 export const getLeadStages = () => dispatch => new Promise((resolve, reject) => {
   dataprovider.getLeadStages()
     .then((list) => {

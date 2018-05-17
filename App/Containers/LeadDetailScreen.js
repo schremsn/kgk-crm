@@ -21,7 +21,7 @@ const data = [
   { name: 'contact_name', value: I18n.t('Contact') },
   { name: 'partner_name', value: I18n.t('Customer') },
   { name: 'external_status', value: I18n.t('Partner status') },
-  { name: 'product', value: I18n.t('Product') },
+  { name: 'product', value: I18n.t('product') },
   { name: 'phone', value: I18n.t('Phone') },
   { name: 'mobile', value: I18n.t('Mobile') },
   { name: 'street', value: I18n.t('Street') },
@@ -52,6 +52,7 @@ class LeadDetailScreen extends Component {
   componentWillMount() {
     const { leadId } = this.props.navigation.state.params;
     this.props.getLeadById(leadId, (leadDetail) => {
+      console.log(leadDetail)
       this.setState({ leadDetail: leadDetail[0] });
     });
   }

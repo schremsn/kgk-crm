@@ -10,13 +10,14 @@ import t from 'tcomb-form-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
-import { Images, Colors } from './../Themes';
+import { Images, Colors, Metrics } from './../Themes';
 import styles, { stylesheet } from './Styles/ContainerStyles';
 import ContactsAddScreen from './ContactsAddScreen';
 import ContactsListScreen from './ContactsListScreen';
+import ProductsListScreen from './ProductsListScreen';
 import Header from '../Components/Header';
 import RoundedButton from '../Components/RoundedButton';
-import { createLead } from '../Redux/LeadRedux';
+import { createLead, getProducts } from '../Redux/LeadRedux';
 
 const { Form } = t.form;
 
@@ -28,17 +29,20 @@ class LeadAddScreen extends Component {
         name: '',
         stage_id: '1',
         description: '',
-        partner_id: this.props.navigation.state.params.contactId || null,
+        partner_id: this.props.navigation.state.params ? this.props.navigation.state.params.contactId : null,
       },
-      customerName: this.props.navigation.state.params.contactName || '',
+      customerName: this.props.navigation.state.params ? this.props.navigation.state.params.contactName : '',
+      productName: '',
       isLoading: false,
       isModalSearchContact: false,
       isModalAddContact: false,
+      isModalSearchProduct: false,
     };
     this.onChangeForm = this.onChangeForm.bind(this);
     this.onPress = this.onPress.bind(this);
     this.getTypeForm = this.getTypeForm.bind(this);
     this.templateInputCustomer = this.templateInputCustomer.bind(this);
+    this.templateInputProduct = this.templateInputProduct.bind(this);
     this.templateInputNotes = this.templateInputNotes.bind(this);
     this.onSelectContact = this.onSelectContact.bind(this);
     this.onShowAddContactModal = this.onShowAddContactModal.bind(this);
@@ -52,7 +56,6 @@ class LeadAddScreen extends Component {
         },
         partner_id: {
           label: I18n.t('Customer'),
-          stylesheet,
           editable: false,
           template: this.templateInputCustomer,
         },
@@ -64,6 +67,12 @@ class LeadAddScreen extends Component {
         external_status: {
           label: I18n.t('Partner status'),
           stylesheet,
+          editable: false,
+        },
+        product: {
+          label: I18n.t('Product'),
+          editable: false,
+          template: this.templateInputProduct,
         },
         description: {
           template: this.templateInputNotes,
@@ -77,6 +86,10 @@ class LeadAddScreen extends Component {
   }
   componentDidMount() {
     this.getTypeForm();
+    getProducts(0)
+      .then((result) => {
+        console.log(result);
+      });
   }
   async getTypeForm() {
     const { leadStages } = this.props;
@@ -91,6 +104,7 @@ class LeadAddScreen extends Component {
       name: t.String,
       partner_id: t.Number,
       external_status: t.String,
+      product: t.String,
       stage_id: t.enums(stateOptions, 'dropdown'),
       description: t.maybe(t.String),
     });
@@ -132,6 +146,19 @@ class LeadAddScreen extends Component {
       });
     }
   }
+  onSelectProduct(value) {
+    if (value === null) {
+      this.setState({
+        isModalSearchProduct: false,
+      });
+    } else {
+      this.setState({
+        isModalSearchProduct: false,
+        value: { ...this.state.value, product: parseInt(value.id, 0) },
+        productName: value.name,
+      });
+    }
+  }
   onShowAddContactModal(value) {
     this.setState({
       isModalAddContact: value,
@@ -146,7 +173,7 @@ class LeadAddScreen extends Component {
     const value = this.state.customerName;
     return (
       <View >
-        <Text style={styles.labelForm}>Customer</Text>
+        <Text style={styles.labelForm}>{I18n.t('Customer')}</Text>
         <TextInput
           style={styles.inputFormDisable}
           value={value}
@@ -155,6 +182,25 @@ class LeadAddScreen extends Component {
         <TouchableOpacity
           style={styles.iconInputFormCustom}
           onPress={() => { this.setState({ isModalSearchContact: true }); }}
+        >
+          <Ionicons name="ios-open-outline" size={25} color={Colors.panther} />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+  templateInputProduct() {
+    const value = this.state.productName;
+    return (
+      <View >
+        <Text style={styles.labelForm}>{I18n.t('product')}</Text>
+        <TextInput
+          style={styles.inputFormDisable}
+          value={value}
+          editable={false}
+        />
+        <TouchableOpacity
+          style={styles.iconInputFormCustom}
+          onPress={() => { this.setState({ isModalSearchProduct: true }); }}
         >
           <Ionicons name="ios-open-outline" size={25} color={Colors.panther} />
         </TouchableOpacity>
@@ -183,7 +229,7 @@ class LeadAddScreen extends Component {
       </View>
     );
   }
-  get renderModal() {
+  get renderSearchContactModal() {
     return (
       <Modal
         animationType="slide"
@@ -201,13 +247,26 @@ class LeadAddScreen extends Component {
             onShowAddContactModal={value => this.onShowAddContactModal(value)}
           />
         </View>
-        <TouchableHighlight
-          onPress={() => {
-            this.setState({ isModalAddContact: true });
-          }}
-        >
-          <Text>Show Modal</Text>
-        </TouchableHighlight>
+      </Modal>
+    );
+  }
+  get renderSearchProductModal() {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={this.state.isModalSearchProduct}
+        onRequestClose={() => {
+          this.setState({ isModalSearchProduct: false });
+        }}
+      >
+        <View style={{}}>
+          <ProductsListScreen
+            navigation={this.props.navigation}
+            isModal
+            onSelectProduct={value => this.onSelectProduct(value)}
+          />
+        </View>
       </Modal>
     );
   }
@@ -267,7 +326,8 @@ class LeadAddScreen extends Component {
           }
           <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
-        { this.renderModal }
+        { this.renderSearchContactModal }
+        { this.renderSearchProductModal }
         { this.renderAddContactModal }
       </View>
     );

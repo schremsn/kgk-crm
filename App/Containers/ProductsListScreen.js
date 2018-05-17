@@ -53,7 +53,16 @@ class ProductsListScreen extends Component {
   }
   renderProduct(item) {
     return (
-      <TouchableOpacity onPress={() => { this.props.navigation.navigate('ProductDetailScreen', { productId: item.id }); }} style={styles.sectionHeaderContainer}>
+      <TouchableOpacity
+        onPress={() => {
+       if (this.props.isModal) {
+         this.props.onSelectProduct(item);
+       } else {
+         this.props.navigation.navigate('ProductDetailScreen', { productId: item.id });
+       }
+      }}
+        style={styles.sectionHeaderContainer}
+      >
         <Text style={styles.sectionHeader}>{item.name}</Text>
         <Text style={styles.sectionText}>{I18n.t('code')}: {item.code}</Text>
         <Text style={styles.sectionText}>{I18n.t('description')}: {item.description}</Text>
@@ -70,7 +79,16 @@ class ProductsListScreen extends Component {
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('product list')} onPress={() => this.props.navigation.goBack(null)} />
+        <Header
+          title={I18n.t('product list')}
+          onPress={() => {
+          if (this.props.isModal) {
+            this.props.onSelectProduct(null);
+          } else {
+            this.props.navigation.goBack(null);
+          }
+        }}
+        />
         {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
@@ -108,6 +126,8 @@ ProductsListScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   getProducts: PropTypes.func.isRequired,
   offset: PropTypes.number.isRequired,
+  isModal: PropTypes.bool,
+  onSelectProduct: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
