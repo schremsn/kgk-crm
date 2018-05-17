@@ -67,7 +67,6 @@ export const getLostReasons = () => dispatch => new Promise((resolve, reject) =>
   dataprovider.getLostReasons()
     .then((list) => {
       resolve(list);
-      console.log('getLostReasonsSuccess', list);
       dispatch(Creators.getLostReasonsSuccess(list));
     })
     .catch((error) => {
@@ -84,7 +83,6 @@ export const markLeadWon = lead => new Promise((resolve, reject) => {
     });
 });
 export const markLeadLost = lead => new Promise((resolve, reject) => {
-  console.log(lead);
   dataprovider.markLeadLost(lead)
     .then((res) => {
       console.log(res);
@@ -159,7 +157,6 @@ export const pipelineCount = cb => (dispatch) => {
 // successful api lookup
 export const getLeadStagesSuccess = (state, action) => {
   const { list } = action;
-  console.log(list);
   return state.merge({ list });
 };
 export const getLostReasonsSuccess = (state, action) => {

@@ -17,6 +17,7 @@ class CommissionStatusListScreen extends Component {
       isLoading: true,
       isRefreshing: false,
       list: [],
+      offset: 0,
     };
     this.getCommissionStatusList = this.getCommissionStatusList.bind(this);
     this.getCommissionStatusListNextPage = this.getCommissionStatusListNextPage.bind(this);
@@ -27,27 +28,33 @@ class CommissionStatusListScreen extends Component {
     this.getCommissionStatusList();
   }
   getCommissionStatusList(isRefreshed) {
-    this.props.getCommissionStatus(0, (list) => {
-      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-      const dataSource = ds.cloneWithRows(list);
-      this.setState({
-        list,
-        dataSource,
-        isLoading: false,
+    console.log(this.state.offset);
+    getCommissionStatus(this.state.offset)
+      .then(({ list, newOffset }) => {
+        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+        const dataSource = ds.cloneWithRows(list);
+        this.setState({
+          list,
+          offset: newOffset,
+          dataSource,
+          isLoading: false,
+        });
       });
-    });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
     }
   }
   getCommissionStatusListNextPage() {
-    this.props.getCommissionStatus(0, (list) => {
-      const data = this.state.list;
-      list.map(item => data.push(item));
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(data),
+    console.log(this.state.offset);
+    getCommissionStatus(this.state.offset)
+      .then(({ list, newOffset }) => {
+        const data = this.state.list;
+        list.map(item => data.push(item));
+        this.setState({
+          offset: newOffset,
+          dataSource: this.state.dataSource.cloneWithRows(data),
+        });
       });
-    });
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
@@ -104,20 +111,9 @@ class CommissionStatusListScreen extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  offset: state.product.offset,
-});
-
-const mapDispatchToProps = dispatch => ({
-  getCommissionStatus: (offset, cb) => { dispatch(getCommissionStatus(offset, cb)); },
-});
 
 CommissionStatusListScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getCommissionStatus: PropTypes.func.isRequired,
-};
-CommissionStatusListScreen.navigationOptions = {
-  title: I18n.t('commission list'),
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommissionStatusListScreen);
+export default connect(null, null)(CommissionStatusListScreen);
