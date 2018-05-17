@@ -22,23 +22,24 @@ const { Form } = t.form;
 class LeadEditScreen extends Component {
   constructor(props) {
     super(props);
+    const { leadDetail } = props.navigation.state.params;
     this.state = {
       value: {
-        city: props.navigation.state.params.leadDetail.city || '',
-        contact_name: props.navigation.state.params.leadDetail.contact_name || '',
-        description: props.navigation.state.params.leadDetail.description || '',
-        email_from: props.navigation.state.params.leadDetail.email_from || '',
-        id: props.navigation.state.params.leadDetail.id,
-        mobile: props.navigation.state.params.leadDetail.mobile || '',
-        name: props.navigation.state.params.leadDetail.name || '',
-        partner_name: props.navigation.state.params.leadDetail.partner_name,
-        external_status: props.navigation.state.params.leadDetail.external_status,
-        product: props.navigation.state.params.leadDetail.product,
-        phone: props.navigation.state.params.leadDetail.phone || '',
-        stage_id: props.navigation.state.params.leadDetail.stage_id[0] || '',
-        street: props.navigation.state.params.leadDetail.street || '',
-        street2: props.navigation.state.params.leadDetail.street2 || '',
-        zip: props.navigation.state.params.leadDetail.zip || '',
+        city: leadDetail.city ? leadDetail.city : '',
+        contact_name: leadDetail.contact_name ? leadDetail.contact_name : '',
+        description: leadDetail.description ? leadDetail.description : '',
+        email_from: leadDetail.email_from ? leadDetail.email_from : '',
+        id: leadDetail.id,
+        mobile: leadDetail.mobile ? leadDetail.mobile : '',
+        name: leadDetail.name ? leadDetail.name : '',
+        partner_name: leadDetail.partner_name ? leadDetail.partner_name : '',
+        external_status: leadDetail.external_status ? leadDetail.external_status : '',
+        product: leadDetail.product ? leadDetail.product : '',
+        phone: leadDetail.phone ? leadDetail.phone : '',
+        stage_id: leadDetail.stage_id[0] ? parseInt(leadDetail.stage_id[0], 0) : '',
+        street: leadDetail.street ? leadDetail.street : '',
+        street2: leadDetail.street2 ? leadDetail.street2 : '',
+        zip: leadDetail.zip ? leadDetail.zip : '',
       },
       isLoading: false,
     };
@@ -128,7 +129,7 @@ class LeadEditScreen extends Component {
     const stateOptions = {};
     const setStageOption = () => {
       for (let i = 0; i < leadStages.length; i += 1) {
-        stateOptions[leadStages[i].id] = leadStages[i].name;
+        stateOptions[parseInt(leadStages[i].id, 0)] = leadStages[i].name;
       }
     };
     await setStageOption();
@@ -154,25 +155,26 @@ class LeadEditScreen extends Component {
   onChange(value) {
     this.setState({ value });
   }
-  onPress() {
-    const value = this.form.getValue();
-    if (value) {
-      this.setState({ isLoading: true });
-      updateLead(value)
-        .then(() => {
-          this.toast.show(I18n.t('Update lead is success'), 1000);
-          setTimeout(() => {
-            this.setState({ isLoading: false });
-            this.props.navigation.replace('LeadDetailScreen', { leadId: value.id });
-          }, 1000);
-        })
-        .catch(() => {
-          this.toast.show(I18n.t('Update lead is error'), 1000);
-          setTimeout(() => {
-            this.setState({ isLoading: false });
-          }, 1000);
-        });
-    }
+  onPress (){
+    const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
+    console.log(value);
+    // if (value) {
+    //   this.setState({ isLoading: true });
+    //   updateLead(value)
+    //     .then(() => {
+    //       this.toast.show(I18n.t('Update lead is success'), 1000);
+    //       setTimeout(() => {
+    //         this.setState({ isLoading: false });
+    //         this.props.navigation.replace('LeadDetailScreen', { leadId: value.id });
+    //       }, 1000);
+    //     })
+    //     .catch(() => {
+    //       this.toast.show(I18n.t('Update lead is error'), 1000);
+    //       setTimeout(() => {
+    //         this.setState({ isLoading: false });
+    //       }, 1000);
+    //     });
+    // }
   }
   templateInputNotes() {
     const value = this.state.value.description ? this.state.value.description : '';
