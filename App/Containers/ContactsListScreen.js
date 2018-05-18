@@ -82,6 +82,8 @@ class ContactListScreen extends Component {
         onPress={() => {
           if (this.props.isModal) {
             this.props.onSelectContact(item);
+          } else {
+            this.props.navigation.navigate('ContactDetailScreen', { contactId: item.id});
           }
         }}
       >

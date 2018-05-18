@@ -15,6 +15,7 @@ class CommissionListScreen extends Component {
     this.state = {
       isLoading: true,
       isRefreshing: false,
+      offset: 2,
     };
     this.getCommissionList = this.getCommissionList.bind(this);
     this.getCommissionListNextPage = this.getCommissionListNextPage.bind(this);
@@ -98,24 +99,29 @@ class CommissionListScreen extends Component {
     }
   }
   getCommissionList(isRefreshed) {
-    this.props.getCommissionSummary(0, (list) => {
-      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-      const dataSource = ds.cloneWithRows(list);
-      this.setState({
-        list,
-        dataSource,
-        isLoading: false,
+    getCommissionSummary(this.state.offset)
+      .then((list, offset) => {
+        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+        const dataSource = ds.cloneWithRows(list);
+        this.setState({
+          list,
+          offset,
+          dataSource,
+          isLoading: false,
+        });
       });
-    });
     if (isRefreshed && this.setState({ isRefreshing: false }));
   }
   getCommissionListNextPage() {
-    this.props.getCommissionSummary(0, (list) => {
-      const data = this.state.list;
-      list.map(item => data.push(item));
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(data),
-      });
+    console.log(this.state.offset)
+    getCommissionSummary(this.state.offset)
+      .then((list, offset) => {
+        const data = this.state.list;
+        list.map(item => data.push(item));
+        this.setState({
+          offset,
+          dataSource: this.state.dataSource.cloneWithRows(data),
+        });
     });
   }
   onRefresh() {
@@ -173,15 +179,7 @@ CommissionListScreen.navigationOptions = {
 };
 CommissionListScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getCommissionSummary: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  commission: state.commission.commission,
-});
 
-const mapDispatchToProps = dispatch => ({
-  getCommissionSummary: (month, cb) => { dispatch(getCommissionSummary(month, cb)); },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CommissionListScreen);
+export default connect(null, null)(CommissionListScreen);

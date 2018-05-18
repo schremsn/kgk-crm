@@ -10,13 +10,14 @@ import t from 'tcomb-form-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
-import { Images, Colors } from './../Themes';
-import styles, { stylesheet, stylesheetMultiLine } from './Styles/ContainerStyles';
+import { Images, Colors, Metrics } from './../Themes';
+import styles, { stylesheet } from './Styles/ContainerStyles';
 import ContactsAddScreen from './ContactsAddScreen';
 import ContactsListScreen from './ContactsListScreen';
+import ProductsListScreen from './ProductsListScreen';
 import Header from '../Components/Header';
 import RoundedButton from '../Components/RoundedButton';
-import { createLead } from '../Redux/LeadRedux';
+import { createLead, getProducts } from '../Redux/LeadRedux';
 
 const { Form } = t.form;
 
@@ -28,18 +29,23 @@ class LeadAddScreen extends Component {
         name: '',
         stage_id: '1',
         description: '',
+        partner_id: this.props.navigation.state.params ? this.props.navigation.state.params.contactId : null,
       },
-      customerName: '',
+      customerName: this.props.navigation.state.params ? this.props.navigation.state.params.contactName : '',
+      productName: '',
       isLoading: false,
       isModalSearchContact: false,
       isModalAddContact: false,
+      isModalSearchProduct: false,
     };
     this.onChangeForm = this.onChangeForm.bind(this);
     this.onPress = this.onPress.bind(this);
     this.getTypeForm = this.getTypeForm.bind(this);
     this.templateInputCustomer = this.templateInputCustomer.bind(this);
+    this.templateInputProduct = this.templateInputProduct.bind(this);
     this.templateInputNotes = this.templateInputNotes.bind(this);
     this.onSelectContact = this.onSelectContact.bind(this);
+    this.onSelectProduct = this.onSelectProduct.bind(this);
     this.onShowAddContactModal = this.onShowAddContactModal.bind(this);
     this.scrollToInput = this.scrollToInput.bind(this);
     this.options = {
@@ -50,15 +56,15 @@ class LeadAddScreen extends Component {
           stylesheet,
         },
         partner_id: {
-          label: I18n.t('Customer'),
-          stylesheet,
-          editable: false,
           template: this.templateInputCustomer,
         },
         stage_id: {
           label: I18n.t('Stage'),
           stylesheet,
           mode: 'dropdown',
+        },
+        product: {
+          template: this.templateInputProduct,
         },
         description: {
           template: this.templateInputNotes,
@@ -72,6 +78,10 @@ class LeadAddScreen extends Component {
   }
   componentDidMount() {
     this.getTypeForm();
+    getProducts(0)
+      .then((result) => {
+        console.log(result);
+      });
   }
   async getTypeForm() {
     const { leadStages } = this.props;
@@ -85,6 +95,7 @@ class LeadAddScreen extends Component {
     const type = t.struct({
       name: t.String,
       partner_id: t.Number,
+      product: t.Number,
       stage_id: t.enums(stateOptions, 'dropdown'),
       description: t.maybe(t.String),
     });
@@ -94,8 +105,8 @@ class LeadAddScreen extends Component {
     this.setState({ value });
   }
   onPress() {
-    const value = this.form.getValue();
-    if (value) {
+    if (this.form.getValue()) {
+      const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
       this.setState({ isLoading: true });
       createLead(value)
         .then(() => {
@@ -126,6 +137,19 @@ class LeadAddScreen extends Component {
       });
     }
   }
+  onSelectProduct(value) {
+    if (value === null) {
+      this.setState({
+        isModalSearchProduct: false,
+      });
+    } else {
+      this.setState({
+        isModalSearchProduct: false,
+        value: { ...this.state.value, product: parseInt(value.id, 0) },
+        productName: value.name,
+      });
+    }
+  }
   onShowAddContactModal(value) {
     this.setState({
       isModalAddContact: value,
@@ -140,13 +164,35 @@ class LeadAddScreen extends Component {
     const value = this.state.customerName;
     return (
       <View >
-        <Text style={styles.labelFormCustom}>Customer</Text>
+        <Text style={styles.labelForm}>{I18n.t('Customer')}</Text>
         <TextInput
-          style={[styles.inputFormCustom, { backgroundColor: '#e2e2e2', color: 'black' }]}
+          style={styles.inputFormDisable}
           value={value}
           editable={false}
         />
-        <TouchableOpacity style={styles.iconInputFormCustom} onPress={() => { this.setState({ isModalSearchContact: true }); }}>
+        <TouchableOpacity
+          style={styles.iconInputFormCustom}
+          onPress={() => { this.setState({ isModalSearchContact: true }); }}
+        >
+          <Ionicons name="ios-open-outline" size={25} color={Colors.panther} />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+  templateInputProduct() {
+    const value = this.state.productName;
+    return (
+      <View >
+        <Text style={styles.labelForm}>{I18n.t('product')}</Text>
+        <TextInput
+          style={styles.inputFormDisable}
+          value={value}
+          editable={false}
+        />
+        <TouchableOpacity
+          style={styles.iconInputFormCustom}
+          onPress={() => { this.setState({ isModalSearchProduct: true }); }}
+        >
           <Ionicons name="ios-open-outline" size={25} color={Colors.panther} />
         </TouchableOpacity>
       </View>
@@ -156,9 +202,9 @@ class LeadAddScreen extends Component {
     const value = this.state.value.description ? this.state.value.description : '';
     return (
       <View >
-        <Text style={styles.labelFormCustom}>Notes</Text>
+        <Text style={styles.labelForm}>Notes</Text>
         <TextInput
-          style={[styles.inputFormCustom, { height: 'auto' }]}
+          style={styles.inputFormMulti}
           value={value}
           multiline
           numberOfLines={3}
@@ -166,7 +212,7 @@ class LeadAddScreen extends Component {
             const valueNew = { ...this.state.value, description: text };
             this.setState({ value: valueNew });
           }}
-          ref={c => this.refNode = c}
+          ref={(c) => { this.refNode = c; }}
           onFocus={(event) => {
             this.scrollToInput(event, this.refNode);
           }}
@@ -174,7 +220,7 @@ class LeadAddScreen extends Component {
       </View>
     );
   }
-  get renderModal() {
+  get renderSearchContactModal() {
     return (
       <Modal
         animationType="slide"
@@ -192,13 +238,26 @@ class LeadAddScreen extends Component {
             onShowAddContactModal={value => this.onShowAddContactModal(value)}
           />
         </View>
-        <TouchableHighlight
-          onPress={() => {
-            this.setState({ isModalAddContact: true });
-          }}
-        >
-          <Text>Show Modal</Text>
-        </TouchableHighlight>
+      </Modal>
+    );
+  }
+  get renderSearchProductModal() {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={this.state.isModalSearchProduct}
+        onRequestClose={() => {
+          this.setState({ isModalSearchProduct: false });
+        }}
+      >
+        <View style={{}}>
+          <ProductsListScreen
+            navigation={this.props.navigation}
+            isModal
+            onSelectProduct={value => this.onSelectProduct(value)}
+          />
+        </View>
       </Modal>
     );
   }
@@ -231,7 +290,10 @@ class LeadAddScreen extends Component {
         keyboardShouldPersistTaps
       >
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('Add Lead')} onPress={() => this.props.navigation.goBack(null)} />
+        <Header
+          title={I18n.t('Add Lead')}
+          onPress={() => { this.props.navigation.goBack(null); }}
+        />
         <Toast ref={(c) => { this.toast = c; }} />
         {
           isLoading &&
@@ -255,12 +317,9 @@ class LeadAddScreen extends Component {
           }
           <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
-        {
-          this.renderModal
-        }
-        {
-          this.renderAddContactModal
-        }
+        { this.renderSearchContactModal }
+        { this.renderSearchProductModal }
+        { this.renderAddContactModal }
       </View>
     );
   }

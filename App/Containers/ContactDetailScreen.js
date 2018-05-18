@@ -9,7 +9,7 @@ import * as Animatable from 'react-native-animatable';
 import Toast from 'react-native-easy-toast';
 import styles from './Styles/ContainerStyles';
 import { Images, Colors } from './../Themes';
-import { getLead, markLeadWon, markLeadLost } from '../Redux/LeadRedux';
+import { getCustomerDetail } from '../Redux/ContactsRedux';
 import Header from '../Components/Header';
 
 import FullButton from '../Components/FullButton';
@@ -17,44 +17,39 @@ import RoundedButton from '../Components/RoundedButton';
 
 const data = [
   { name: 'id', value: I18n.t('id') },
-  { name: 'name', value: I18n.t('Lead name') },
-  { name: 'contact_name', value: I18n.t('Contact') },
-  { name: 'partner_name', value: I18n.t('Customer') },
-  { name: 'external_status', value: I18n.t('Partner status') },
-  { name: 'product', value: I18n.t('product') },
-  { name: 'phone', value: I18n.t('Phone') },
-  { name: 'mobile', value: I18n.t('Mobile') },
+  { name: 'name', value: I18n.t('name') },
+  { name: 'city', value: I18n.t('City') },
+  { name: 'mobile', value: I18n.t('mobile') },
+  { name: 'phone', value: I18n.t('phone') },
+  { name: 'email', value: I18n.t('Email') },
+  { name: 'comment', value: I18n.t('notes') },
+  { name: 'contact_address', value: I18n.t('Contact Address') },
+  { name: 'is_company', value: I18n.t('Is Company') },
   { name: 'street', value: I18n.t('Street') },
   { name: 'street2', value: I18n.t('Street2') },
-  { name: 'city', value: I18n.t('City') },
+  { name: 'website', value: I18n.t('Website') },
   { name: 'zip', value: I18n.t('Zip') },
   { name: 'email_from', value: I18n.t('Email') },
-  { name: 'description', value: I18n.t('Description') },
-  { name: 'stage_id', value: I18n.t('Stage') },
+  { name: 'state', value: I18n.t('Province') },
+  { name: 'identification_id', value: I18n.t('identification id') },
 ];
-class LeadDetailScreen extends Component {
+class ContactDetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      leadDetail: {},
+      contactDetail: {},
       isShowActions: false,
       isEdit: false,
-      isSelectLostReason: false,
-      reasonLost: props.listReasonLost[0],
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
     this.renderListActions = this.renderListActions.bind(this);
-    this.renderSelectLostReason = this.renderSelectLostReason.bind(this);
-    this.onMarkLeadWon = this.onMarkLeadWon.bind(this);
-    this.onMarkLeadLost = this.onMarkLeadLost.bind(this);
   }
   componentWillMount() {
-    const { leadId } = this.props.navigation.state.params;
-    getLead(leadId)
-      .then((leadDetail) => {
-        console.log(leadDetail)
-        this.setState({ leadDetail: leadDetail[0] });
+    const { contactId } = this.props.navigation.state.params;
+    getCustomerDetail(contactId)
+      .then((result) => {
+        this.setState({ contactDetail: result[0] });
       });
   }
   onCallPhone(phone) {
@@ -75,24 +70,6 @@ class LeadDetailScreen extends Component {
         },
       ],
     );
-  }
-  onMarkLeadWon(lead) {
-    markLeadWon(lead)
-      .then(() => {
-        this.toast.show(I18n.t('Mark lead won is success'), 1000);
-        this.setState({ isShowActions: false });
-      });
-  }
-  onMarkLeadLost() {
-    const lead = {
-      id: parseInt(this.state.leadDetail.id, 0),
-      lost_reason: this.state.reasonLost.id,
-    };
-    markLeadLost(lead)
-      .then(() => {
-        this.toast.show(I18n.t('Mark lead lost is success'), 1000);
-        this.setState({ isSelectLostReason: false, isShowActions: false });
-      });
   }
   renderCard(cardTitle, rowData) {
     return (
@@ -121,9 +98,7 @@ class LeadDetailScreen extends Component {
           </View>
           <View style={styles.rowInfoContainer}>
             {
-              item.name === 'stage_id' || item.name === 'product'
-                ? <Text style={styles.rowInfo}>{rowData[item.name][1]}</Text>
-                : (item.name === 'phone' || item.name === 'mobile')
+              (item.name === 'phone' || item.name === 'mobile')
                 ?
                   <View style={styles.boxLeadPhone}>
                     <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
@@ -160,20 +135,11 @@ class LeadDetailScreen extends Component {
           style={styles.boxActionContent}
         >
 
-          <FullButton text={I18n.t('New lead')} onPress={() => this.props.navigation.navigate('LeadAddScreen')} />
-          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail })} />
+          <FullButton text={I18n.t('Add Contact')} onPress={() => this.props.navigation.navigate('ContactsAddScreen')} />
+          <FullButton text={I18n.t('Edit')} />
           <FullButton
-            text={I18n.t('Log activity')}
-            disable
-            styles={{ backgroundColor: Colors.steel }}
-          />
-          <FullButton
-            text={I18n.t('Mark won')}
-            onPress={() => this.onMarkLeadWon({ id: this.state.leadDetail.id })}
-          />
-          <FullButton
-            text={I18n.t('Mark lost')}
-            onPress={() => this.setState({ isSelectLostReason: true })}
+            text={I18n.t('Add Lead')}
+            onPress={() => this.props.navigation.navigate('LeadAddScreen', { contactId: this.state.contactDetail.id, contactName: this.state.contactDetail.name})}
           />
           <FullButton
             text={I18n.t('Cancel')}
@@ -185,57 +151,21 @@ class LeadDetailScreen extends Component {
       </TouchableHighlight>
     );
   }
-  renderSelectLostReason() {
-    return (
-      <View
-        style={styles.boxPicker}
-      >
-        <View style={styles.boxPickerContent}>
-          <TextInput>The Lost Reason </TextInput>
-          <Picker
-            selectedValue={this.state.reasonLost}
-            style={{ height: 50, width: '100%' }}
-            mode="dropdown"
-            onValueChange={(itemValue) => this.setState({ reasonLost: itemValue })}
-          >
-            {
-              this.props.listReasonLost.map(item => (
-                <Picker.Item key={item.id} label={item.name} value={item.id} />
-              ))
-            }
-          </Picker>
-          <View style={styles.boxButtons}>
-            <RoundedButton
-              onPress={() => this.setState({ isSelectLostReason: false })}
-              text={I18n.t('Cancel')}
-              styles={{ width: '49%', backgroundColor: Colors.frost }}
-            />
-            <RoundedButton onPress={() => this.onMarkLeadLost()} text={I18n.t('OK')} styles={{ width: '49%' }} />
-          </View>
-        </View>
-      </View>
-    );
-  }
   render() {
-    const {
-      leadDetail, isShowActions, isEdit, isSelectLostReason,
-    } = this.state;
+    const { contactDetail, isShowActions } = this.state;
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('lead detail')} onPress={() => this.props.navigation.navigate('LeadListScreen', { stageId: leadDetail.stage_id[0], stageName: leadDetail.stage_id[1] })} />
+        <Header title={I18n.t('Contact Detail')} onPress={() => this.props.navigation.goBack(null)} />
 
         <ScrollView style={[styles.mainContainer]}>
-          {leadDetail.id && this.renderCard('Lead Information', leadDetail)}
+          {contactDetail.id && this.renderCard('Lead Information', contactDetail)}
         </ScrollView>
         {
           isShowActions && this.renderListActions()
         }
         {
-          isSelectLostReason && this.renderSelectLostReason()
-        }
-        {
-          (!isShowActions || !isEdit) &&
+          !isShowActions &&
           <TouchableOpacity
             style={[styles.buttonBox]}
             onPress={() => this.setState({ isShowActions: true })}
@@ -251,14 +181,9 @@ class LeadDetailScreen extends Component {
   }
 }
 
-LeadDetailScreen.propTypes = {
+ContactDetailScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  listReasonLost: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = state => ({
-  listReasonLost: state.lead.listReasonLost,
-});
 
-
-export default connect(mapStateToProps, null)(LeadDetailScreen);
+export default connect(null, null)(ContactDetailScreen);

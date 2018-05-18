@@ -19,41 +19,35 @@ export const INITIAL_STATE = Immutable({
   commission: [],
 });
 
-export const getCommissionSummary = (month, cb) => (dispatch) => {
+export const getCommissionSummary = month => new Promise((resolve, reject) => {
   dataprovider.getCommissionSummary(month)
     .then((data) => {
-      if (cb) {
-        cb(data);
-      }
-      console.log('getCommissionSummary', data);
-      dispatch(Creators.getCommissionSuccess(data));
+      resolve(data, month + 2);
     })
     .catch((err) => {
-      console.log(`error user ${err}`);
+      reject(err);
     });
-};
-export const getCommissionStatusDetail = (commissionId, cb) => () => {
+});
+export const getCommissionStatus = (offset = 0) => new Promise((resolve, reject) => {
+  dataprovider.getCommissionStatus(offset)
+    .then((list) => {
+      const newOffset = offset + 50;
+      resolve({ list, newOffset });
+    })
+    .catch((err) => {
+      reject(err);
+    });
+});
+
+export const getCommissionStatusDetail = commissionId => new Promise((resolve, reject) => {
   dataprovider.getCommissionStatusDetail(commissionId)
     .then((data) => {
-      cb(data);
-      console.log('getCommissionStatusDetail', data);
-      // dispatch(Creators.getUserInfoSuccess(data))
+      resolve(data);
     })
     .catch((err) => {
-      console.log(`error user ${err}`);
+      reject(err);
     });
-};
-export const getCommissionStatus = (offset = 0, cb) => (dispatch, getState) => {
-  dataprovider.getCommissionStatus(offset)
-    .then((data) => {
-      cb(data);
-      console.log('getCommissionStatus', data);
-      // dispatch(Creators.getUserInfoSuccess(data))
-    })
-    .catch((err) => {
-      console.log(`error user ${err}`);
-    });
-};
+});
 
 /* ------------- Reducers ------------- */
 

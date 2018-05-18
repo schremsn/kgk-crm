@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ReactNative, {
-  View, ActivityIndicator, Image, KeyboardAvoidingView, ScrollView, ToastAndroid,
+import {
+  View, ActivityIndicator, Image, ToastAndroid,
   Platform,
 } from 'react-native';
 import I18n from 'react-native-i18n';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import t from 'tcomb-form-native';
-import { Images, Colors, Metrics } from './../Themes';
+import { Images, Colors } from './../Themes';
 import styles, { stylesheet } from './Styles/ContainerStyles';
 import Header from '../Components/Header';
 import { createCustomer } from '../Redux/ContactsRedux';
@@ -143,7 +143,7 @@ export default class ContactsAddScreen extends Component {
           if (this.props.isModal) {
             this.props.onShowAddContactModal(false);
           } else {
-            this.props.navigation.popToTop();
+            this.props.navigation.goBack(null);
           }
         }}
         />

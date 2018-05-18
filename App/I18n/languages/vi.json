@@ -92,7 +92,9 @@
   // contacts
   "Company": "Công ty",
   "Contacts": "Danh bạ",
-  // add contacts
+  "Contact Detail": "Chi tiết Danh bạ",
+  "Contact Address": "Địa chỉ Danh bạ",
+    // add contacts
   "optional": "Không bắt buộc",
   "required": "Bắt buộc",
   "Province": "Tỉnh",
@@ -103,6 +105,7 @@
   // Edit lead
   "Edit Lead": "Thay đổi chỉ dẫn",
   "Add Lead": "Tạo chỉ dẫn",
+  "Partner status": "Trạng thái đối tác",
   "Update lead is success": "Cập nhật chỉ dẫn thành công",
   "Add lead is success": "Tạo chỉ dẫn thành công",
   "Update lead is error": "Cập nhật chỉ dẫn thất bại",

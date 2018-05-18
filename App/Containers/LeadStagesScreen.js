@@ -31,12 +31,13 @@ class LeadStagesScreen extends Component {
     }
   }
   getPipelineCount(isRefreshed) {
-    this.props.getPipelineCount((list) => {
-      this.setState({
-        list,
-        isLoading: false,
+    pipelineCount()
+      .then((list) => {
+        this.setState({
+          list,
+          isLoading: false,
+        });
       });
-    });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
     }
@@ -96,14 +97,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getPipelineCount: (cb) => { dispatch(pipelineCount(cb)); },
   getLeadStages: () => { dispatch(getLeadStages()); },
 });
 
 LeadStagesScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   leadStages: PropTypes.array.isRequired,
-  getPipelineCount: PropTypes.func.isRequired,
   getLeadStages: PropTypes.func.isRequired,
 };
 LeadStagesScreen.navigationOptions = {
