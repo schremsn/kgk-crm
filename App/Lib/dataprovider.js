@@ -1,6 +1,6 @@
-import Odoo from './odoo';
-import Config from './config';
 import DD from '../Data/datadictionary';
+import Config from './config';
+import Odoo from './odoo';
 
 /**
  * instance variable for singleton
@@ -144,6 +144,33 @@ export default class DataProvider {
   }
 
   /**
+   * retrieve the linked commission status for the lead
+   * @param {number} id
+   */
+  getLeadStatus(id) {
+    if ((id === undefined) || (!Number.isInteger(id))) {
+      throw new Error('invalid lead id');
+    }
+
+    const params = {
+      domain: [['lead_id', '=', id]],
+      fields: DD.commissionStatus,
+      limit: maxRecords,
+      order: 'id asc',
+    };
+
+    return new Promise((resolve, reject) => {
+      this.odoo.search_read('commission.status', params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  /**
    * create a new customer based on the data provided data, which needs to be a dictionary
    * @param {any} customer
    */
@@ -151,6 +178,10 @@ export default class DataProvider {
     if (customer === undefined) {
       throw new Error('No customer provided');
     }
+    // assign current user as sales person
+    customer.user_id = this.getUserId();
+    console.log(customer);
+
     return new Promise((resolve, reject) => {
       this.odoo.create('res.partner', customer, (err, data) => {
         if (err) {
