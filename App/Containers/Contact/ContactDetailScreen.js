@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, ScrollView, Text, Image, TouchableOpacity, Alert, TouchableHighlight, TextInput, KeyboardAvoidingView, Picker } from 'react-native';
+import { View, ScrollView, Text, Image, TouchableOpacity, Alert, TouchableHighlight, KeyboardAvoidingView } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
