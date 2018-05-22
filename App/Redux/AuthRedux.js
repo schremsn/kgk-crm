@@ -35,10 +35,26 @@ export const INITIAL_STATE = Immutable({
 export const getUserInfo = () => (dispatch) => {
   dataprovider.getUserInfo()
     .then((data) => {
-      // console.log('getUserInfo', data)
+      console.log('getUserInfo', data);
       dispatch(Creators.getUserInfoSuccess(data));
       ReferenceData.getInstance().setCompanyInfo(data.id);
-      dispatch(Creators.getCompanyInfoSuccess(data));
+      // dispatch(Creators.getCompanyInfoSuccess(data));
+    })
+    .catch((err) => {
+      console.log(`error user ${err}`);
+    });
+};
+export const getCompanyInfo = id => (dispatch) => {
+  dataprovider.getCompanyInfo(id)
+    .then((data) => {
+      console.log('getCompanyInfo', data);
+      dataprovider.getStates(data.country_id)
+        .then((res) => {
+          console.log(res);
+        });
+      // dispatch(Creators.getUserInfoSuccess(data));
+      // ReferenceData.getInstance().setCompanyInfo(data.id);
+      // dispatch(Creators.getCompanyInfoSuccess(data));
     })
     .catch((err) => {
       console.log(`error user ${err}`);
@@ -59,7 +75,9 @@ export const login = ({ username, password }, cb) => (dispatch) => {
   dataprovider.login(username, password)
     .then((info) => {
       cb(info);
+      console.log('login', info);
       dispatch(getUserInfo());
+      dispatch(getCompanyInfo(info.company_id));
       dispatch(getMailChannels(info));
       dispatch(getLostReasons());
       dispatch(Creators.loginSuccess(info));

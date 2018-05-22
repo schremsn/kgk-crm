@@ -155,12 +155,14 @@ class LeadDetailScreen extends Component {
       case 'external_status': return (
         <View style={styles.boxLeadPhone}>
           <Text style={styles.rowInfo}>{value}</Text>
-          <TouchableOpacity
-            style={styles.buttonCallPhone}
-            onPress={() => this.getPartnerInformation()}
-          >
-            <Ionicons name="ios-information-circle-outline" size={25} color={Colors.banner} />
-          </TouchableOpacity>
+          {
+            value && <TouchableOpacity
+              style={styles.buttonCallPhone}
+              onPress={() => this.getPartnerInformation()}
+            >
+              <Ionicons name="ios-information-circle-outline" size={25} color={Colors.banner} />
+            </TouchableOpacity>
+          }
         </View>
       );
       default: return (<Text style={styles.rowInfo}>{typeof (value) === 'object' ? value[1] : value} </Text>);
