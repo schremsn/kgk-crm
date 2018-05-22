@@ -76,7 +76,7 @@ class CommissionStatusDetailScreen extends Component {
           <View style={styles.rowInfoContainer}>
             {
               item.name === 'create_date' ? <Text style={styles.rowInfo}>{moment(rowData[item.name]).format('MM-DD-YYYY')}</Text>
-              : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
+              : <Text style={styles.rowInfo}>{typeof (rowData[item.name]) === 'object' ? rowData[item.name][1] : rowData[item.name]}</Text>
             }
           </View>
         </View>
