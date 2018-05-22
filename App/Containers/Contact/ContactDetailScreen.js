@@ -7,13 +7,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
 import * as Animatable from 'react-native-animatable';
 import Toast from 'react-native-easy-toast';
-import styles from './Styles/ContainerStyles';
-import { Images, Colors } from './../Themes';
-import { getCustomerDetail } from '../Redux/ContactsRedux';
-import Header from '../Components/Header';
+import styles from '../Styles/ContainerStyles';
+import { Images, Colors } from '../../Themes/index';
+import { getCustomerDetail } from '../../Redux/ContactsRedux';
+import Header from '../../Components/Header';
 
-import FullButton from '../Components/FullButton';
-import RoundedButton from '../Components/RoundedButton';
+import FullButton from '../../Components/FullButton';
+import RoundedButton from '../../Components/RoundedButton';
 
 const data = [
   { name: 'id', value: I18n.t('id') },
@@ -136,7 +136,7 @@ class ContactDetailScreen extends Component {
         >
 
           <FullButton text={I18n.t('Add Contact')} onPress={() => this.props.navigation.navigate('ContactsAddScreen')} />
-          <FullButton text={I18n.t('Edit')} />
+          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('ContactsEditScreen', { contactDetail: this.state.contactDetail})} />
           <FullButton
             text={I18n.t('Add Lead')}
             onPress={() => this.props.navigation.navigate('LeadAddScreen', { contactId: this.state.contactDetail.id, contactName: this.state.contactDetail.name})}

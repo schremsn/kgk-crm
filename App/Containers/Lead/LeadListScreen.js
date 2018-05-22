@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import styles from './Styles/ContainerStyles';
-import { Images, Colors } from './../Themes';
-import { getLeadbyStage, searchLead } from '../Redux/LeadRedux';
-import ProgressBar from '../Components/ProgressBar';
-import Header from '../Components/Header';
-import CircleButton from '../Components/CircleButton';
+import styles from '../Styles/ContainerStyles';
+import { Images, Colors } from '../../Themes/index';
+import { getLeadbyStage, searchLead } from '../../Redux/LeadRedux';
+import ProgressBar from '../../Components/ProgressBar';
+import Header from '../../Components/Header';
+import CircleButton from '../../Components/CircleButton';
 
 class LeadListScreen extends Component {
   constructor(props) {

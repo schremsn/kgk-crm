@@ -10,14 +10,14 @@ import t from 'tcomb-form-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
-import { Images, Colors, Metrics } from './../Themes';
-import styles, { stylesheet } from './Styles/ContainerStyles';
-import ContactsAddScreen from './ContactsAddScreen';
-import ContactsListScreen from './ContactsListScreen';
-import ProductsListScreen from './ProductsListScreen';
-import Header from '../Components/Header';
-import RoundedButton from '../Components/RoundedButton';
-import { createLead, getProducts } from '../Redux/LeadRedux';
+import { Images, Colors, Metrics } from '../../Themes/index';
+import styles, { stylesheet } from '../Styles/ContainerStyles';
+import ContactsAddScreen from '../Contact/ContactsAddScreen';
+import ContactsListScreen from '../Contact/ContactsListScreen';
+import ProductsListScreen from '../Product/ProductsListScreen';
+import Header from '../../Components/Header';
+import RoundedButton from '../../Components/RoundedButton';
+import { createLead, getProducts } from '../../Redux/LeadRedux';
 
 const { Form } = t.form;
 

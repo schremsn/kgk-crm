@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput, KeyboardAvoidingView } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Images, Colors } from './../Themes';
-import styles from './Styles/ContainerStyles';
-import ProgressBar from '../Components/ProgressBar';
-import Header from '../Components/Header';
-import { getCustomers, searchCustomer } from '../Redux/ContactsRedux';
+import { Images, Colors } from '../../Themes/index';
+import styles from '../Styles/ContainerStyles';
+import ProgressBar from '../../Components/ProgressBar';
+import Header from '../../Components/Header';
+import { getCustomers, searchCustomer } from '../../Redux/ContactsRedux';
 
 class ContactListScreen extends Component {
   constructor() {

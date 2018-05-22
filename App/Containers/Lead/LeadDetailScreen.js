@@ -7,13 +7,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
 import * as Animatable from 'react-native-animatable';
 import Toast from 'react-native-easy-toast';
-import styles from './Styles/ContainerStyles';
-import { Images, Colors } from './../Themes';
-import { getLead, markLeadWon, markLeadLost } from '../Redux/LeadRedux';
-import Header from '../Components/Header';
+import styles from '../Styles/ContainerStyles';
+import { Images, Colors } from '../../Themes/index';
+import { getLead, markLeadWon, markLeadLost } from '../../Redux/LeadRedux';
+import Header from '../../Components/Header';
 
-import FullButton from '../Components/FullButton';
-import RoundedButton from '../Components/RoundedButton';
+import FullButton from '../../Components/FullButton';
+import RoundedButton from '../../Components/RoundedButton';
 
 const data = [
   { name: 'id', value: I18n.t('id') },
@@ -53,7 +53,7 @@ class LeadDetailScreen extends Component {
     const { leadId } = this.props.navigation.state.params;
     getLead(leadId)
       .then((leadDetail) => {
-        console.log(leadDetail)
+        console.log(leadDetail);
         this.setState({ leadDetail: leadDetail[0] });
       });
   }
@@ -196,7 +196,7 @@ class LeadDetailScreen extends Component {
             selectedValue={this.state.reasonLost}
             style={{ height: 50, width: '100%' }}
             mode="dropdown"
-            onValueChange={(itemValue) => this.setState({ reasonLost: itemValue })}
+            onValueChange={itemValue => this.setState({ reasonLost: itemValue })}
           >
             {
               this.props.listReasonLost.map(item => (
@@ -223,8 +223,16 @@ class LeadDetailScreen extends Component {
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('lead detail')} onPress={() => this.props.navigation.navigate('LeadListScreen', { stageId: leadDetail.stage_id[0], stageName: leadDetail.stage_id[1] })} />
-
+        <Header
+          title={I18n.t('lead detail')}
+          onPress={() => {
+          if (leadDetail.stage_id[0]) {
+            this.props.navigation.navigate('LeadListScreen', { stageId: leadDetail.stage_id[0], stageName: leadDetail.stage_id[1] });
+          } else {
+            this.props.navigation.navigate('LeadStagesScreen');
+          }
+        }}
+        />
         <ScrollView style={[styles.mainContainer]}>
           {leadDetail.id && this.renderCard('Lead Information', leadDetail)}
         </ScrollView>

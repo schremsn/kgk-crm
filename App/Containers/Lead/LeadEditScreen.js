@@ -10,13 +10,13 @@ import t from 'tcomb-form-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Images, Colors } from './../Themes';
-import styles, { stylesheet } from './Styles/ContainerStyles';
-import Header from '../Components/Header';
-import { updateLead } from '../Redux/LeadRedux';
-import RoundedButton from '../Components/RoundedButton';
-import ProgressBar from '../Components/ProgressBar';
-import ProductsListScreen from './ProductsListScreen';
+import { Images, Colors } from '../../Themes/index';
+import styles, { stylesheet } from '../Styles/ContainerStyles';
+import Header from '../../Components/Header';
+import { updateLead } from '../../Redux/LeadRedux';
+import RoundedButton from '../../Components/RoundedButton';
+import ProgressBar from '../../Components/ProgressBar';
+import ProductsListScreen from '../Product/ProductsListScreen';
 
 
 const { Form } = t.form;

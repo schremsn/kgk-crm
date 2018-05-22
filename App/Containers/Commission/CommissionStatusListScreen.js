@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, ScrollView } from 'react-native';
 import I18n from 'react-native-i18n';
 import moment from 'moment';
-import { Images, Colors } from './../Themes';
-import styles from './Styles/ContainerStyles';
-import ProgressBar from '../Components/ProgressBar';
-import Header from '../Components/Header';
-import { getCommissionStatus } from '../Redux/CommissionRedux';
+import { Images, Colors } from '../../Themes/index';
+import styles from '../Styles/ContainerStyles';
+import ProgressBar from '../../Components/ProgressBar';
+import Header from '../../Components/Header';
+import { getCommissionStatus } from '../../Redux/CommissionRedux';
 
 class CommissionStatusListScreen extends Component {
   constructor() {
