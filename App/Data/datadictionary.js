@@ -172,4 +172,9 @@ export default class DD {
     'id',
     'name',
   ]
+
+  static state = [
+    'id',
+    'name',
+  ]
 }

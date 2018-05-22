@@ -180,7 +180,6 @@ export default class DataProvider {
     }
     // assign current user as sales person
     customer.user_id = this.getUserId();
-    console.log(customer);
 
     return new Promise((resolve, reject) => {
       this.odoo.create('res.partner', customer, (err, data) => {
@@ -1094,6 +1093,9 @@ export default class DataProvider {
   }
 
 
+  /**
+   * get predefined reasons codes for marking a lead lost
+   */
   getLostReasons() {
     const params = {
       fields: DD.reason,
@@ -1102,6 +1104,28 @@ export default class DataProvider {
 
     return new Promise((resolve, reject) => {
       this.odoo.search_read('crm.lost.reason', params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  /**
+   * retrieve the states for the country
+   * @param {number} countryId
+   */
+  getStates(countryId = 241) {
+    const params = {
+      domain: [['country_id', '=', countryId]],
+      fields: DD.state,
+      order: 'name',
+    };
+
+    return new Promise((resolve, reject) => {
+      this.odoo.search_read('res.country.state', params, (err, data) => {
         if (err) {
           reject(err);
         } else {
