@@ -48,6 +48,8 @@ const PipelineStack = StackNavigator({
   LeadListScreen: { screen: LeadListScreen },
   LeadEditScreen: { screen: LeadEditScreen },
   LeadAddScreen: { screen: LeadAddScreen },
+  LeadCommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
+
 }, {
   headerMode: 'none',
   initialRouteName: 'LeadStagesScreen',

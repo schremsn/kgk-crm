@@ -129,8 +129,7 @@ export default StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     borderColor: Colors.windowTint,
-    borderWidth: 0.5,
-    borderRadius: 2,
+    borderWidth: 0.1,
   },
   rowLabelContainer: {
     flex: 1,
