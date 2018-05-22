@@ -4,10 +4,10 @@ import { RefreshControl, Text, Image, View, TouchableOpacity, ListView, Alert, B
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import numeral from 'numeral';
-import ProgressBar from '../Components/ProgressBar';
-import styles from './Styles/ContainerStyles';
-import { Colors, Images } from '../Themes';
-import { getCommissionSummary } from '../Redux/CommissionRedux';
+import ProgressBar from '../../Components/ProgressBar';
+import styles from '../Styles/ContainerStyles';
+import { Colors, Images } from '../../Themes/index';
+import { getCommissionSummary } from '../../Redux/CommissionRedux';
 
 class CommissionListScreen extends Component {
   constructor() {

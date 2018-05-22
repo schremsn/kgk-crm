@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
 import I18n from 'react-native-i18n';
-import ProgressBar from '../Components/ProgressBar';
-import { getMessages } from '../Redux/MessageRedux';
-import styles from './Styles/ContainerStyles';
-import { Images, Colors } from './../Themes';
+import ProgressBar from '../../Components/ProgressBar';
+import { getMessages } from '../../Redux/MessageRedux';
+import styles from '../Styles/ContainerStyles';
+import { Images, Colors } from '../../Themes/index';
 
 class MessagesListScreen extends Component {
   constructor() {

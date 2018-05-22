@@ -4,7 +4,7 @@ import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Images, Colors } from '../Themes';
 import styles from './Styles/ContainerStyles';
-import LeadStagesScreen from './LeadStagesScreen';
+import LeadStagesScreen from './Lead/LeadStagesScreen';
 
 export default class MoreScreen extends Component {
   constructor() {

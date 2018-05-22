@@ -23,9 +23,21 @@ export const INITIAL_STATE = Immutable({
 
 export const createCustomer = data => new Promise((resolve, reject) => {
   dataprovider.createCustomer(data)
-    .then((data) => {
-      resolve(data);
-      console.log('getCustomers', data);
+    .then((detail) => {
+      resolve(detail);
+      console.log('crateCustomers', detail);
+      // dispatch(Creators.getUserInfoSuccess(data))
+    })
+    .catch((err) => {
+      reject(err);
+      console.log(`error user ${err}`);
+    });
+});
+export const updateCustomer = data => new Promise((resolve, reject) => {
+  dataprovider.updateCustomer(data)
+    .then((detail) => {
+      resolve(detail);
+      console.log('updateCustomers', detail);
       // dispatch(Creators.getUserInfoSuccess(data))
     })
     .catch((err) => {

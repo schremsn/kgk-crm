@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
 import I18n from 'react-native-i18n';
-import styles from './Styles/ContainerStyles';
-import { Images, Colors } from './../Themes';
-import { getProducts } from '../Redux/ProductRedux';
-import ProgressBar from '../Components/ProgressBar';
-import Header from '../Components/Header';
+import styles from '../Styles/ContainerStyles';
+import { Images, Colors } from '../../Themes/index';
+import { getProducts } from '../../Redux/ProductRedux';
+import ProgressBar from '../../Components/ProgressBar';
+import Header from '../../Components/Header';
 
 class ProductsListScreen extends Component {
   constructor() {

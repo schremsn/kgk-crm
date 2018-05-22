@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { View, ScrollView, Text, Image, Linking } from 'react-native';
 import I18n from 'react-native-i18n';
 import MyWebView from 'react-native-webview-autoheight';
-import styles from './Styles/ContainerStyles';
-import { Images, Metrics } from './../Themes';
-import Header from '../Components/Header';
+import styles from '../Styles/ContainerStyles';
+import { Images, Metrics } from '../../Themes/index';
+import Header from '../../Components/Header';
 
 const customStyle = '<style>* {max-width: 100% } body {font-family: sans-serif;} h1 {color: red;}</style>';
 
