@@ -8,7 +8,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Toast from 'react-native-easy-toast';
 import { Images, Colors } from '../../Themes/index';
 import styles, { stylesheet } from '../Styles/ContainerStyles';
-import ContactsAddScreen from '../Contact/ContactsAddScreen';
+import ContactsAddModal from '../Contact/ContactsAddModal';
 import ContactsListModal from '../Contact/ContactsListModal';
 import ProductsListModal from '../Product/ProductsListModal';
 import Header from '../../Components/Header';
@@ -216,17 +216,16 @@ class LeadAddScreen extends Component {
     return (
       <Modal
         animationType="slide"
-        transparent={false}
+        transparent
         visible={this.state.isModalAddContact}
         onRequestClose={() => {
           this.setState({ isModalAddContact: false });
         }}
       >
         <View>
-          <ContactsAddScreen
+          <ContactsAddModal
             navigation={this.props.navigation}
             onShowAddContactModal={value => this.onShowAddContactModal(value)}
-            isModal
           />
         </View>
       </Modal>

@@ -16,7 +16,7 @@ import RoundedButton from '../../Components/RoundedButton';
 const { Form } = t.form;
 
 
-class ContactsAddScreen extends Component {
+class ContactsAddModal extends Component {
   constructor() {
     super();
     this.state = {
@@ -132,7 +132,7 @@ class ContactsAddScreen extends Component {
         .then(() => {
           this.setState({ isLoading: false });
           ToastAndroid.show(I18n.t('Create contacts is success'), ToastAndroid.SHORT);
-          this.props.navigation.replace('ContactsListScreen');
+          this.props.onShowAddContactModal(false);
         })
         .catch((error) => {
           this.setState({ isLoading: false });
@@ -143,11 +143,10 @@ class ContactsAddScreen extends Component {
   render() {
     const { value, isLoading, type } = this.state;
     return (
-      <View style={[styles.containerHasForm]}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
+      <View style={[styles.containerModal, { paddingVertical: 20 }]}>
         <Header
           title={I18n.t('Add Contact')}
-          onPress={() => {this.props.navigation.goBack(null);}}
+          onPress={() => { this.props.onShowAddContactModal(false); }}
         />
         {
           isLoading &&
@@ -156,7 +155,7 @@ class ContactsAddScreen extends Component {
           </View>
         }
         <KeyboardAwareScrollView
-          style={{ marginBottom: 70 }}
+          style={{ marginBottom: 120, backgroundColor: Colors.banner, padding: 10 }}
           innerRef={(ref) => { this.scrollView = ref; }}
         >
           {
@@ -169,19 +168,20 @@ class ContactsAddScreen extends Component {
             />
           }
 
-          <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
+          <RoundedButton onPress={this.onPress} styles={{ marginBottom: 20 }} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
       </View>
     );
   }
 }
 
-ContactsAddScreen.propTypes = {
+ContactsAddModal.propTypes = {
   navigation: PropTypes.object.isRequired,
+  onShowAddContactModal: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
   states: state.auth.states,
 });
 
-export default connect(mapStateToProps, null)(ContactsAddScreen);
+export default connect(mapStateToProps, null)(ContactsAddModal);

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TouchableOpacity, RefreshControl, ListView, TextInput, KeyboardAvoidingView } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Images, Colors } from '../../Themes/index';
+import { Colors } from '../../Themes/index';
 import styles from '../Styles/ContainerStyles';
 import ProgressBar from '../../Components/ProgressBar';
-import Header from '../../Components/Header';
 import { getCustomers, searchCustomer } from '../../Redux/ContactsRedux';
 
 class ContactsListModal extends Component {
@@ -109,7 +108,7 @@ class ContactsListModal extends Component {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
             : <ListView
-              style={[styles.mainContainerModal]}
+              style={[styles.mainContainerModal, { marginBottom: 170 }]}
               enableEmptySections
               // onEndReached={() => this.getCustomersListNextPage()}
               onEndReachedThreshold={1200}
@@ -130,6 +129,15 @@ class ContactsListModal extends Component {
               }
             />
         }
+        <TouchableOpacity
+          style={[styles.buttonBoxModal, { marginBottom: 250 }]}
+          onPress={() => { this.props.onShowAddContactModal(true);}}
+        >
+          <View style={styles.button}>
+            <Ionicons name="ios-add-outline" size={25} color={Colors.snow} />
+          </View>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={[styles.buttonBoxModal, { marginBottom: 180 }]}
           onPress={() => this.props.onSelectContact(null)}
