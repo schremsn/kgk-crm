@@ -16,6 +16,7 @@ const { Types, Creators } = createActions({
   getUserInfoSuccess: ['userInfo'],
   getCompanyInfoSuccess: ['companyInfo'],
   getMailChannelsSuccess: ['mailChannels'],
+  getStatesSuccess: ['states'],
 });
 
 export const AuthTypes = Types;
@@ -29,6 +30,7 @@ export const INITIAL_STATE = Immutable({
   companyInfo: {},
   mailChannels: [],
   isLogin: false,
+  states: [],
   error: {},
 });
 
@@ -47,14 +49,11 @@ export const getUserInfo = () => (dispatch) => {
 export const getCompanyInfo = id => (dispatch) => {
   dataprovider.getCompanyInfo(id)
     .then((data) => {
-      console.log('getCompanyInfo', data);
       dataprovider.getStates(data.country_id)
         .then((res) => {
           console.log(res);
+          dispatch(Creators.getStatesSuccess(res));
         });
-      // dispatch(Creators.getUserInfoSuccess(data));
-      // ReferenceData.getInstance().setCompanyInfo(data.id);
-      // dispatch(Creators.getCompanyInfoSuccess(data));
     })
     .catch((err) => {
       console.log(`error user ${err}`);
@@ -111,6 +110,10 @@ export const getMailChannelsSuccess = (state, action) => {
   const { mailChannels } = action;
   return state.merge({ mailChannels });
 };
+export const getStatesSuccess = (state, action) => {
+  const { states } = action;
+  return state.merge({ states });
+};
 
 // Something went wrong somewhere.
 export const failure = (state, action) => {
@@ -126,5 +129,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_USER_INFO_SUCCESS]: getUserInfoSuccess,
   [Types.GET_COMPANY_INFO_SUCCESS]: getCompanyInfoSuccess,
   [Types.GET_MAIL_CHANNELS_SUCCESS]: getMailChannelsSuccess,
-
+  [Types.GET_STATES_SUCCESS]: getStatesSuccess,
 });

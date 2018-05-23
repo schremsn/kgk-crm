@@ -1,22 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  View, TouchableOpacity, Image,
-  Modal, Text, TextInput,
-} from 'react-native';
+import { View, Image, Modal } from 'react-native';
 import I18n from 'react-native-i18n';
 import t from 'tcomb-form-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Images, Colors } from '../../Themes/index';
+import { Images } from '../../Themes/index';
 import styles, { stylesheet } from '../Styles/ContainerStyles';
 import Header from '../../Components/Header';
 import { updateLead } from '../../Redux/LeadRedux';
 import RoundedButton from '../../Components/RoundedButton';
 import ProgressBar from '../../Components/ProgressBar';
-import ProductsListScreen from '../Product/ProductsListScreen';
+import Input from '../../Components/Form/Input';
+import ProductsListModal from '../Product/ProductsListModal';
 
 
 const { Form } = t.form;
@@ -25,7 +22,6 @@ class LeadEditScreen extends Component {
   constructor(props) {
     super(props);
     const { leadDetail } = props.navigation.state.params;
-    console.log(leadDetail)
     this.state = {
       value: {
         city: leadDetail.city ? leadDetail.city : null,
@@ -130,14 +126,22 @@ class LeadEditScreen extends Component {
     this.getTypeForm();
   }
   async getTypeForm() {
-    const { leadStages } = this.props;
-    const stateOptions = {};
+    const { leadStages, states } = this.props;
     const setStageOption = () => {
+      const stageOptions = {};
       for (let i = 0; i < leadStages.length; i += 1) {
-        stateOptions[parseInt(leadStages[i].id, 0)] = leadStages[i].name;
+        stageOptions[parseInt(leadStages[i].id, 0)] = leadStages[i].name;
       }
+      return stageOptions;
     };
-    await setStageOption();
+    const setStateOption = () => {
+      const stateOptions = {};
+      const stateLength = states.length;
+      for (let i = 0; i < stateLength; i += 1) {
+        stateOptions[states[i].name] = states[i].name;
+      }
+      return stateOptions;
+    };
     const type = t.struct({
       id: t.Number,
       name: t.maybe(t.String),
@@ -149,11 +153,11 @@ class LeadEditScreen extends Component {
       mobile: t.maybe(t.String),
       street: t.maybe(t.String),
       street2: t.maybe(t.String),
-      city: t.maybe(t.String),
+      city: t.enums(setStateOption(), 'city'),
       zip: t.maybe(t.String),
       email_from: t.maybe(t.String),
       description: t.maybe(t.String),
-      stage_id: t.enums(stateOptions, 'dropdown'),
+      stage_id: t.enums(setStageOption(), 'stage_id'),
     });
     this.setState({ type });
   }
@@ -179,14 +183,12 @@ class LeadEditScreen extends Component {
       this.setState({ isLoading: true });
       updateLead(value)
         .then(() => {
-          this.toast.show(I18n.t('Update lead is success'), 1000);
           setTimeout(() => {
             this.setState({ isLoading: false });
             this.props.navigation.replace('LeadDetailScreen', { leadId: value.id });
           }, 1000);
         })
         .catch(() => {
-          this.toast.show(I18n.t('Update lead is error'), 1000);
           setTimeout(() => {
             this.setState({ isLoading: false });
           }, 1000);
@@ -196,57 +198,38 @@ class LeadEditScreen extends Component {
   templateInputNotes() {
     const value = this.state.value.description ? this.state.value.description : '';
     return (
-      <View >
-        <Text style={styles.labelForm}>Notes</Text>
-        <TextInput
-          style={styles.inputFormMulti}
-          value={value}
-          multiline
-          numberOfLines={3}
-          onChangeText={(text) => {
-            const valueNew = { ...this.state.value, description: text };
-            this.setState({ value: valueNew });
-          }}
-        />
-      </View>
+      <Input
+        multiline
+        label={I18n.t('notes')}
+        value={value}
+        press={(text) => {
+          const valueNew = { ...this.state.value, description: text };
+          this.setState({ value: valueNew });
+        }}
+      />
     );
   }
   templateInputProduct() {
     const value = this.state.productName;
     return (
-      <View >
-        <Text style={styles.labelForm}>{I18n.t('product')}</Text>
-        <TextInput
-          style={styles.inputFormDisable}
-          value={value}
-          editable={false}
-        />
-        <TouchableOpacity
-          style={styles.iconInputFormCustom}
-          onPress={() => { this.setState({ isModalSearchProduct: true }); }}
-        >
-          <Ionicons name="ios-open-outline" size={25} color={Colors.panther} />
-        </TouchableOpacity>
-      </View>
+      <Input label={I18n.t('product')} value={value} press={() => this.setState({ isModalSearchProduct: true })} />
     );
   }
   get renderSearchProductModal() {
     return (
       <Modal
         animationType="slide"
-        transparent={false}
+        transparent
         visible={this.state.isModalSearchProduct}
         onRequestClose={() => {
           this.setState({ isModalSearchProduct: false });
         }}
       >
-        <View style={{}}>
-          <ProductsListScreen
-            navigation={this.props.navigation}
-            isModal
-            onSelectProduct={value => this.onSelectProduct(value)}
-          />
-        </View>
+        <ProductsListModal
+          navigation={this.props.navigation}
+          isModal
+          onSelectProduct={value => this.onSelectProduct(value)}
+        />
       </Modal>
     );
   }
@@ -257,7 +240,6 @@ class LeadEditScreen extends Component {
       <View style={[styles.containerHasForm]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title={I18n.t('Edit Lead')} onPress={() => this.props.navigation.goBack(null)} />
-        <Toast ref={(c) => { this.toast = c; }} />
         <KeyboardAwareScrollView
           style={{ marginBottom: 60 }}
           innerRef={(ref) => { this.scrollView = ref; }}
@@ -291,6 +273,7 @@ LeadEditScreen.propTypes = {
 
 const mapStateToProps = state => ({
   leadStages: state.lead.list,
+  states: state.auth.states,
 });
 
 export default connect(mapStateToProps, null)(LeadEditScreen);

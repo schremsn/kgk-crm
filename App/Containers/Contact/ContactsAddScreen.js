@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {
-  View, ActivityIndicator, Image, ToastAndroid,
-  Platform,
-} from 'react-native';
+import { View, ActivityIndicator, Image, ToastAndroid, Platform } from 'react-native';
 import I18n from 'react-native-i18n';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -17,23 +15,8 @@ import RoundedButton from '../../Components/RoundedButton';
 
 const { Form } = t.form;
 
-const Person = t.struct({
-  is_company: t.Boolean,
-  name: t.String,
-  identification_id: t.maybe(t.String),
-  street: t.maybe(t.String),
-  street2: t.maybe(t.String),
-  city: t.String,
-  state: t.maybe(t.String),
-  code_zip: t.maybe(t.Number),
-  phone: t.maybe(t.Number),
-  mobile: t.maybe(t.Number),
-  website: t.maybe(t.String),
-  email: t.maybe(t.String),
-  comment: t.maybe(t.String),
-});
 
-export default class ContactsAddScreen extends Component {
+class ContactsAddScreen extends Component {
   constructor() {
     super();
     this.state = {
@@ -108,7 +91,36 @@ export default class ContactsAddScreen extends Component {
       // auto: 'placeholders'
     };
   }
-
+  componentWillMount() {
+    this.getTypeForm();
+  }
+  async getTypeForm() {
+    const { states } = this.props;
+    const setStateOption = () => {
+      const stateOptions = {};
+      const stateLength = states.length;
+      for (let i = 0; i < stateLength; i += 1) {
+        stateOptions[states[i].id] = states[i].name;
+      }
+      return stateOptions;
+    };
+    const type = t.struct({
+      is_company: t.Boolean,
+      name: t.String,
+      identification_id: t.maybe(t.String),
+      street: t.maybe(t.String),
+      street2: t.maybe(t.String),
+      city: t.enums(setStateOption(), 'city'),
+      state: t.maybe(t.String),
+      code_zip: t.maybe(t.Number),
+      phone: t.maybe(t.Number),
+      mobile: t.maybe(t.Number),
+      website: t.maybe(t.String),
+      email: t.maybe(t.String),
+      comment: t.maybe(t.String),
+    });
+    this.setState({ type });
+  }
   onChange(value) {
     this.setState({ value });
   }
@@ -133,7 +145,7 @@ export default class ContactsAddScreen extends Component {
     }
   }
   render() {
-    const { value, isLoading } = this.state;
+    const { value, isLoading, type } = this.state;
     return (
       <View style={[styles.containerHasForm]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
@@ -157,13 +169,16 @@ export default class ContactsAddScreen extends Component {
           style={{ marginBottom: this.props.isModal ? 120 : 70 }}
           innerRef={(ref) => { this.scrollView = ref; }}
         >
-          <Form
-            ref={(c) => { this.form = c; }}
-            type={Person}
-            options={this.options}
-            value={value}
-            onChange={this.onChange}
-          />
+          {
+            type && <Form
+              ref={(c) => { this.form = c; }}
+              type={type}
+              options={this.options}
+              value={value}
+              onChange={this.onChange}
+            />
+          }
+
           <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
       </View>
@@ -177,3 +192,8 @@ ContactsAddScreen.propTypes = {
   onShowAddContactModal: PropTypes.func,
 };
 
+const mapStateToProps = state => ({
+  states: state.auth.states,
+});
+
+export default connect(mapStateToProps, null)(ContactsAddScreen);
