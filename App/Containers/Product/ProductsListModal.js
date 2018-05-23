@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
+import { View, Text, TouchableOpacity, RefreshControl, ListView } from 'react-native';
 import I18n from 'react-native-i18n';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from '../Styles/ContainerStyles';
-import { Images, Colors } from '../../Themes/index';
+import { Colors } from '../../Themes/index';
 import { getProducts } from '../../Redux/ProductRedux';
 import ProgressBar from '../../Components/ProgressBar';
-import Header from '../../Components/Header';
 
-class ProductsListScreen extends Component {
+class ProductsListModal extends Component {
   constructor() {
     super();
     this.state = {
@@ -54,34 +54,25 @@ class ProductsListScreen extends Component {
   renderProduct(item) {
     return (
       <TouchableOpacity
-        onPress={() => { this.props.navigation.navigate('ProductDetailScreen', { productId: item.id });}}
-        style={styles.sectionHeaderContainer}
+        onPress={() => this.props.onSelectProduct(item)}
+        activeOpacity={0.9}
+        style={styles.sectionHeaderContainerModal}
       >
-        <Text style={styles.sectionHeader}>{item.name}</Text>
-        <Text style={styles.sectionText}>{I18n.t('code')}: {item.code}</Text>
-        <Text style={styles.sectionText}>{I18n.t('description')}: {item.description}</Text>
-        <View style={styles.sectionImage}>
-          {
-            item.image_small && <Image style={styles.thumpImage} source={{ uri: `data:image/png;base64,${item.image_small}` }} />
-          }
-        </View>
+        <Text style={styles.sectionHeaderModal}>{item.name}</Text>
+        <Text style={styles.sectionTextModal}>{I18n.t('code')}: {item.code}</Text>
+        <Text style={styles.sectionTextModal}>{I18n.t('description')}: {item.description}</Text>
       </TouchableOpacity>
     );
   }
   render() {
     const { isLoading, isRefreshing, dataSource } = this.state;
     return (
-      <View style={styles.container}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header
-          title={I18n.t('product list')}
-          onPress={() => { this.props.navigation.goBack(null); }}
-        />
+      <View style={styles.containerModal}>
         {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
             : <ListView
-              style={styles.mainContainer}
+              style={styles.mainContainerModal}
               enableEmptySections
               onEndReached={() => this.getProductListNextPage()}
               onEndReachedThreshold={1200}
@@ -102,18 +93,23 @@ class ProductsListScreen extends Component {
               }
             />
         }
+        <TouchableOpacity
+          style={[styles.buttonBoxModal]}
+          onPress={() => this.props.onSelectProduct(null)}
+        >
+          <View style={styles.button}>
+            <Ionicons name="ios-arrow-down-outline" size={25} color={Colors.snow} />
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }
 }
-
-ProductsListScreen.navigationOptions = {
-  title: I18n.t('product list'),
-};
-ProductsListScreen.propTypes = {
+ProductsListModal.propTypes = {
   navigation: PropTypes.object.isRequired,
   getProducts: PropTypes.func.isRequired,
   offset: PropTypes.number.isRequired,
+  onSelectProduct: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -124,4 +120,4 @@ const mapDispatchToProps = dispatch => ({
   getProducts: (offset, cb) => { dispatch(getProducts(offset, cb)); },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductsListScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductsListModal);

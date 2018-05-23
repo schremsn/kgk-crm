@@ -32,8 +32,18 @@ export default StyleSheet.create({
   containerHasForm: {
     padding: Metrics.doubleBaseMargin,
   },
+  containerModal: {
+    paddingHorizontal: Metrics.doubleBaseMargin,
+    // marginHorizontal: Metrics.doubleBaseMargin,
+    backgroundColor: Colors.banner,
+    opacity: 0.9,
+    borderRadius: 4,
+  },
   mainContainer: {
     marginBottom: 60,
+  },
+  mainContainerModal: {
+    marginBottom: 0,
   },
   description: {
     marginVertical: Metrics.doubleSection,
@@ -47,6 +57,24 @@ export default StyleSheet.create({
     borderColor: Colors.border,
     padding: Metrics.baseMargin,
     marginBottom: 20,
+  },
+  sectionHeaderContainerModal: {
+    // borderWidth: 1,
+    // borderColor: Colors.border,
+    padding: Metrics.baseMargin,
+    marginBottom: 20,
+    backgroundColor: 'white',
+    borderRadius: 4,
+  },
+  sectionHeaderModal: {
+    ...Fonts.style.h5,
+    color: Colors.fire,
+  },
+  sectionTextModal: {
+    ...Fonts.base,
+    color: Colors.banner,
+    fontSize: 14,
+    lineHeight: Metrics.doubleBaseMargin + 5,
   },
   sectionImage: {
     alignItems: 'center',
@@ -82,6 +110,14 @@ export default StyleSheet.create({
     position: 'absolute',
     right: 30,
     bottom: 100,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  buttonBoxModal: {
+    position: 'absolute',
+    right: 30,
+    bottom: 30,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -281,7 +317,7 @@ export default StyleSheet.create({
   iconInputFormCustom: {
     position: 'absolute',
     height: 45,
-    top: 33,
+    top: 10,
     justifyContent: 'center',
     alignItems: 'center',
     width: 45,

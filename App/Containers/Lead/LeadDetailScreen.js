@@ -241,9 +241,7 @@ class LeadDetailScreen extends Component {
     );
   }
   render() {
-    const {
-      leadDetail, isShowActions, isEdit, isSelectLostReason,
-    } = this.state;
+    const { leadDetail, isShowActions, isSelectLostReason } = this.state;
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
