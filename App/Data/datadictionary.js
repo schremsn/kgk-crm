@@ -86,12 +86,12 @@ export default class DD {
     'description',
     'lost_reason',
     'zip',
+    'state',
     'street',
     'street2',
     'function',
     'stage_id',
     'tag_ids',
-    'probability',
     'product',
     'external_status',
   ]
@@ -125,7 +125,6 @@ export default class DD {
     'type',
     'email_from',
     'id',
-    'date_deadline',
   ]
 
   static dashboard = {
