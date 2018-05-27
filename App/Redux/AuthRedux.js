@@ -3,8 +3,8 @@ import Immutable from 'seamless-immutable';
 import DataProvider from '../Lib/dataprovider';
 import ReferenceData from '../Data/referencedata';
 import { Alert } from 'react-native';
-import { getCommissionStatus } from './CommissionRedux';
 import { getLostReasons } from './LeadRedux';
+import retryPromise from '../Services/Api';
 
 const dataprovider = DataProvider.getInstance();
 
@@ -35,46 +35,52 @@ export const INITIAL_STATE = Immutable({
 });
 
 export const getUserInfo = () => (dispatch) => {
-  dataprovider.getUserInfo()
-    .then((data) => {
-      console.log('getUserInfo', data);
-      dispatch(Creators.getUserInfoSuccess(data));
-      ReferenceData.getInstance().setCompanyInfo(data.id);
-      // dispatch(Creators.getCompanyInfoSuccess(data));
-    })
-    .catch((err) => {
-      console.log(`error user ${err}`);
-    });
+  const requestApi = () => (
+    dataprovider.getUserInfo()
+      .then((data) => {
+        dispatch(Creators.getUserInfoSuccess(data));
+        ReferenceData.getInstance().setCompanyInfo(data.id);
+        // dispatch(Creators.getCompanyInfoSuccess(data));
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+  );
+  retryPromise(requestApi, 'getUserInfo');
 };
 export const getCompanyInfo = id => (dispatch) => {
-  dataprovider.getCompanyInfo(id)
-    .then((data) => {
-      dataprovider.getStates(data.country_id)
-        .then((res) => {
-          console.log(res);
-          dispatch(Creators.getStatesSuccess(res));
-        });
-    })
-    .catch((err) => {
-      console.log(`error user ${err}`);
-    });
+  const requestApi = () => (
+    dataprovider.getCompanyInfo(id)
+      .then((data) => {
+        dataprovider.getStates(data.country_id)
+          .then((res) => {
+            dispatch(Creators.getStatesSuccess(res));
+          });
+      })
+      .catch((err) => {
+        console.log(`error user ${err}`);
+      })
+  );
+  retryPromise(requestApi, 'getCompanyInfo');
 };
 export const getMailChannels = () => (dispatch) => {
-  dataprovider.getMailChannels()
-    .then((mailChannels) => {
+  const requestApi = () => (
+    dataprovider.getMailChannels()
+      .then((mailChannels) => {
       // console.log('mailChannels', mailChannels)
-      dispatch(Creators.getMailChannelsSuccess(mailChannels));
-    })
-    .catch((err) => {
-      console.log(`error user ${err}`);
-    });
+        dispatch(Creators.getMailChannelsSuccess(mailChannels));
+      })
+      .catch((err) => {
+        console.log(`error user ${err}`);
+      })
+  );
+  retryPromise(requestApi, 'getMailChannels');
 };
 
 export const login = ({ username, password }, cb) => (dispatch) => {
   dataprovider.login(username, password)
     .then((info) => {
       cb(info);
-      console.log('login', info);
       dispatch(getUserInfo());
       dispatch(getCompanyInfo(info.company_id));
       dispatch(getMailChannels(info));

@@ -1,6 +1,7 @@
 import { createReducer, createActions } from 'reduxsauce';
 import Immutable from 'seamless-immutable';
 import DataProvider from '../Lib/dataprovider';
+import retryPromise from '../Services/Api';
 
 const dataprovider = DataProvider.getInstance();
 
@@ -22,62 +23,66 @@ export const INITIAL_STATE = Immutable({
 });
 
 export const createCustomer = data => new Promise((resolve, reject) => {
-  dataprovider.createCustomer(data)
-    .then((detail) => {
-      resolve(detail);
-      console.log('crateCustomers', detail);
-      // dispatch(Creators.getUserInfoSuccess(data))
-    })
-    .catch((err) => {
-      reject(err);
-      console.log(`error user ${err}`);
-    });
+  const requestApi = () => (
+    dataprovider.createCustomer(data)
+      .then((detail) => {
+        resolve(detail);
+        console.log('crateCustomers', detail);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+  );
+  retryPromise(requestApi, 'createCustomer');
 });
 export const updateCustomer = data => new Promise((resolve, reject) => {
-  dataprovider.updateCustomer(data)
-    .then((detail) => {
-      resolve(detail);
-      console.log('updateCustomers', detail);
-      // dispatch(Creators.getUserInfoSuccess(data))
-    })
-    .catch((err) => {
-      reject(err);
-      console.log(`error user ${err}`);
-    });
+  const requestApi = () => (
+    dataprovider.updateCustomer(data)
+      .then((detail) => {
+        resolve(detail);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+  );
+  retryPromise(requestApi, 'createCustomer');
 });
-export const getCustomers = (offset = 0, cb) => (dispatch, getState) => {
-  dataprovider.getCustomers(offset)
-    .then((data) => {
-      cb(data);
-      console.log('getCustomers', data);
-      // dispatch(Creators.getUserInfoSuccess(data))
-    })
-    .catch((err) => {
-      console.log(`error user ${err}`);
-    });
-};
+export const getCustomers = (offset = 0) => new Promise((resolve, reject) => {
+  const requestApi = () => (
+    dataprovider.getCustomers(offset)
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+  );
+  retryPromise(requestApi, 'getCustomers');
+});
 export const getCustomerDetail = id => new Promise((resolve, reject) => {
-  dataprovider.getCustomerDetail(id)
-    .then((data) => {
-      resolve(data);
-      console.log('getCustomerDetail', data);
-    })
-    .catch((err) => {
-      reject(err);
-      console.log(`error user ${err}`);
-    });
+  const requestApi = () => (
+    dataprovider.getCustomerDetail(id)
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+  );
+  retryPromise(requestApi, 'getCustomerDetail');
 });
-export const searchCustomer = (searchTerm, cb) => new Promise((resolve, reject) => {
-  dataprovider.searchCustomer(searchTerm)
-    .then((data) => {
-      resolve(data);
-      console.log('searchCustomer', data);
-      // dispatch(Creators.getUserInfoSuccess(data))
-    })
-    .catch((err) => {
-      reject(err);
-      console.log(`error user ${err}`);
-    });
+export const searchCustomer = searchTerm => new Promise((resolve, reject) => {
+  const requestApi = () => (
+    dataprovider.searchCustomer(searchTerm)
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(err);
+        console.log(`error user ${err}`);
+      })
+  );
+  retryPromise(requestApi, 'searchCustomer');
 });
 
 /* ------------- Reducers ------------- */

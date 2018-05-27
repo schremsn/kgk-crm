@@ -115,4 +115,7 @@
   "Add lead is error": "Tạo chỉ dẫn thất bại",
   "Mark lead won is success": "Đánh dấu chỉ dẫn thắng thành công",
   "Mark lead lost is success": "Đánh dấu chỉ dẫn thất bị thành công",
+
+  // error
+  "Connection error, data download failed": "Lỗi kết nối, tải dữ liệu không thành công."
 }

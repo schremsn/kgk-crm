@@ -28,9 +28,10 @@ class ProductDetailScreen extends Component {
   }
   componentWillMount() {
     const { productId } = this.props.navigation.state.params;
-    this.props.getProductDetail(productId, (productDetail) => {
-      this.setState({ productDetail });
-    });
+    getProductDetail(productId)
+      .then((productDetail) => {
+        this.setState({ productDetail });
+      });
   }
   renderCard(cardTitle, rowData) {
     return (
@@ -89,11 +90,7 @@ ProductDetailScreen.navigationOptions = {
 };
 ProductDetailScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getProductDetail: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  getProductDetail: (productId, cb) => { dispatch(getProductDetail(productId, cb)); },
-});
 
-export default connect(null, mapDispatchToProps)(ProductDetailScreen);
+export default connect(null, null)(ProductDetailScreen);

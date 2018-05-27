@@ -9,6 +9,7 @@ import styles from '../Styles/ContainerStyles';
 import ProgressBar from '../../Components/ProgressBar';
 import Header from '../../Components/Header';
 import { getCustomers, searchCustomer } from '../../Redux/ContactsRedux';
+import { Metrics } from '../../Themes';
 
 class ContactListScreen extends Component {
   constructor() {
@@ -31,15 +32,16 @@ class ContactListScreen extends Component {
     this.getCustomersList();
   }
   getCustomersList(isRefreshed) {
-    this.props.getCustomers(0, (list) => {
-      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-      const dataSource = ds.cloneWithRows(list);
-      this.setState({
-        list,
-        dataSource,
-        isLoading: false,
+    getCustomers(0)
+      .then((list) => {
+        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+        const dataSource = ds.cloneWithRows(list);
+        this.setState({
+          list,
+          dataSource,
+          isLoading: false,
+        });
       });
-    });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
     }
@@ -126,7 +128,7 @@ class ContactListScreen extends Component {
         </KeyboardAvoidingView>
         {
           isLoading
-            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
+            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} style={{ height: Metrics.screenHeight - 240 }} />
             : <ListView
               style={[styles.mainContainer, { marginBottom: this.props.isModal ? 20 : 60 }]}
               enableEmptySections

@@ -45,6 +45,11 @@ export default StyleSheet.create({
   mainContainerModal: {
     marginBottom: 0,
   },
+  mainContainerHasFormModal: {
+    marginBottom: 120,
+    backgroundColor: Colors.banner,
+    padding: 10,
+  },
   description: {
     marginVertical: Metrics.doubleSection,
   },
@@ -85,8 +90,7 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: Metrics.screenHeight,
-    paddingBottom: 100,
+    height: Metrics.screenHeight
   },
   progressBarLoading: {
     backgroundColor: 'transparent',

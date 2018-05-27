@@ -5,9 +5,10 @@ import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInpu
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from '../Styles/ContainerStyles';
-import { Images, Colors } from '../../Themes/index';
+import { Images, Colors, Metrics } from '../../Themes/index';
 import { getLeadbyStage, searchLead } from '../../Redux/LeadRedux';
 import ProgressBar from '../../Components/ProgressBar';
+import GetDataFailed from '../../Components/GetDataFailed';
 import Header from '../../Components/Header';
 import CircleButton from '../../Components/CircleButton';
 
@@ -15,7 +16,7 @@ class LeadListScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
+      typeShowContent: 'loading',
       isRefreshing: false,
       searchContent: '',
       stageName: props.navigation.state.params.stageName,
@@ -38,15 +39,18 @@ class LeadListScreen extends Component {
         const dataSource = ds.cloneWithRows(list);
         this.setState({
           dataSource,
-          isLoading: false,
+          typeShowContent: 'success',
         });
+      })
+      .catch((e) => {
+        this.setState({ typeShowContent: 'fail' });
       });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
     }
   }
   onRefresh() {
-    this.setState({ isRefreshing: true });
+    this.setState({ isRefreshing: true, typeShowContent: 'loading' });
     this.getLeadsList('isRefreshed');
   }
   renderProduct(item) {
@@ -85,10 +89,51 @@ class LeadListScreen extends Component {
       </View>
     );
   }
+  get renderContent() {
+    const { typeShowContent, dataSource, isRefreshing } = this.state;
+    switch (typeShowContent) {
+      case 'loading':
+        return (
+          <ProgressBar
+            isRefreshing={isRefreshing}
+            onRefresh={this.onRefresh}
+            style={{ height: Metrics.screenHeight - 240 }}
+          />
+        );
+      case 'success':
+        return (
+          <ListView
+            style={styles.mainContainer}
+            enableEmptySections
+            // onEndReached={() => this.getLeadsListNextPage()}
+            onEndReachedThreshold={1200}
+            dataSource={dataSource}
+            renderRow={item => this.renderProduct(item)}
+            renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
+            // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={this.onRefresh}
+                colors={[Colors.fire]}
+                tintColor={Colors.snow}
+                title={`${I18n.t('loading')}...`}
+                titleColor={Colors.snow}
+                progressBackgroundColor={Colors.snow}
+              />
+            }
+          />
+        );
+      case 'fail':
+        return (
+          <GetDataFailed onRefresh={this.onRefresh} />
+        );
+      default:
+        return null;
+    }
+  }
   render() {
-    const {
-      isLoading, isRefreshing, dataSource, stageName,
-    } = this.state;
+    const { stageName } = this.state;
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
@@ -107,29 +152,7 @@ class LeadListScreen extends Component {
           </TouchableOpacity>
         </View>
         {
-          isLoading
-            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
-            : <ListView
-              style={styles.mainContainer}
-              enableEmptySections
-              // onEndReached={() => this.getLeadsListNextPage()}
-              onEndReachedThreshold={1200}
-              dataSource={dataSource}
-              renderRow={item => this.renderProduct(item)}
-              renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-              // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
-              refreshControl={
-                <RefreshControl
-                  refreshing={isRefreshing}
-                  onRefresh={this.onRefresh}
-                  colors={[Colors.fire]}
-                  tintColor={Colors.snow}
-                  title={`${I18n.t('loading')}...`}
-                  titleColor={Colors.snow}
-                  progressBackgroundColor={Colors.snow}
-                />
-              }
-            />
+          this.renderContent
         }
         {
           this.renderAddButton

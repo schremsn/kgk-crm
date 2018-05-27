@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View,
+  Text,
   ActivityIndicator,
   StyleSheet,
   Platform,
@@ -10,9 +11,12 @@ import {
 } from 'react-native';
 import I18n from 'react-native-i18n';
 import { Colors, Metrics } from '../Themes';
+import RoundedButton from './RoundedButton';
 import styles from '../Containers/Styles/ContainerStyles';
 
-const ProgressBar = ({ isRefreshing, onRefresh, isSubmitLoading }) => {
+const ProgressBar = ({
+  isRefreshing, onRefresh, isSubmitLoading, style,
+}) => {
   if (isSubmitLoading) {
     return (
       <View style={[styles.progressBarLoading]}>
@@ -22,7 +26,7 @@ const ProgressBar = ({ isRefreshing, onRefresh, isSubmitLoading }) => {
   }
   return (
     <ScrollView
-      style={styles.mainContainer}
+      style={[styles.mainContainer]}
       showsHorizontalScrollIndicator={false}
       refreshControl={
         <RefreshControl
@@ -36,8 +40,9 @@ const ProgressBar = ({ isRefreshing, onRefresh, isSubmitLoading }) => {
         />
           }
     >
-      <View style={styles.progressBar}>
-        <ActivityIndicator size="large" color={Platform.OS === 'ios' ? 'white' : '#EA0000'} />
+      <View style={[styles.progressBar, style]}>
+         <ActivityIndicator size="large" color={Platform.OS === 'ios' ? 'white' : '#EA0000'} />
+         <Text style={{ color: 'white', fontSize: 17, marginTop: 30}}>Loading...</Text>
       </View>
     </ScrollView>
   );
@@ -46,6 +51,7 @@ const ProgressBar = ({ isRefreshing, onRefresh, isSubmitLoading }) => {
 ProgressBar.propTypes = {
   isRefreshing: PropTypes.bool,
   onRefresh: PropTypes.func,
+  style: PropTypes.object,
   isSubmitLoading: PropTypes.bool,
 };
 
