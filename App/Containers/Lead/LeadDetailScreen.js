@@ -38,7 +38,6 @@ class LeadDetailScreen extends Component {
     this.state = {
       leadDetail: {},
       isShowActions: false,
-      isEdit: false,
       isSelectLostReason: false,
       reasonLost: props.listReasonLost[0],
     };
@@ -156,7 +155,8 @@ class LeadDetailScreen extends Component {
         <View style={styles.boxLeadPhone}>
           <Text style={styles.rowInfo}>{value}</Text>
           {
-            value && <TouchableOpacity
+            value &&
+            <TouchableOpacity
               style={styles.buttonCallPhone}
               onPress={() => this.getPartnerInformation()}
             >

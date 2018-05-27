@@ -123,7 +123,7 @@ class ContactDetailScreen extends Component {
           <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('ContactsEditScreen', { contactDetail: this.state.contactDetail })} />
           <FullButton
             text={I18n.t('Add Lead')}
-            onPress={() => this.props.navigation.navigate('LeadAddScreen', { contactId: this.state.contactDetail.id, contactName: this.state.contactDetail.name })}
+            onPress={() => this.props.navigation.navigate('ContactsLeadAddScreen', { contactId: this.state.contactDetail.id, contactName: this.state.contactDetail.name })}
           />
           <FullButton
             text={I18n.t('Cancel')}

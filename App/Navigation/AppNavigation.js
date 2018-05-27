@@ -73,6 +73,8 @@ const MoreStack = StackNavigator({
   ContactDetailScreen: { screen: ContactDetailScreen },
   ContactsAddScreen: { screen: ContactsAddScreen },
   ContactsEditScreen: { screen: ContactsEditScreen },
+  ContactsLeadAddScreen: { screen: LeadAddScreen },
+
 }, {
   headerMode: 'none',
   initialRouteName: 'MoreScreen',

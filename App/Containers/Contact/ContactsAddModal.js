@@ -148,14 +148,8 @@ class ContactsAddModal extends Component {
           title={I18n.t('Add Contact')}
           onPress={() => { this.props.onShowAddContactModal(false); }}
         />
-        {
-          isLoading &&
-          <View style={[styles.progressBarLoading]}>
-            <ActivityIndicator size="large" color={Platform.OS === 'ios' ? 'white' : Colors.fire} />
-          </View>
-        }
         <KeyboardAwareScrollView
-          style={{ marginBottom: 120, backgroundColor: Colors.banner, padding: 10 }}
+          style={styles.mainContainerHasFormModal}
           innerRef={(ref) => { this.scrollView = ref; }}
         >
           {
@@ -170,6 +164,12 @@ class ContactsAddModal extends Component {
 
           <RoundedButton onPress={this.onPress} styles={{ marginBottom: 20 }} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
+        {
+          isLoading &&
+          <View style={[styles.progressBarLoading]}>
+            <ActivityIndicator size="large" color={Platform.OS === 'ios' ? 'white' : Colors.fire} />
+          </View>
+        }
       </View>
     );
   }
@@ -177,7 +177,7 @@ class ContactsAddModal extends Component {
 
 ContactsAddModal.propTypes = {
   navigation: PropTypes.object.isRequired,
-  onShowAddContactModal: PropTypes.func,
+  onShowAddContactModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

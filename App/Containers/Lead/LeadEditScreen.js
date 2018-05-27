@@ -130,7 +130,7 @@ class LeadEditScreen extends Component {
     const setStageOption = () => {
       const stageOptions = {};
       for (let i = 0; i < leadStages.length; i += 1) {
-        stageOptions[parseInt(leadStages[i].id, 0)] = leadStages[i].name;
+        stageOptions[leadStages[i].id] = leadStages[i].name;
       }
       return stageOptions;
     };

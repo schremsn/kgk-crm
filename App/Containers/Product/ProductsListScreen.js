@@ -8,6 +8,7 @@ import { Images, Colors } from '../../Themes/index';
 import { getProducts } from '../../Redux/ProductRedux';
 import ProgressBar from '../../Components/ProgressBar';
 import Header from '../../Components/Header';
+import { Metrics } from '../../Themes';
 
 class ProductsListScreen extends Component {
   constructor() {
@@ -79,7 +80,7 @@ class ProductsListScreen extends Component {
         />
         {
           isLoading
-            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
+            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} style={{ height: Metrics.screenHeight - 240 }} />
             : <ListView
               style={styles.mainContainer}
               enableEmptySections
