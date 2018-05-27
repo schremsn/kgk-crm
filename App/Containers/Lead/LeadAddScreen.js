@@ -150,7 +150,7 @@ class LeadAddScreen extends Component {
   templateInputCustomer() {
     const value = this.state.customerName;
     return (
-      <Input label={I18n.t('Customer')} value={value} press={() => this.setState({ isModalSearchContact: true })} />
+      <Input label={I18n.t('Customer')} value={value} press={() => { this.setState({ isModalSearchContact: true }); }} />
     );
   }
   templateInputProduct() {
@@ -185,7 +185,6 @@ class LeadAddScreen extends Component {
       >
         <View>
           <ContactsListModal
-            navigation={this.props.navigation}
             onSelectContact={value => this.onSelectContact(value)}
             onShowAddContactModal={value => this.onShowAddContactModal(value)}
           />

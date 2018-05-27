@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { View, Text, TouchableOpacity, RefreshControl, ListView, TextInput, KeyboardAvoidingView } from 'react-native';
 import I18n from 'react-native-i18n';
@@ -29,21 +28,22 @@ class ContactsListModal extends Component {
     this.getCustomersList();
   }
   getCustomersList(isRefreshed) {
-    this.props.getCustomers(0, (list) => {
-      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-      const dataSource = ds.cloneWithRows(list);
-      this.setState({
-        list,
-        dataSource,
-        isLoading: false,
+    getCustomers(0)
+      .then((list) => {
+        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+        const dataSource = ds.cloneWithRows(list);
+        this.setState({
+          list,
+          dataSource,
+          isLoading: false,
+        });
       });
-    });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
     }
   }
   getCustomersListNextPage() {
-    this.props.getCustomers(0, (list) => {
+    getCustomers(0, (list) => {
       const data = this.state.list;
       list.map(item => data.push(item));
       this.setState({
@@ -91,7 +91,7 @@ class ContactsListModal extends Component {
     const { isLoading, isRefreshing, dataSource } = this.state;
     return (
       <View style={[styles.containerModal]}>
-        <KeyboardAvoidingView behavior="height" style={[styles.boxSearch, { marginTop: 20}]}>
+        <KeyboardAvoidingView behavior="height" style={[styles.boxSearch, { marginTop: 20 }]}>
           <TextInput
             style={styles.inputSearch}
             underlineColorAndroid="transparent"
@@ -131,7 +131,7 @@ class ContactsListModal extends Component {
         }
         <TouchableOpacity
           style={[styles.buttonBoxModal, { marginBottom: 250 }]}
-          onPress={() => { this.props.onShowAddContactModal(true);}}
+          onPress={() => { this.props.onShowAddContactModal(true); }}
         >
           <View style={styles.button}>
             <Ionicons name="ios-add-outline" size={25} color={Colors.snow} />
@@ -151,20 +151,10 @@ class ContactsListModal extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  offset: state.contacts.offset,
-});
-
-const mapDispatchToProps = dispatch => ({
-  getCustomers: (offset, cb) => { dispatch(getCustomers(offset, cb)); },
-  searchCustomer: (searchTerm, cb) => { dispatch(searchCustomer(searchTerm, cb)); },
-});
 
 ContactsListModal.propTypes = {
-  navigation: PropTypes.object.isRequired,
-  getCustomers: PropTypes.func.isRequired,
   onSelectContact: PropTypes.func.isRequired,
   onShowAddContactModal: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsListModal);
+export default ContactsListModal;

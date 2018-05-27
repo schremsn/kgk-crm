@@ -4,12 +4,11 @@ import PropTypes from 'prop-types';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput, KeyboardAvoidingView } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Images, Colors } from '../../Themes/index';
+import { Images, Colors, Metrics } from '../../Themes/index';
 import styles from '../Styles/ContainerStyles';
 import ProgressBar from '../../Components/ProgressBar';
 import Header from '../../Components/Header';
 import { getCustomers, searchCustomer } from '../../Redux/ContactsRedux';
-import { Metrics } from '../../Themes';
 
 class ContactListScreen extends Component {
   constructor() {
@@ -17,7 +16,6 @@ class ContactListScreen extends Component {
     this.state = {
       isLoading: true,
       isRefreshing: false,
-      isKeyboard: false,
       searchContent: '',
       list: [],
     };
@@ -47,7 +45,7 @@ class ContactListScreen extends Component {
     }
   }
   getCustomersListNextPage() {
-    this.props.getCustomers(0, (list) => {
+    getCustomers(0, (list) => {
       const data = this.state.list;
       list.map(item => data.push(item));
       this.setState({
@@ -64,7 +62,7 @@ class ContactListScreen extends Component {
   }
   handleSearchLead() {
     const { searchContent } = this.state;
-    if(searchContent.length > 0){
+    if (searchContent.length > 0) {
       searchCustomer(searchContent)
         .then((list) => {
           const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
@@ -72,7 +70,6 @@ class ContactListScreen extends Component {
           this.setState({
             list,
             dataSource,
-            isKeyboard: false
           });
         });
     }
@@ -81,13 +78,7 @@ class ContactListScreen extends Component {
     return (
       <TouchableOpacity
         style={styles.sectionHeaderContainer}
-        onPress={() => {
-          if (this.props.isModal) {
-            this.props.onSelectContact(item);
-          } else {
-            this.props.navigation.navigate('ContactDetailScreen', { contactId: item.id});
-          }
-        }}
+        onPress={() => {this.props.navigation.navigate('ContactDetailScreen', { contactId: item.id });}}
       >
         <Text style={styles.sectionHeader}>{item.id}</Text>
         <Text style={styles.sectionText}>{I18n.t('Company')}: {item.company_name}</Text>
@@ -99,19 +90,15 @@ class ContactListScreen extends Component {
     );
   }
   render() {
-    const { isLoading, isRefreshing, isKeyboard, dataSource } = this.state;
+    const {
+      isLoading, isRefreshing, dataSource,
+    } = this.state;
     return (
       <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header
           title={I18n.t('Contacts')}
-          onPress={() => {
-          if (this.props.isModal) {
-            this.props.onSelectContact(null);
-          } else {
-            this.props.navigation.goBack(null);
-          }
-        }}
+          onPress={() => { this.props.navigation.goBack(null); }}
         />
         <KeyboardAvoidingView behavior="height" style={styles.boxSearch}>
           <TextInput
@@ -130,7 +117,7 @@ class ContactListScreen extends Component {
           isLoading
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} style={{ height: Metrics.screenHeight - 240 }} />
             : <ListView
-              style={[styles.mainContainer, { marginBottom: this.props.isModal ? 20 : 60 }]}
+              style={[styles.mainContainer, { marginBottom: 60 }]}
               enableEmptySections
               // onEndReached={() => this.getCustomersListNextPage()}
               onEndReachedThreshold={1200}
@@ -153,13 +140,7 @@ class ContactListScreen extends Component {
         }
         <TouchableOpacity
           style={[styles.buttonBox]}
-          onPress={() => {
-            if (this.props.isModal) {
-              this.props.onShowAddContactModal(true);
-            } else {
-              this.props.navigation.navigate('ContactsAddScreen');
-            }
-        }}
+          onPress={() => { this.props.navigation.navigate('ContactsAddScreen'); }}
         >
           <View style={styles.button}>
             <Ionicons name="ios-add-outline" size={25} color={Colors.snow} />
@@ -175,16 +156,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getCustomers: (offset, cb) => { dispatch(getCustomers(offset, cb)); },
   searchCustomer: (searchTerm, cb) => { dispatch(searchCustomer(searchTerm, cb)); },
 });
 
 ContactListScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getCustomers: PropTypes.func.isRequired,
-  onSelectContact: PropTypes.func,
-  onShowAddContactModal: PropTypes.func,
-  isModal: PropTypes.bool,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactListScreen);

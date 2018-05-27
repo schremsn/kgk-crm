@@ -11,6 +11,7 @@ import styles, { stylesheet } from '../Styles/ContainerStyles';
 import Header from '../../Components/Header';
 import { createCustomer } from '../../Redux/ContactsRedux';
 import RoundedButton from '../../Components/RoundedButton';
+import Input from '../../Components/Form/Input';
 
 
 const { Form } = t.form;
@@ -25,6 +26,7 @@ class ContactsAddScreen extends Component {
       },
       isLoading: false,
     };
+    this.templateInputNotes = this.templateInputNotes.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onPress = this.onPress.bind(this);
     this.options = {
@@ -75,8 +77,7 @@ class ContactsAddScreen extends Component {
           stylesheet,
         },
         comment: {
-          label: I18n.t('notes'),
-          stylesheet,
+          template: this.templateInputNotes,
         },
         email: {
           label: I18n.t('Email'),
@@ -100,7 +101,7 @@ class ContactsAddScreen extends Component {
       const stateOptions = {};
       const stateLength = states.length;
       for (let i = 0; i < stateLength; i += 1) {
-        stateOptions[states[i].id] = states[i].name;
+        stateOptions[states[i].name] = states[i].name;
       }
       return stateOptions;
     };
@@ -120,6 +121,20 @@ class ContactsAddScreen extends Component {
       comment: t.maybe(t.String),
     });
     this.setState({ type });
+  }
+  templateInputNotes() {
+    const value = this.state.value.comment ? this.state.value.comment : '';
+    return (
+      <Input
+        multiline
+        label={I18n.t('notes')}
+        value={value}
+        press={(text) => {
+          const valueNew = { ...this.state.value, comment: text };
+          this.setState({ value: valueNew });
+        }}
+      />
+    );
   }
   onChange(value) {
     this.setState({ value });

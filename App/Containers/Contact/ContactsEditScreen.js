@@ -10,6 +10,7 @@ import styles, { stylesheet } from '../Styles/ContainerStyles';
 import Header from '../../Components/Header';
 import { updateCustomer } from '../../Redux/ContactsRedux';
 import RoundedButton from '../../Components/RoundedButton';
+import Input from '../../Components/Form/Input';
 
 
 const { Form } = t.form;
@@ -20,7 +21,7 @@ class ContactsEditScreen extends Component {
     const { contactDetail } = props.navigation.state.params;
     this.state = {
       value: {
-        is_company: true,
+        is_company: contactDetail.is_company,
         id: contactDetail.id ? contactDetail.id : null,
         name: contactDetail.name ? contactDetail.name : null,
         identification_id: contactDetail.identification_id ? contactDetail.identification_id : null,
@@ -39,6 +40,7 @@ class ContactsEditScreen extends Component {
     };
     this.onChange = this.onChange.bind(this);
     this.onPress = this.onPress.bind(this);
+    this.templateInputNotes = this.templateInputNotes.bind(this);
     this.options = {
       hasError: true,
       fields: {
@@ -92,8 +94,7 @@ class ContactsEditScreen extends Component {
           stylesheet,
         },
         comment: {
-          label: I18n.t('notes'),
-          stylesheet,
+          template: this.templateInputNotes,
         },
         email: {
           label: I18n.t('Email'),
@@ -138,6 +139,20 @@ class ContactsEditScreen extends Component {
       comment: t.maybe(t.String),
     });
     this.setState({ type });
+  }
+  templateInputNotes() {
+    const value = this.state.value.comment ? this.state.value.comment : '';
+    return (
+      <Input
+        multiline
+        label={I18n.t('notes')}
+        value={value}
+        press={(text) => {
+          const valueNew = { ...this.state.value, comment: text };
+          this.setState({ value: valueNew });
+        }}
+      />
+    );
   }
   onChange(value) {
     this.setState({ value });

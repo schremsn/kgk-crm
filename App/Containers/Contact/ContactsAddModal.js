@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, ActivityIndicator, Image, ToastAndroid, Platform } from 'react-native';
+import { View, ActivityIndicator, ToastAndroid, Platform } from 'react-native';
 import I18n from 'react-native-i18n';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 import t from 'tcomb-form-native';
-import { Images, Colors } from '../../Themes/index';
+import { Colors } from '../../Themes/index';
 import styles, { stylesheet } from '../Styles/ContainerStyles';
 import Header from '../../Components/Header';
 import { createCustomer } from '../../Redux/ContactsRedux';
 import RoundedButton from '../../Components/RoundedButton';
+import Input from '../../Components/Form/Input';
 
 
 const { Form } = t.form;
@@ -25,6 +25,7 @@ class ContactsAddModal extends Component {
       },
       isLoading: false,
     };
+    this.templateInputNotes = this.templateInputNotes.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onPress = this.onPress.bind(this);
     this.options = {
@@ -75,8 +76,7 @@ class ContactsAddModal extends Component {
           stylesheet,
         },
         comment: {
-          label: I18n.t('notes'),
-          stylesheet,
+          template: this.templateInputNotes,
         },
         email: {
           label: I18n.t('Email'),
@@ -120,6 +120,20 @@ class ContactsAddModal extends Component {
       comment: t.maybe(t.String),
     });
     this.setState({ type });
+  }
+  templateInputNotes() {
+    const value = this.state.value.comment ? this.state.value.comment : '';
+    return (
+      <Input
+        multiline
+        label={I18n.t('notes')}
+        value={value}
+        press={(text) => {
+          const valueNew = { ...this.state.value, comment: text };
+          this.setState({ value: valueNew });
+        }}
+      />
+    );
   }
   onChange(value) {
     this.setState({ value });
