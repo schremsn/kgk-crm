@@ -4,19 +4,19 @@ import {
   View,
   Text,
   ActivityIndicator,
-  StyleSheet,
   Platform,
   ScrollView,
   RefreshControl,
+  Animated
 } from 'react-native';
 import I18n from 'react-native-i18n';
 import { Colors, Metrics } from '../Themes';
-import RoundedButton from './RoundedButton';
 import styles from '../Containers/Styles/ContainerStyles';
+import AnimatedLinearGradient, { presetColors } from '../Components/Animate';
+import NativeLinearGradient from 'react-native-linear-gradient';
+import { LinearTextGradient } from 'react-native-text-gradient';
 
-const ProgressBar = ({
-  isRefreshing, onRefresh, isSubmitLoading, style,
-}) => {
+const ProgressBar = ({ isSubmitLoading, style }) => {
   if (isSubmitLoading) {
     return (
       <View style={[styles.progressBarLoading]}>
@@ -25,26 +25,22 @@ const ProgressBar = ({
     );
   }
   return (
-    <ScrollView
-      style={[styles.mainContainer]}
-      showsHorizontalScrollIndicator={false}
-      refreshControl={
-        <RefreshControl
-          refreshing={isRefreshing}
-          onRefresh={onRefresh}
-          colors={[Colors.fire]}
-          tintColor={Colors.snow}
-          title={`${I18n.t('loading')}...`}
-          titleColor={Colors.snow}
-          progressBackgroundColor={Colors.snow}
-        />
-          }
-    >
-      <View style={[styles.progressBar, style]}>
-         <ActivityIndicator size="large" color={Platform.OS === 'ios' ? 'white' : '#EA0000'} />
-         <Text style={{ color: 'white', fontSize: 17, marginTop: 30}}>Loading...</Text>
-      </View>
-    </ScrollView>
+    <View style={[styles.progressBar, style]}>
+      {/*<AnimatedLinearGradient customColors={presetColors.instagram} speed={4000}>*/}
+
+      {/*</AnimatedLinearGradient>*/}
+
+      <ActivityIndicator size="large" color={Platform.OS === 'ios' ? 'white' : '#EA0000'} />
+      <LinearTextGradient
+        style={{ fontWeight: '400', fontSize: 25, marginTop: 25, marginBottom: 60 }}
+        locations={[0, 1]}
+        colors={['red', 'white']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+      >
+        Loading...
+      </LinearTextGradient>
+    </View>
   );
 };
 

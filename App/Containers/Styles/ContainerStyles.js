@@ -41,6 +41,7 @@ export default StyleSheet.create({
   },
   mainContainer: {
     marginBottom: 60,
+    // padding: Metrics.doubleBaseMargin,
   },
   mainContainerModal: {
     marginBottom: 0,
@@ -90,7 +91,7 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    height: Metrics.screenHeight
+    height: Metrics.screenHeight,
   },
   progressBarLoading: {
     backgroundColor: 'transparent',
