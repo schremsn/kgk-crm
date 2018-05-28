@@ -105,7 +105,7 @@ export default class DD {
       'description',
       'lost_reason',
       'zip',
-      'state',
+      'state_id',
       'street',
       'street2',
       'function',
@@ -135,7 +135,7 @@ export default class DD {
       'street2',
       'website',
       'zip',
-      'state',
+      'state_id',
       'identification_id',
     ];
   }
