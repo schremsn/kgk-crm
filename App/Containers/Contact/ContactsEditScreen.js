@@ -129,8 +129,8 @@ class ContactsEditScreen extends Component {
       identification_id: t.maybe(t.String),
       street: t.maybe(t.String),
       street2: t.maybe(t.String),
-      city: t.enums(setStateOption(), 'city'),
-      state: t.maybe(t.String),
+      city: t.maybe(t.String),
+      state: t.enums(setStateOption(), 'state'),
       code_zip: t.maybe(t.Number),
       phone: t.maybe(t.Number),
       mobile: t.maybe(t.Number),
@@ -159,6 +159,7 @@ class ContactsEditScreen extends Component {
   }
   onPress() {
     const value = this.form.getValue();
+    console.log(value)
     if (value) {
       this.setState({ isLoading: true });
       updateCustomer(value)
