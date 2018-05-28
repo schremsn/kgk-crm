@@ -950,13 +950,14 @@ export default class DataProvider {
    * retrieve the commission summary for the user for the specified number of month
    * @param {number} months
    */
-  getCommissionSummary(months = 2) {
+  getCommissionSummary(months = 2, index = 0) {
     const date = new Date();
     date.setDate(date.getDate() - (months * 31));
 
     const params = {
       domain: [['end_date', '>', date], ['sales_agent', '=', this.getUserId()]],
       fields: DD.commissionSummary,
+      offset: index,
     };
 
     return new Promise((resolve, reject) => {
