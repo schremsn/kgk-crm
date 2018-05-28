@@ -290,7 +290,7 @@ export default class DataProvider {
     const params = {
       domain: [
         '&',
-        ['customer', '=', 'true'],
+        ['customer', '=', true],
         '|',
         ['name', 'ilike', searchTerm],
         '|',
@@ -955,7 +955,7 @@ export default class DataProvider {
     date.setDate(date.getDate() - (months * 31));
 
     const params = {
-      domain: [['end_date', '>', date]],
+      domain: [['end_date', '>', date], ['sales_agent', '=', this.getUserId()]],
       fields: DD.commissionSummary,
     };
 
