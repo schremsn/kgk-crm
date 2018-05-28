@@ -21,7 +21,7 @@ const ProgressBar = ({ isSubmitLoading, style }) => {
     <View style={[styles.progressBar, style]}>
       <ActivityIndicator size="large" color={Platform.OS === 'ios' ? 'white' : '#EA0000'} />
       <LinearTextGradient
-        style={style.linearText}
+        style={styles.linearText}
         locations={[0, 1]}
         colors={['red', 'white']}
         start={{ x: 0, y: 0 }}
