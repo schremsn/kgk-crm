@@ -27,6 +27,7 @@ const data = [
   { name: 'street', value: I18n.t('Street') },
   { name: 'street2', value: I18n.t('Street2') },
   { name: 'city', value: I18n.t('City') },
+  { name: 'state', value: I18n.t('Province') },
   { name: 'zip', value: I18n.t('Zip') },
   { name: 'email_from', value: I18n.t('Email') },
   { name: 'description', value: I18n.t('Description') },
@@ -49,6 +50,9 @@ class LeadDetailScreen extends Component {
     this.onMarkLeadLost = this.onMarkLeadLost.bind(this);
   }
   componentWillMount() {
+    this.getLeadDetail()
+  }
+  getLeadDetail(){
     const { leadId } = this.props.navigation.state.params;
     getLead(leadId)
       .then((leadDetail) => {
@@ -185,7 +189,7 @@ class LeadDetailScreen extends Component {
         >
 
           <FullButton text={I18n.t('New lead')} onPress={() => this.props.navigation.navigate('LeadAddScreen')} />
-          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail })} />
+          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail, reloadData: () => { this.getLeadDetail()} })} />
           <FullButton
             text={I18n.t('Log activity')}
             disable

@@ -1,8 +1,8 @@
+import { Alert } from 'react-native';
 import { createReducer, createActions } from 'reduxsauce';
 import Immutable from 'seamless-immutable';
 import DataProvider from '../Lib/dataprovider';
 import ReferenceData from '../Data/referencedata';
-import { Alert } from 'react-native';
 import { getLostReasons } from './LeadRedux';
 import retryPromise from '../Services/Api';
 
@@ -48,17 +48,27 @@ export const getUserInfo = () => (dispatch) => {
   );
   retryPromise(requestApi, 'getUserInfo');
 };
+
+const getStates = (countryId, dispatch) => {
+  const requestApi = () => (
+    dataprovider.getStates(countryId)
+      .then((res) => {
+        dispatch(Creators.getStatesSuccess(res));
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+  );
+  retryPromise(requestApi, 'getStates');
+};
 export const getCompanyInfo = id => (dispatch) => {
   const requestApi = () => (
     dataprovider.getCompanyInfo(id)
       .then((data) => {
-        dataprovider.getStates(data.country_id)
-          .then((res) => {
-            dispatch(Creators.getStatesSuccess(res));
-          });
+        getStates(data.country_id, dispatch);
       })
       .catch((err) => {
-        console.log(`error user ${err}`);
+        throw new Error(err);
       })
   );
   retryPromise(requestApi, 'getCompanyInfo');
@@ -71,7 +81,7 @@ export const getMailChannels = () => (dispatch) => {
         dispatch(Creators.getMailChannelsSuccess(mailChannels));
       })
       .catch((err) => {
-        console.log(`error user ${err}`);
+        throw new Error(err);
       })
   );
   retryPromise(requestApi, 'getMailChannels');

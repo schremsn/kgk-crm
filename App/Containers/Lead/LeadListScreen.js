@@ -16,7 +16,8 @@ class LeadListScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      typeShowContent: 'loading',
+      isFetching: true,
+      isError: false,
       isRefreshing: false,
       searchContent: '',
       stageName: props.navigation.state.params.stageName,
@@ -39,18 +40,18 @@ class LeadListScreen extends Component {
         const dataSource = ds.cloneWithRows(list);
         this.setState({
           dataSource,
-          typeShowContent: 'success',
+          isFetching: false,
         });
       })
-      .catch((e) => {
-        this.setState({ typeShowContent: 'fail' });
+      .catch(() => {
+        this.setState({ isFetching: false, isError: true });
       });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
     }
   }
   onRefresh() {
-    this.setState({ isRefreshing: true, typeShowContent: 'loading' });
+    this.setState({ isRefreshing: true });
     this.getLeadsList('isRefreshed');
   }
   renderProduct(item) {
@@ -89,51 +90,10 @@ class LeadListScreen extends Component {
       </View>
     );
   }
-  get renderContent() {
-    const { typeShowContent, dataSource, isRefreshing } = this.state;
-    switch (typeShowContent) {
-      case 'loading':
-        return (
-          <ProgressBar
-            isRefreshing={isRefreshing}
-            onRefresh={this.onRefresh}
-            style={{ height: Metrics.screenHeight - 240 }}
-          />
-        );
-      case 'success':
-        return (
-          <ListView
-            style={styles.mainContainer}
-            enableEmptySections
-            // onEndReached={() => this.getLeadsListNextPage()}
-            onEndReachedThreshold={1200}
-            dataSource={dataSource}
-            renderRow={item => this.renderProduct(item)}
-            renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-            // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
-            refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                onRefresh={this.onRefresh}
-                colors={[Colors.fire]}
-                tintColor={Colors.snow}
-                title={`${I18n.t('loading')}...`}
-                titleColor={Colors.snow}
-                progressBackgroundColor={Colors.snow}
-              />
-            }
-          />
-        );
-      case 'fail':
-        return (
-          <GetDataFailed onRefresh={this.onRefresh} />
-        );
-      default:
-        return null;
-    }
-  }
   render() {
-    const { stageName } = this.state;
+    const {
+      stageName, isFetching, isRefreshing, isError, dataSource,
+    } = this.state;
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
@@ -152,7 +112,38 @@ class LeadListScreen extends Component {
           </TouchableOpacity>
         </View>
         {
-          this.renderContent
+          isFetching &&
+          <ProgressBar
+            isRefreshing={isRefreshing}
+            onRefresh={this.onRefresh}
+            style={{ height: Metrics.screenHeight - 240 }}
+          />
+        }
+        {
+          isError &&
+          <GetDataFailed onRefresh={this.onRefresh} />
+        }
+        {
+          (!isFetching && !isError) &&
+          <ListView
+            style={styles.mainContainer}
+            enableEmptySections
+            onEndReachedThreshold={1200}
+            dataSource={dataSource}
+            renderRow={item => this.renderProduct(item)}
+            renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={this.onRefresh}
+                colors={[Colors.fire]}
+                tintColor={Colors.snow}
+                title={`${I18n.t('loading')}...`}
+                titleColor={Colors.snow}
+                progressBackgroundColor={Colors.snow}
+              />
+            }
+          />
         }
         {
           this.renderAddButton

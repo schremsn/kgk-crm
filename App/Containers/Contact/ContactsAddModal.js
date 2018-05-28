@@ -74,6 +74,7 @@ class ContactsAddModal extends Component {
         state: {
           label: I18n.t('Province'),
           stylesheet,
+          mode: 'dropdown',
         },
         comment: {
           template: this.templateInputNotes,

@@ -54,6 +54,11 @@ class LeadAddScreen extends Component {
         partner_id: {
           template: this.templateInputCustomer,
         },
+        state: {
+          label: I18n.t('Province'),
+          stylesheet,
+          mode: 'dropdown',
+        },
         stage_id: {
           label: I18n.t('Stage'),
           stylesheet,
@@ -76,7 +81,7 @@ class LeadAddScreen extends Component {
     this.getTypeForm();
   }
   async getTypeForm() {
-    const { leadStages } = this.props;
+    const { leadStages, states } = this.props;
     const setStageOption = () => {
       const stageOptions = {};
       for (let i = 0; i < leadStages.length; i += 1) {
@@ -84,11 +89,20 @@ class LeadAddScreen extends Component {
       }
       return stageOptions;
     };
+    const setStateOption = () => {
+      const stateOptions = {};
+      const stateLength = states.length;
+      for (let i = 0; i < stateLength; i += 1) {
+        stateOptions[states[i].name] = states[i].name;
+      }
+      return stateOptions;
+    };
     const type = t.struct({
       name: t.String,
       partner_id: t.Number,
       product: t.Number,
-      stage_id: t.enums(setStageOption(), 'dropdown'),
+      state: t.enums(setStateOption(), 'province'),
+      stage_id: t.enums(setStageOption(), 'stage_id'),
       description: t.maybe(t.String),
     });
     this.setState({ type });
@@ -279,6 +293,7 @@ LeadAddScreen.propTypes = {
 };
 const mapStateToProps = state => ({
   leadStages: state.lead.list,
+  states: state.auth.states,
 });
 
 export default connect(mapStateToProps, null)(LeadAddScreen);

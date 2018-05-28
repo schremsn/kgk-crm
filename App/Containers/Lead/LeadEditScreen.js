@@ -99,6 +99,11 @@ class LeadEditScreen extends Component {
           label: I18n.t('City'),
           stylesheet,
         },
+        state: {
+          label: I18n.t('Province'),
+          stylesheet,
+          mode: 'dropdown',
+        },
         zip: {
           label: I18n.t('Zip'),
           stylesheet,
@@ -153,7 +158,8 @@ class LeadEditScreen extends Component {
       mobile: t.maybe(t.String),
       street: t.maybe(t.String),
       street2: t.maybe(t.String),
-      city: t.enums(setStateOption(), 'city'),
+      city: t.String,
+      state: t.enums(setStateOption(), 'province'),
       zip: t.maybe(t.String),
       email_from: t.maybe(t.String),
       description: t.maybe(t.String),
@@ -178,20 +184,17 @@ class LeadEditScreen extends Component {
     }
   }
   onPress() {
-    const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
-    if (value) {
+    if (this.form.getValue()) {
+      const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
       this.setState({ isLoading: true });
       updateLead(value)
         .then(() => {
-          setTimeout(() => {
-            this.setState({ isLoading: false });
-            this.props.navigation.replace('LeadDetailScreen', { leadId: value.id });
-          }, 1000);
+          this.setState({ isLoading: false });
+          this.props.navigation.goBack(null);
+          this.props.navigation.state.params.reloadData();
         })
         .catch(() => {
-          setTimeout(() => {
-            this.setState({ isLoading: false });
-          }, 1000);
+          this.setState({ isLoading: false });
         });
     }
   }
