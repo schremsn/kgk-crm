@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
 import I18n from 'react-native-i18n';
 import moment from 'moment';
 import { Images, Colors } from '../../Themes/index';
@@ -28,7 +28,6 @@ class CommissionStatusListScreen extends Component {
     this.getCommissionStatusList();
   }
   getCommissionStatusList(isRefreshed) {
-    console.log(this.state.offset);
     getCommissionStatus(this.state.offset)
       .then(({ list, newOffset }) => {
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
@@ -45,7 +44,6 @@ class CommissionStatusListScreen extends Component {
     }
   }
   getCommissionStatusListNextPage() {
-    console.log(this.state.offset);
     getCommissionStatus(this.state.offset)
       .then(({ list, newOffset }) => {
         const data = this.state.list;

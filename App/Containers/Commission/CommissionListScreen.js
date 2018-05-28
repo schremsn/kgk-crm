@@ -15,10 +15,8 @@ class CommissionListScreen extends Component {
     this.state = {
       isLoading: true,
       isRefreshing: false,
-      offset: 2,
     };
     this.getCommissionList = this.getCommissionList.bind(this);
-    this.getCommissionListNextPage = this.getCommissionListNextPage.bind(this);
     this.renderCommission = this.renderCommission.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
     this.handleBackAndroid = this.handleBackAndroid.bind(this);
@@ -99,7 +97,7 @@ class CommissionListScreen extends Component {
     }
   }
   getCommissionList(isRefreshed) {
-    getCommissionSummary(2)
+    getCommissionSummary()
       .then((list) => {
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
         const dataSource = ds.cloneWithRows(list);
