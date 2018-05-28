@@ -99,30 +99,16 @@ class CommissionListScreen extends Component {
     }
   }
   getCommissionList(isRefreshed) {
-    getCommissionSummary(this.state.offset)
-      .then((list, offset) => {
+    getCommissionSummary(2)
+      .then((list) => {
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
         const dataSource = ds.cloneWithRows(list);
         this.setState({
-          list,
-          offset,
           dataSource,
           isLoading: false,
         });
       });
     if (isRefreshed && this.setState({ isRefreshing: false }));
-  }
-  getCommissionListNextPage() {
-    console.log(this.state.offset)
-    getCommissionSummary(this.state.offset)
-      .then((list, offset) => {
-        const data = this.state.list;
-        list.map(item => data.push(item));
-        this.setState({
-          offset,
-          dataSource: this.state.dataSource.cloneWithRows(data),
-        });
-    });
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
@@ -149,12 +135,9 @@ class CommissionListScreen extends Component {
             : <ListView
               style={styles.mainContainer}
               enableEmptySections
-              onEndReached={() => this.getCommissionListNextPage()}
-              onEndReachedThreshold={1200}
               dataSource={dataSource}
               renderRow={item => this.renderCommission(item)}
               renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-              // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
               refreshControl={
                 <RefreshControl
                   refreshing={isRefreshing}
