@@ -19,12 +19,6 @@ const listActions = [
     name: I18n.t('Contacts'),
     routeName: 'ContactsListScreen',
   },
-  {
-    name: I18n.t('account'),
-    routeName: 'ProductsListScreen',
-  },
-
-
 ];
 
 export default class MoreScreen extends Component {
