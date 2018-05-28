@@ -159,14 +159,14 @@ class ContactsEditScreen extends Component {
   }
   onPress() {
     const value = this.form.getValue();
-    console.log(value)
     if (value) {
       this.setState({ isLoading: true });
       updateCustomer(value)
         .then(() => {
           this.setState({ isLoading: false });
           ToastAndroid.show(I18n.t('Update contacts is success'), ToastAndroid.SHORT);
-          this.props.navigation.replace('ContactDetailScreen', { contactId: this.props.navigation.state.params.contactDetail.id });
+          this.props.navigation.goBack(null);
+          this.props.navigation.state.params.reloadData();
         })
         .catch(() => {
           this.setState({ isLoading: false });

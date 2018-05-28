@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, ScrollView, Text, Image, TouchableOpacity, Alert, TouchableHighlight, KeyboardAvoidingView } from 'react-native';
+import { View, ScrollView, Text, Image, TouchableOpacity, Alert, TouchableHighlight, KeyboardAvoidingView, RefreshControl } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
@@ -37,17 +37,26 @@ class ContactDetailScreen extends Component {
     this.state = {
       contactDetail: {},
       isShowActions: false,
+      isRefreshing: false,
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
     this.renderListActions = this.renderListActions.bind(this);
+    this.onRefresh = this.onRefresh.bind(this);
   }
   componentWillMount() {
+    this.getContactDetail();
+  }
+  getContactDetail(isRefreshed){
     const { contactId } = this.props.navigation.state.params;
     getCustomerDetail(contactId)
       .then((result) => {
+        console.log(result)
         this.setState({ contactDetail: result[0] });
       });
+    if (isRefreshed) {
+      this.setState({ isRefreshing: false });
+    }
   }
   onCallPhone(phone) {
     Alert.alert(
@@ -120,7 +129,7 @@ class ContactDetailScreen extends Component {
           style={styles.boxActionContent}
         >
           <FullButton text={I18n.t('Add Contact')} onPress={() => this.props.navigation.navigate('ContactsAddScreen')} />
-          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('ContactsEditScreen', { contactDetail: this.state.contactDetail })} />
+          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('ContactsEditScreen', { contactDetail: this.state.contactDetail, reloadData: () => { this.getContactDetail()} })} />
           <FullButton
             text={I18n.t('Add Lead')}
             onPress={() => this.props.navigation.navigate('ContactsLeadAddScreen', { contactId: this.state.contactDetail.id, contactName: this.state.contactDetail.name })}
@@ -133,13 +142,30 @@ class ContactDetailScreen extends Component {
       </TouchableHighlight>
     );
   }
+  onRefresh() {
+    this.setState({ isRefreshing: true });
+    this.getContactDetail('isRefreshed');
+  }
   render() {
-    const { contactDetail, isShowActions } = this.state;
+    const { contactDetail, isShowActions, isRefreshing } = this.state;
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title={I18n.t('Contact Detail')} onPress={() => this.props.navigation.goBack(null)} />
-        <ScrollView style={[styles.mainContainer]}>
+        <ScrollView
+          style={[styles.mainContainer]}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={this.onRefresh}
+              colors={[Colors.fire]}
+              tintColor={Colors.snow}
+              title={`${I18n.t('loading')}...`}
+              titleColor={Colors.snow}
+              progressBackgroundColor={Colors.snow}
+            />
+          }
+        >
           {contactDetail.id && this.renderCard('Lead Information', contactDetail)}
         </ScrollView>
         {
