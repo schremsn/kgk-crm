@@ -331,5 +331,10 @@ export default StyleSheet.create({
     borderBottomRightRadius: 4,
     backgroundColor: 'white',
   },
-
+  linearText: {
+    fontWeight: '400',
+    fontSize: 25,
+    marginTop: 25,
+    marginBottom: 60,
+  },
 });
