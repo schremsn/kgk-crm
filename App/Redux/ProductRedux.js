@@ -1,6 +1,7 @@
 import { createReducer, createActions } from 'reduxsauce';
 import Immutable from 'seamless-immutable';
 import DataProvider from '../Lib/dataprovider';
+import retryPromise from '../Services/Api';
 
 const dataprovider = DataProvider.getInstance();
 
@@ -29,25 +30,30 @@ export const initState = () => (dispatch) => {
 };
 
 export const getProducts = (offset, cb) => (dispatch, getState) => {
-  console.log(getState);
-  dataprovider.getProducts(offset)
-    .then((list) => {
-      dispatch(Creators.productSuccess(list, offset));
-      if (cb) { cb(list); }
-    })
-    .catch(() => {
-      dispatch(Creators.productFailure());
-    });
+  const requestApi = () => (
+    dataprovider.getProducts(offset)
+      .then((list) => {
+        dispatch(Creators.productSuccess(list, offset));
+        if (cb) { cb(list); }
+      })
+      .catch(() => {
+        dispatch(Creators.productFailure());
+      })
+  );
+  retryPromise(requestApi, 'getProducts');
 };
-export const getProductDetail = (productId, cb) => () => {
-  dataprovider.getProductDetail(productId)
-    .then((detail) => {
-      if (cb) { cb(detail[0]); }
-    })
-    .catch(() => {
-
-    });
-};
+export const getProductDetail = productId => new Promise((resolve, reject) => {
+  const requestApi = () => (
+    dataprovider.getProductDetail(productId)
+      .then((detail) => {
+        resolve(detail[0]);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+  );
+  retryPromise(requestApi, 'getProductDetail');
+});
 
 
 /* ------------- Reducers ------------- */

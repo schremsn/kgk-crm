@@ -7,13 +7,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
 import * as Animatable from 'react-native-animatable';
 import Toast from 'react-native-easy-toast';
-import styles from './Styles/ContainerStyles';
-import { Images, Colors } from './../Themes';
-import { getLead, markLeadWon, markLeadLost } from '../Redux/LeadRedux';
-import Header from '../Components/Header';
+import styles from '../Styles/ContainerStyles';
+import { Images, Colors } from '../../Themes/index';
+import { getLead, markLeadWon, markLeadLost, getLeadStatus } from '../../Redux/LeadRedux';
+import Header from '../../Components/Header';
 
-import FullButton from '../Components/FullButton';
-import RoundedButton from '../Components/RoundedButton';
+import FullButton from '../../Components/FullButton';
+import RoundedButton from '../../Components/RoundedButton';
 
 const data = [
   { name: 'id', value: I18n.t('id') },
@@ -27,6 +27,7 @@ const data = [
   { name: 'street', value: I18n.t('Street') },
   { name: 'street2', value: I18n.t('Street2') },
   { name: 'city', value: I18n.t('City') },
+  { name: 'state', value: I18n.t('Province') },
   { name: 'zip', value: I18n.t('Zip') },
   { name: 'email_from', value: I18n.t('Email') },
   { name: 'description', value: I18n.t('Description') },
@@ -38,7 +39,6 @@ class LeadDetailScreen extends Component {
     this.state = {
       leadDetail: {},
       isShowActions: false,
-      isEdit: false,
       isSelectLostReason: false,
       reasonLost: props.listReasonLost[0],
     };
@@ -50,10 +50,12 @@ class LeadDetailScreen extends Component {
     this.onMarkLeadLost = this.onMarkLeadLost.bind(this);
   }
   componentWillMount() {
+    this.getLeadDetail()
+  }
+  getLeadDetail(){
     const { leadId } = this.props.navigation.state.params;
     getLead(leadId)
       .then((leadDetail) => {
-        console.log(leadDetail)
         this.setState({ leadDetail: leadDetail[0] });
       });
   }
@@ -75,6 +77,12 @@ class LeadDetailScreen extends Component {
         },
       ],
     );
+  }
+  getPartnerInformation() {
+    getLeadStatus(this.state.leadDetail.id)
+      .then((res) => {
+        this.props.navigation.navigate('LeadCommissionStatusDetailScreen', { commissionDetail: res[0] });
+      });
   }
   onMarkLeadWon(lead) {
     markLeadWon(lead)
@@ -98,17 +106,6 @@ class LeadDetailScreen extends Component {
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         {this.renderRows(rowData)}
-        {
-          this.state.isEdit &&
-          <View style={styles.boxButtons}>
-            <RoundedButton
-              onPress={() => this.setState({ isEdit: false })}
-              text={I18n.t('Cancel')}
-              styles={{ width: '49%', backgroundColor: Colors.frost }}
-            />
-            <RoundedButton onPress={this.onPress} text={I18n.t('Save')} styles={{ width: '49%' }} />
-          </View>
-        }
       </KeyboardAvoidingView>
     );
   }
@@ -121,28 +118,59 @@ class LeadDetailScreen extends Component {
           </View>
           <View style={styles.rowInfoContainer}>
             {
-              item.name === 'stage_id' || item.name === 'product'
-                ? <Text style={styles.rowInfo}>{rowData[item.name][1]}</Text>
-                : (item.name === 'phone' || item.name === 'mobile')
-                ?
-                  <View style={styles.boxLeadPhone}>
-                    <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
-                    {
-                    rowData[item.name] &&
-                    <TouchableOpacity
-                      style={styles.buttonCallPhone}
-                      onPress={() => this.onCallPhone(rowData[item.name])}
-                    >
-                      <Ionicons name="ios-call-outline" size={25} color={Colors.banner} />
-                    </TouchableOpacity>
-                  }
-                  </View>
-                : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
+              this.renderField(item.name, rowData[item.name])
             }
           </View>
 
         </View>))
     );
+  }
+  renderField(name, value) {
+    switch (name) {
+      case 'phone': return (
+        <View style={styles.boxLeadPhone}>
+          <Text style={styles.rowInfo}>{value}</Text>
+          {
+            value &&
+            <TouchableOpacity
+              style={styles.buttonCallPhone}
+              onPress={() => this.onCallPhone(value)}
+            >
+              <Ionicons name="ios-call-outline" size={25} color={Colors.banner} />
+            </TouchableOpacity>
+          }
+        </View>
+      );
+      case 'mobile': return (
+        <View style={styles.boxLeadPhone}>
+          <Text style={styles.rowInfo}>{value}</Text>
+          {
+            value &&
+            <TouchableOpacity
+              style={styles.buttonCallPhone}
+              onPress={() => this.onCallPhone(value)}
+            >
+              <Ionicons name="ios-call-outline" size={25} color={Colors.banner} />
+            </TouchableOpacity>
+          }
+        </View>
+      );
+      case 'external_status': return (
+        <View style={styles.boxLeadPhone}>
+          <Text style={styles.rowInfo}>{value}</Text>
+          {
+            value &&
+            <TouchableOpacity
+              style={styles.buttonCallPhone}
+              onPress={() => this.getPartnerInformation()}
+            >
+              <Ionicons name="ios-information-circle-outline" size={25} color={Colors.banner} />
+            </TouchableOpacity>
+          }
+        </View>
+      );
+      default: return (<Text style={styles.rowInfo}>{typeof (value) === 'object' ? value[1] : value} </Text>);
+    }
   }
   renderListActions() {
     return (
@@ -161,7 +189,7 @@ class LeadDetailScreen extends Component {
         >
 
           <FullButton text={I18n.t('New lead')} onPress={() => this.props.navigation.navigate('LeadAddScreen')} />
-          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail })} />
+          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail, reloadData: () => { this.getLeadDetail()} })} />
           <FullButton
             text={I18n.t('Log activity')}
             disable
@@ -196,7 +224,7 @@ class LeadDetailScreen extends Component {
             selectedValue={this.state.reasonLost}
             style={{ height: 50, width: '100%' }}
             mode="dropdown"
-            onValueChange={(itemValue) => this.setState({ reasonLost: itemValue })}
+            onValueChange={itemValue => this.setState({ reasonLost: itemValue })}
           >
             {
               this.props.listReasonLost.map(item => (
@@ -217,14 +245,20 @@ class LeadDetailScreen extends Component {
     );
   }
   render() {
-    const {
-      leadDetail, isShowActions, isEdit, isSelectLostReason,
-    } = this.state;
+    const { leadDetail, isShowActions, isSelectLostReason } = this.state;
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('lead detail')} onPress={() => this.props.navigation.navigate('LeadListScreen', { stageId: leadDetail.stage_id[0], stageName: leadDetail.stage_id[1] })} />
-
+        <Header
+          title={I18n.t('lead detail')}
+          onPress={() => {
+            if (leadDetail.stage_id[0]) {
+              this.props.navigation.navigate('LeadListScreen', { stageId: leadDetail.stage_id[0], stageName: leadDetail.stage_id[1] });
+            } else {
+              this.props.navigation.navigate('LeadStagesScreen');
+            }
+          }}
+        />
         <ScrollView style={[styles.mainContainer]}>
           {leadDetail.id && this.renderCard('Lead Information', leadDetail)}
         </ScrollView>
@@ -235,7 +269,7 @@ class LeadDetailScreen extends Component {
           isSelectLostReason && this.renderSelectLostReason()
         }
         {
-          (!isShowActions || !isEdit) &&
+          (!isShowActions) &&
           <TouchableOpacity
             style={[styles.buttonBox]}
             onPress={() => this.setState({ isShowActions: true })}

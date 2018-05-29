@@ -4,10 +4,10 @@ import { View, ScrollView, Text, Image, Linking } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import MyWebView from 'react-native-webview-autoheight';
-import styles from './Styles/ContainerStyles';
-import { Images, Metrics } from './../Themes';
-import { getProductDetail } from '../Redux/ProductRedux';
-import Header from '../Components/Header';
+import styles from '../Styles/ContainerStyles';
+import { Images, Metrics } from '../../Themes/index';
+import { getProductDetail } from '../../Redux/ProductRedux';
+import Header from '../../Components/Header';
 
 const customStyle = '<style>* {max-width: 100% } body {font-family: sans-serif;} h1 {color: red;}</style>';
 
@@ -28,9 +28,10 @@ class ProductDetailScreen extends Component {
   }
   componentWillMount() {
     const { productId } = this.props.navigation.state.params;
-    this.props.getProductDetail(productId, (productDetail) => {
-      this.setState({ productDetail });
-    });
+    getProductDetail(productId)
+      .then((productDetail) => {
+        this.setState({ productDetail });
+      });
   }
   renderCard(cardTitle, rowData) {
     return (
@@ -89,11 +90,7 @@ ProductDetailScreen.navigationOptions = {
 };
 ProductDetailScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getProductDetail: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  getProductDetail: (productId, cb) => { dispatch(getProductDetail(productId, cb)); },
-});
 
-export default connect(null, mapDispatchToProps)(ProductDetailScreen);
+export default connect(null, null)(ProductDetailScreen);

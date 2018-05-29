@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
 import I18n from 'react-native-i18n';
-import styles from './Styles/ContainerStyles';
-import { Images, Colors } from './../Themes';
-import { getProducts } from '../Redux/ProductRedux';
-import ProgressBar from '../Components/ProgressBar';
-import Header from '../Components/Header';
+import styles from '../Styles/ContainerStyles';
+import { Images, Colors } from '../../Themes/index';
+import { getProducts } from '../../Redux/ProductRedux';
+import ProgressBar from '../../Components/ProgressBar';
+import Header from '../../Components/Header';
+import { Metrics } from '../../Themes';
 
 class ProductsListScreen extends Component {
   constructor() {
@@ -54,13 +55,7 @@ class ProductsListScreen extends Component {
   renderProduct(item) {
     return (
       <TouchableOpacity
-        onPress={() => {
-       if (this.props.isModal) {
-         this.props.onSelectProduct(item);
-       } else {
-         this.props.navigation.navigate('ProductDetailScreen', { productId: item.id });
-       }
-      }}
+        onPress={() => { this.props.navigation.navigate('ProductDetailScreen', { productId: item.id });}}
         style={styles.sectionHeaderContainer}
       >
         <Text style={styles.sectionHeader}>{item.name}</Text>
@@ -81,17 +76,11 @@ class ProductsListScreen extends Component {
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header
           title={I18n.t('product list')}
-          onPress={() => {
-          if (this.props.isModal) {
-            this.props.onSelectProduct(null);
-          } else {
-            this.props.navigation.goBack(null);
-          }
-        }}
+          onPress={() => { this.props.navigation.goBack(null); }}
         />
         {
           isLoading
-            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
+            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} style={{ height: Metrics.screenHeight - 240 }} />
             : <ListView
               style={styles.mainContainer}
               enableEmptySections
@@ -126,8 +115,6 @@ ProductsListScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   getProducts: PropTypes.func.isRequired,
   offset: PropTypes.number.isRequired,
-  isModal: PropTypes.bool,
-  onSelectProduct: PropTypes.func,
 };
 
 const mapStateToProps = state => ({

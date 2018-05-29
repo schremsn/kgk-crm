@@ -18,6 +18,13 @@ const ApplicationStyles = {
       bottom: 0,
       right: 0,
     },
+    backgroundImageModal: {
+      position: 'absolute',
+      top: -5,
+      left: 10,
+      bottom: 0,
+      right: 20,
+    },
     container: {
       flex: 1,
       paddingTop: Metrics.baseMargin,

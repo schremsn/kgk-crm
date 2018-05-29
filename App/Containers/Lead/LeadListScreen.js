@@ -4,18 +4,20 @@ import { connect } from 'react-redux';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import styles from './Styles/ContainerStyles';
-import { Images, Colors } from './../Themes';
-import { getLeadbyStage, searchLead } from '../Redux/LeadRedux';
-import ProgressBar from '../Components/ProgressBar';
-import Header from '../Components/Header';
-import CircleButton from '../Components/CircleButton';
+import styles from '../Styles/ContainerStyles';
+import { Images, Colors, Metrics } from '../../Themes/index';
+import { getLeadbyStage, searchLead } from '../../Redux/LeadRedux';
+import ProgressBar from '../../Components/ProgressBar';
+import GetDataFailed from '../../Components/GetDataFailed';
+import Header from '../../Components/Header';
+import CircleButton from '../../Components/CircleButton';
 
 class LeadListScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
+      isFetching: true,
+      isError: false,
       isRefreshing: false,
       searchContent: '',
       stageName: props.navigation.state.params.stageName,
@@ -38,8 +40,11 @@ class LeadListScreen extends Component {
         const dataSource = ds.cloneWithRows(list);
         this.setState({
           dataSource,
-          isLoading: false,
+          isFetching: false,
         });
+      })
+      .catch(() => {
+        this.setState({ isFetching: false, isError: true });
       });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
@@ -87,7 +92,7 @@ class LeadListScreen extends Component {
   }
   render() {
     const {
-      isLoading, isRefreshing, dataSource, stageName,
+      stageName, isFetching, isRefreshing, isError, dataSource,
     } = this.state;
     return (
       <View style={styles.container}>
@@ -107,29 +112,38 @@ class LeadListScreen extends Component {
           </TouchableOpacity>
         </View>
         {
-          isLoading
-            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
-            : <ListView
-              style={styles.mainContainer}
-              enableEmptySections
-              // onEndReached={() => this.getLeadsListNextPage()}
-              onEndReachedThreshold={1200}
-              dataSource={dataSource}
-              renderRow={item => this.renderProduct(item)}
-              renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-              // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
-              refreshControl={
-                <RefreshControl
-                  refreshing={isRefreshing}
-                  onRefresh={this.onRefresh}
-                  colors={[Colors.fire]}
-                  tintColor={Colors.snow}
-                  title={`${I18n.t('loading')}...`}
-                  titleColor={Colors.snow}
-                  progressBackgroundColor={Colors.snow}
-                />
-              }
-            />
+          isFetching &&
+          <ProgressBar
+            isRefreshing={isRefreshing}
+            onRefresh={this.onRefresh}
+            style={{ height: Metrics.screenHeight - 240 }}
+          />
+        }
+        {
+          isError &&
+          <GetDataFailed onRefresh={this.onRefresh} />
+        }
+        {
+          (!isFetching && !isError) &&
+          <ListView
+            style={styles.mainContainer}
+            enableEmptySections
+            onEndReachedThreshold={1200}
+            dataSource={dataSource}
+            renderRow={item => this.renderProduct(item)}
+            renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={this.onRefresh}
+                colors={[Colors.fire]}
+                tintColor={Colors.snow}
+                title={`${I18n.t('loading')}...`}
+                titleColor={Colors.snow}
+                progressBackgroundColor={Colors.snow}
+              />
+            }
+          />
         }
         {
           this.renderAddButton

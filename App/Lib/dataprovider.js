@@ -1,6 +1,6 @@
-import Odoo from './odoo';
-import Config from './config';
 import DD from '../Data/datadictionary';
+import Config from './config';
+import Odoo from './odoo';
 
 /**
  * instance variable for singleton
@@ -144,6 +144,33 @@ export default class DataProvider {
   }
 
   /**
+   * retrieve the linked commission status for the lead
+   * @param {number} id
+   */
+  getLeadStatus(id) {
+    if ((id === undefined) || (!Number.isInteger(id))) {
+      throw new Error('invalid lead id');
+    }
+
+    const params = {
+      domain: [['lead_id', '=', id]],
+      fields: DD.commissionStatus,
+      limit: maxRecords,
+      order: 'id asc',
+    };
+
+    return new Promise((resolve, reject) => {
+      this.odoo.search_read('commission.status', params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  /**
    * create a new customer based on the data provided data, which needs to be a dictionary
    * @param {any} customer
    */
@@ -151,6 +178,9 @@ export default class DataProvider {
     if (customer === undefined) {
       throw new Error('No customer provided');
     }
+    // assign current user as sales person
+    customer.user_id = this.getUserId();
+
     return new Promise((resolve, reject) => {
       this.odoo.create('res.partner', customer, (err, data) => {
         if (err) {
@@ -260,7 +290,7 @@ export default class DataProvider {
     const params = {
       domain: [
         '&',
-        ['customer', '=', 'true'],
+        ['customer', '=', true],
         '|',
         ['name', 'ilike', searchTerm],
         '|',
@@ -920,13 +950,14 @@ export default class DataProvider {
    * retrieve the commission summary for the user for the specified number of month
    * @param {number} months
    */
-  getCommissionSummary(months = 2) {
+  getCommissionSummary(months = 2, index = 0) {
     const date = new Date();
     date.setDate(date.getDate() - (months * 31));
 
     const params = {
-      domain: [['end_date', '>', date]],
+      domain: [['end_date', '>', date], ['sales_agent', '=', this.getUserId()]],
       fields: DD.commissionSummary,
+      offset: index,
     };
 
     return new Promise((resolve, reject) => {
@@ -1063,6 +1094,9 @@ export default class DataProvider {
   }
 
 
+  /**
+   * get predefined reasons codes for marking a lead lost
+   */
   getLostReasons() {
     const params = {
       fields: DD.reason,
@@ -1071,6 +1105,28 @@ export default class DataProvider {
 
     return new Promise((resolve, reject) => {
       this.odoo.search_read('crm.lost.reason', params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  /**
+   * retrieve the states for the country
+   * @param {number} countryId
+   */
+  getStates(countryId = 241) {
+    const params = {
+      domain: [['country_id', '=', countryId]],
+      fields: DD.state,
+      order: 'name',
+    };
+
+    return new Promise((resolve, reject) => {
+      this.odoo.search_read('res.country.state', params, (err, data) => {
         if (err) {
           reject(err);
         } else {

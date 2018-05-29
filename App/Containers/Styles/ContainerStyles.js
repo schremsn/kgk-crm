@@ -32,8 +32,24 @@ export default StyleSheet.create({
   containerHasForm: {
     padding: Metrics.doubleBaseMargin,
   },
+  containerModal: {
+    paddingHorizontal: Metrics.doubleBaseMargin,
+    // marginHorizontal: Metrics.doubleBaseMargin,
+    backgroundColor: Colors.banner,
+    opacity: 0.9,
+    borderRadius: 4,
+  },
   mainContainer: {
     marginBottom: 60,
+    // padding: Metrics.doubleBaseMargin,
+  },
+  mainContainerModal: {
+    marginBottom: 0,
+  },
+  mainContainerHasFormModal: {
+    marginBottom: 120,
+    backgroundColor: Colors.banner,
+    padding: 10,
   },
   description: {
     marginVertical: Metrics.doubleSection,
@@ -48,6 +64,24 @@ export default StyleSheet.create({
     padding: Metrics.baseMargin,
     marginBottom: 20,
   },
+  sectionHeaderContainerModal: {
+    // borderWidth: 1,
+    // borderColor: Colors.border,
+    padding: Metrics.baseMargin,
+    marginBottom: 20,
+    backgroundColor: 'white',
+    borderRadius: 4,
+  },
+  sectionHeaderModal: {
+    ...Fonts.style.h5,
+    color: Colors.fire,
+  },
+  sectionTextModal: {
+    ...Fonts.base,
+    color: Colors.banner,
+    fontSize: 14,
+    lineHeight: Metrics.doubleBaseMargin + 5,
+  },
   sectionImage: {
     alignItems: 'center',
     padding: 15,
@@ -57,8 +91,7 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: Metrics.screenHeight,
-    paddingBottom: 100,
+    height: Metrics.screenHeight,
   },
   progressBarLoading: {
     backgroundColor: 'transparent',
@@ -82,6 +115,14 @@ export default StyleSheet.create({
     position: 'absolute',
     right: 30,
     bottom: 100,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  buttonBoxModal: {
+    position: 'absolute',
+    right: 30,
+    bottom: 30,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -129,8 +170,7 @@ export default StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     borderColor: Colors.windowTint,
-    borderWidth: 0.5,
-    borderRadius: 2,
+    borderWidth: 0.1,
   },
   rowLabelContainer: {
     flex: 1,
@@ -282,7 +322,7 @@ export default StyleSheet.create({
   iconInputFormCustom: {
     position: 'absolute',
     height: 45,
-    top: 33,
+    top: 10,
     justifyContent: 'center',
     alignItems: 'center',
     width: 45,
@@ -291,5 +331,10 @@ export default StyleSheet.create({
     borderBottomRightRadius: 4,
     backgroundColor: 'white',
   },
-
+  linearText: {
+    fontWeight: '400',
+    fontSize: 25,
+    marginTop: 25,
+    marginBottom: 60,
+  },
 });

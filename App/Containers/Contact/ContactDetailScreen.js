@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, ScrollView, Text, Image, TouchableOpacity, Alert, TouchableHighlight, TextInput, KeyboardAvoidingView, Picker } from 'react-native';
+import { View, ScrollView, Text, Image, TouchableOpacity, Alert, TouchableHighlight, KeyboardAvoidingView, RefreshControl } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
 import * as Animatable from 'react-native-animatable';
 import Toast from 'react-native-easy-toast';
-import styles from './Styles/ContainerStyles';
-import { Images, Colors } from './../Themes';
-import { getCustomerDetail } from '../Redux/ContactsRedux';
-import Header from '../Components/Header';
-
-import FullButton from '../Components/FullButton';
-import RoundedButton from '../Components/RoundedButton';
+import styles from '../Styles/ContainerStyles';
+import { Images, Colors } from '../../Themes/index';
+import { getCustomerDetail } from '../../Redux/ContactsRedux';
+import Header from '../../Components/Header';
+import FullButton from '../../Components/FullButton';
 
 const data = [
   { name: 'id', value: I18n.t('id') },
@@ -39,23 +37,30 @@ class ContactDetailScreen extends Component {
     this.state = {
       contactDetail: {},
       isShowActions: false,
-      isEdit: false,
+      isRefreshing: false,
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
     this.renderListActions = this.renderListActions.bind(this);
+    this.onRefresh = this.onRefresh.bind(this);
   }
   componentWillMount() {
+    this.getContactDetail();
+  }
+  getContactDetail(isRefreshed){
     const { contactId } = this.props.navigation.state.params;
     getCustomerDetail(contactId)
       .then((result) => {
+        console.log(result)
         this.setState({ contactDetail: result[0] });
       });
+    if (isRefreshed) {
+      this.setState({ isRefreshing: false });
+    }
   }
   onCallPhone(phone) {
     Alert.alert(
-      I18n.t('Confirm'),
-      `${I18n.t('Do you want to call')} ${phone} ?`,
+      I18n.t('Confirm'), `${I18n.t('Do you want to call')} ${phone} ?`,
       [
         {
           text: 'Cancel',
@@ -75,17 +80,6 @@ class ContactDetailScreen extends Component {
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         {this.renderRows(rowData)}
-        {
-          this.state.isEdit &&
-          <View style={styles.boxButtons}>
-            <RoundedButton
-              onPress={() => this.setState({ isEdit: false })}
-              text={I18n.t('Cancel')}
-              styles={{ width: '49%', backgroundColor: Colors.frost }}
-            />
-            <RoundedButton onPress={this.onPress} text={I18n.t('Save')} styles={{ width: '49%' }} />
-          </View>
-        }
       </KeyboardAvoidingView>
     );
   }
@@ -134,31 +128,44 @@ class ContactDetailScreen extends Component {
           direction="normal"
           style={styles.boxActionContent}
         >
-
           <FullButton text={I18n.t('Add Contact')} onPress={() => this.props.navigation.navigate('ContactsAddScreen')} />
-          <FullButton text={I18n.t('Edit')} />
+          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('ContactsEditScreen', { contactDetail: this.state.contactDetail, reloadData: () => { this.getContactDetail()} })} />
           <FullButton
             text={I18n.t('Add Lead')}
-            onPress={() => this.props.navigation.navigate('LeadAddScreen', { contactId: this.state.contactDetail.id, contactName: this.state.contactDetail.name})}
+            onPress={() => this.props.navigation.navigate('ContactsLeadAddScreen', { contactId: this.state.contactDetail.id, contactName: this.state.contactDetail.name })}
           />
           <FullButton
             text={I18n.t('Cancel')}
             onPress={() => this.setState({ isShowActions: false })}
           />
-
         </Animatable.View>
-
       </TouchableHighlight>
     );
   }
+  onRefresh() {
+    this.setState({ isRefreshing: true });
+    this.getContactDetail('isRefreshed');
+  }
   render() {
-    const { contactDetail, isShowActions } = this.state;
+    const { contactDetail, isShowActions, isRefreshing } = this.state;
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title={I18n.t('Contact Detail')} onPress={() => this.props.navigation.goBack(null)} />
-
-        <ScrollView style={[styles.mainContainer]}>
+        <ScrollView
+          style={[styles.mainContainer]}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={this.onRefresh}
+              colors={[Colors.fire]}
+              tintColor={Colors.snow}
+              title={`${I18n.t('loading')}...`}
+              titleColor={Colors.snow}
+              progressBackgroundColor={Colors.snow}
+            />
+          }
+        >
           {contactDetail.id && this.renderCard('Lead Information', contactDetail)}
         </ScrollView>
         {

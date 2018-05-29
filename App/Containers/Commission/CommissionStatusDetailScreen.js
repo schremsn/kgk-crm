@@ -4,12 +4,12 @@ import { View, ListView, Text, Image, ScrollView } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import moment from 'moment/moment';
-import ProgressBar from '../Components/ProgressBar';
+import ProgressBar from '../../Components/ProgressBar';
 
-import styles from './Styles/ContainerStyles';
-import { Images, Metrics } from './../Themes';
-import { getCommissionStatusDetail } from '../Redux/CommissionRedux';
-import Header from '../Components/Header';
+import styles from '../Styles/ContainerStyles';
+import { Images, Metrics } from '../../Themes/index';
+import { getCommissionStatusDetail } from '../../Redux/CommissionRedux';
+import Header from '../../Components/Header';
 
 const data = [
   { name: 'id', value: I18n.t('id') },
@@ -76,7 +76,7 @@ class CommissionStatusDetailScreen extends Component {
           <View style={styles.rowInfoContainer}>
             {
               item.name === 'create_date' ? <Text style={styles.rowInfo}>{moment(rowData[item.name]).format('MM-DD-YYYY')}</Text>
-              : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
+              : <Text style={styles.rowInfo}>{typeof (rowData[item.name]) === 'object' ? rowData[item.name][1] : rowData[item.name]}</Text>
             }
           </View>
         </View>

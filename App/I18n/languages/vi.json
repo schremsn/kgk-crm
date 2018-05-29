@@ -61,8 +61,6 @@
   // lead detail
   "contact": "Liên hệ",
   "city": "Thành phố",
-  "Contact": "Liên hệ",
-  "Add Contact": "Thêm liên hệ",
   "Customer": "Khách hàng",
   "Phone": "Số điện thoại",
   "Mobile": "Di động",
@@ -90,6 +88,9 @@
   "Network is not connected": "Không kết nối mạng !",
   "Do you want to call": "Bạn muốn gọi",
   // contacts
+  "Contact": "Liên hệ",
+  "Add Contact": "Thêm liên hệ",
+  "Edit Contact": "Sửa liên hệ",
   "Company": "Công ty",
   "Contacts": "Danh bạ",
   "Contact Detail": "Chi tiết Danh bạ",
@@ -100,6 +101,8 @@
   "Province": "Tỉnh",
   "Website": "Website",
   "Create contacts is success": "Tạo danh bạ thành công",
+  "Update contacts is success": "Sửa danh bạ thành công",
+  "Update contacts is error": "Sửa danh bạ không thành công",
   "Is Company": "Là Công ty",
   "identification id": "Mã nhận biết",
   // Edit lead
@@ -112,4 +115,7 @@
   "Add lead is error": "Tạo chỉ dẫn thất bại",
   "Mark lead won is success": "Đánh dấu chỉ dẫn thắng thành công",
   "Mark lead lost is success": "Đánh dấu chỉ dẫn thất bị thành công",
+
+  // error
+  "Connection error, data download failed": "Lỗi kết nối, tải dữ liệu không thành công."
 }

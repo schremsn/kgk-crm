@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import ReactNative, {
-  View, ActivityIndicator, Image, TouchableHighlight,
-  Platform, Text, TextInput, Modal, TouchableOpacity,
-} from 'react-native';
+import { View, ActivityIndicator, Image, Platform, Modal } from 'react-native';
 import I18n from 'react-native-i18n';
 import t from 'tcomb-form-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
-import { Images, Colors, Metrics } from './../Themes';
-import styles, { stylesheet } from './Styles/ContainerStyles';
-import ContactsAddScreen from './ContactsAddScreen';
-import ContactsListScreen from './ContactsListScreen';
-import ProductsListScreen from './ProductsListScreen';
-import Header from '../Components/Header';
-import RoundedButton from '../Components/RoundedButton';
-import { createLead, getProducts } from '../Redux/LeadRedux';
+import { Images, Colors } from '../../Themes/index';
+import styles, { stylesheet } from '../Styles/ContainerStyles';
+import ContactsAddModal from '../Contact/ContactsAddModal';
+import ContactsListModal from '../Contact/ContactsListModal';
+import ProductsListModal from '../Product/ProductsListModal';
+import Header from '../../Components/Header';
+import RoundedButton from '../../Components/RoundedButton';
+import Input from '../../Components/Form/Input';
+import { createLead } from '../../Redux/LeadRedux';
 
 const { Form } = t.form;
 
@@ -47,7 +44,6 @@ class LeadAddScreen extends Component {
     this.onSelectContact = this.onSelectContact.bind(this);
     this.onSelectProduct = this.onSelectProduct.bind(this);
     this.onShowAddContactModal = this.onShowAddContactModal.bind(this);
-    this.scrollToInput = this.scrollToInput.bind(this);
     this.options = {
       hasError: true,
       fields: {
@@ -57,6 +53,11 @@ class LeadAddScreen extends Component {
         },
         partner_id: {
           template: this.templateInputCustomer,
+        },
+        state: {
+          label: I18n.t('Province'),
+          stylesheet,
+          mode: 'dropdown',
         },
         stage_id: {
           label: I18n.t('Stage'),
@@ -78,25 +79,30 @@ class LeadAddScreen extends Component {
   }
   componentDidMount() {
     this.getTypeForm();
-    getProducts(0)
-      .then((result) => {
-        console.log(result);
-      });
   }
   async getTypeForm() {
-    const { leadStages } = this.props;
-    const stateOptions = {};
+    const { leadStages, states } = this.props;
     const setStageOption = () => {
+      const stageOptions = {};
       for (let i = 0; i < leadStages.length; i += 1) {
-        stateOptions[leadStages[i].id] = leadStages[i].name;
+        stageOptions[leadStages[i].id] = leadStages[i].name;
       }
+      return stageOptions;
     };
-    await setStageOption();
+    const setStateOption = () => {
+      const stateOptions = {};
+      const stateLength = states.length;
+      for (let i = 0; i < stateLength; i += 1) {
+        stateOptions[states[i].name] = states[i].name;
+      }
+      return stateOptions;
+    };
     const type = t.struct({
       name: t.String,
       partner_id: t.Number,
       product: t.Number,
-      stage_id: t.enums(stateOptions, 'dropdown'),
+      state: t.enums(setStateOption(), 'province'),
+      stage_id: t.enums(setStageOption(), 'stage_id'),
       description: t.maybe(t.String),
     });
     this.setState({ type });
@@ -155,85 +161,44 @@ class LeadAddScreen extends Component {
       isModalAddContact: value,
     });
   }
-  scrollToInput = (event, refName) => {
-    const node = ReactNative.findNodeHandle(refName);
-    const extraHeight = 200;
-    this.scrollView.props.scrollToFocusedInput(node, extraHeight, 100);
-  }
   templateInputCustomer() {
     const value = this.state.customerName;
     return (
-      <View >
-        <Text style={styles.labelForm}>{I18n.t('Customer')}</Text>
-        <TextInput
-          style={styles.inputFormDisable}
-          value={value}
-          editable={false}
-        />
-        <TouchableOpacity
-          style={styles.iconInputFormCustom}
-          onPress={() => { this.setState({ isModalSearchContact: true }); }}
-        >
-          <Ionicons name="ios-open-outline" size={25} color={Colors.panther} />
-        </TouchableOpacity>
-      </View>
+      <Input label={I18n.t('Customer')} value={value} press={() => { this.setState({ isModalSearchContact: true }); }} />
     );
   }
   templateInputProduct() {
     const value = this.state.productName;
     return (
-      <View >
-        <Text style={styles.labelForm}>{I18n.t('product')}</Text>
-        <TextInput
-          style={styles.inputFormDisable}
-          value={value}
-          editable={false}
-        />
-        <TouchableOpacity
-          style={styles.iconInputFormCustom}
-          onPress={() => { this.setState({ isModalSearchProduct: true }); }}
-        >
-          <Ionicons name="ios-open-outline" size={25} color={Colors.panther} />
-        </TouchableOpacity>
-      </View>
+      <Input label={I18n.t('product')} value={value} press={() => this.setState({ isModalSearchProduct: true })} />
     );
   }
   templateInputNotes() {
     const value = this.state.value.description ? this.state.value.description : '';
     return (
-      <View >
-        <Text style={styles.labelForm}>Notes</Text>
-        <TextInput
-          style={styles.inputFormMulti}
-          value={value}
-          multiline
-          numberOfLines={3}
-          onChangeText={(text) => {
-            const valueNew = { ...this.state.value, description: text };
-            this.setState({ value: valueNew });
-          }}
-          ref={(c) => { this.refNode = c; }}
-          onFocus={(event) => {
-            this.scrollToInput(event, this.refNode);
-          }}
-        />
-      </View>
+      <Input
+        multiline
+        label={I18n.t('notes')}
+        value={value}
+        press={(text) => {
+          const valueNew = { ...this.state.value, description: text };
+          this.setState({ value: valueNew });
+        }}
+      />
     );
   }
   get renderSearchContactModal() {
     return (
       <Modal
         animationType="slide"
-        transparent={false}
+        transparent
         visible={this.state.isModalSearchContact}
         onRequestClose={() => {
           this.setState({ isModalSearchContact: false });
         }}
       >
         <View>
-          <ContactsListScreen
-            navigation={this.props.navigation}
-            isModal
+          <ContactsListModal
             onSelectContact={value => this.onSelectContact(value)}
             onShowAddContactModal={value => this.onShowAddContactModal(value)}
           />
@@ -245,16 +210,15 @@ class LeadAddScreen extends Component {
     return (
       <Modal
         animationType="slide"
-        transparent={false}
+        transparent
         visible={this.state.isModalSearchProduct}
         onRequestClose={() => {
           this.setState({ isModalSearchProduct: false });
         }}
       >
         <View style={{}}>
-          <ProductsListScreen
+          <ProductsListModal
             navigation={this.props.navigation}
-            isModal
             onSelectProduct={value => this.onSelectProduct(value)}
           />
         </View>
@@ -265,17 +229,16 @@ class LeadAddScreen extends Component {
     return (
       <Modal
         animationType="slide"
-        transparent={false}
+        transparent
         visible={this.state.isModalAddContact}
         onRequestClose={() => {
           this.setState({ isModalAddContact: false });
         }}
       >
         <View>
-          <ContactsAddScreen
+          <ContactsAddModal
             navigation={this.props.navigation}
             onShowAddContactModal={value => this.onShowAddContactModal(value)}
-            isModal
           />
         </View>
       </Modal>
@@ -330,6 +293,7 @@ LeadAddScreen.propTypes = {
 };
 const mapStateToProps = state => ({
   leadStages: state.lead.list,
+  states: state.auth.states,
 });
 
 export default connect(mapStateToProps, null)(LeadAddScreen);

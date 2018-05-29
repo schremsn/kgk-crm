@@ -1,39 +1,23 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {
-  View, ActivityIndicator, Image, ToastAndroid,
-  Platform,
-} from 'react-native';
+import { View, ActivityIndicator, Image, ToastAndroid, Platform } from 'react-native';
 import I18n from 'react-native-i18n';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import t from 'tcomb-form-native';
-import { Images, Colors } from './../Themes';
-import styles, { stylesheet } from './Styles/ContainerStyles';
-import Header from '../Components/Header';
-import { createCustomer } from '../Redux/ContactsRedux';
-import RoundedButton from '../Components/RoundedButton';
+import { Images, Colors } from '../../Themes/index';
+import styles, { stylesheet } from '../Styles/ContainerStyles';
+import Header from '../../Components/Header';
+import { createCustomer } from '../../Redux/ContactsRedux';
+import RoundedButton from '../../Components/RoundedButton';
+import Input from '../../Components/Form/Input';
 
 
 const { Form } = t.form;
 
-const Person = t.struct({
-  is_company: t.Boolean,
-  name: t.String,
-  identification_id: t.maybe(t.String),
-  street: t.maybe(t.String),
-  street2: t.maybe(t.String),
-  city: t.String,
-  state: t.maybe(t.String),
-  code_zip: t.maybe(t.Number),
-  phone: t.maybe(t.Number),
-  mobile: t.maybe(t.Number),
-  website: t.maybe(t.String),
-  email: t.maybe(t.String),
-  comment: t.maybe(t.String),
-});
 
-export default class ContactsAddScreen extends Component {
+class ContactsAddScreen extends Component {
   constructor() {
     super();
     this.state = {
@@ -42,6 +26,7 @@ export default class ContactsAddScreen extends Component {
       },
       isLoading: false,
     };
+    this.templateInputNotes = this.templateInputNotes.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onPress = this.onPress.bind(this);
     this.options = {
@@ -90,10 +75,10 @@ export default class ContactsAddScreen extends Component {
         state: {
           label: I18n.t('Province'),
           stylesheet,
+          mode: 'dropdown',
         },
         comment: {
-          label: I18n.t('notes'),
-          stylesheet,
+          template: this.templateInputNotes,
         },
         email: {
           label: I18n.t('Email'),
@@ -108,7 +93,50 @@ export default class ContactsAddScreen extends Component {
       // auto: 'placeholders'
     };
   }
-
+  componentWillMount() {
+    this.getTypeForm();
+  }
+  async getTypeForm() {
+    const { states } = this.props;
+    const setStateOption = () => {
+      const stateOptions = {};
+      const stateLength = states.length;
+      for (let i = 0; i < stateLength; i += 1) {
+        stateOptions[states[i].name] = states[i].name;
+      }
+      return stateOptions;
+    };
+    const type = t.struct({
+      is_company: t.Boolean,
+      name: t.String,
+      identification_id: t.maybe(t.String),
+      street: t.maybe(t.String),
+      street2: t.maybe(t.String),
+      city: t.maybe(t.String),
+      state: t.enums(setStateOption(), 'state'),
+      code_zip: t.maybe(t.Number),
+      phone: t.maybe(t.Number),
+      mobile: t.maybe(t.Number),
+      website: t.maybe(t.String),
+      email: t.maybe(t.String),
+      comment: t.maybe(t.String),
+    });
+    this.setState({ type });
+  }
+  templateInputNotes() {
+    const value = this.state.value.comment ? this.state.value.comment : '';
+    return (
+      <Input
+        multiline
+        label={I18n.t('notes')}
+        value={value}
+        press={(text) => {
+          const valueNew = { ...this.state.value, comment: text };
+          this.setState({ value: valueNew });
+        }}
+      />
+    );
+  }
   onChange(value) {
     this.setState({ value });
   }
@@ -120,11 +148,7 @@ export default class ContactsAddScreen extends Component {
         .then(() => {
           this.setState({ isLoading: false });
           ToastAndroid.show(I18n.t('Create contacts is success'), ToastAndroid.SHORT);
-          if (this.props.isModal) {
-            this.props.onShowAddContactModal(false);
-          } else {
-            this.props.navigation.replace('ContactsListScreen');
-          }
+          this.props.navigation.replace('ContactsListScreen');
         })
         .catch((error) => {
           this.setState({ isLoading: false });
@@ -133,19 +157,13 @@ export default class ContactsAddScreen extends Component {
     }
   }
   render() {
-    const { value, isLoading } = this.state;
+    const { value, isLoading, type } = this.state;
     return (
       <View style={[styles.containerHasForm]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header
           title={I18n.t('Add Contact')}
-          onPress={() => {
-          if (this.props.isModal) {
-            this.props.onShowAddContactModal(false);
-          } else {
-            this.props.navigation.goBack(null);
-          }
-        }}
+          onPress={() => {this.props.navigation.goBack(null);}}
         />
         {
           isLoading &&
@@ -154,16 +172,19 @@ export default class ContactsAddScreen extends Component {
           </View>
         }
         <KeyboardAwareScrollView
-          style={{ marginBottom: this.props.isModal ? 120 : 70 }}
+          style={{ marginBottom: 70 }}
           innerRef={(ref) => { this.scrollView = ref; }}
         >
-          <Form
-            ref={(c) => { this.form = c; }}
-            type={Person}
-            options={this.options}
-            value={value}
-            onChange={this.onChange}
-          />
+          {
+            type && <Form
+              ref={(c) => { this.form = c; }}
+              type={type}
+              options={this.options}
+              value={value}
+              onChange={this.onChange}
+            />
+          }
+
           <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
       </View>
@@ -173,7 +194,10 @@ export default class ContactsAddScreen extends Component {
 
 ContactsAddScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  isModal: PropTypes.bool,
-  onShowAddContactModal: PropTypes.func,
 };
 
+const mapStateToProps = state => ({
+  states: state.auth.states,
+});
+
+export default connect(mapStateToProps, null)(ContactsAddScreen);

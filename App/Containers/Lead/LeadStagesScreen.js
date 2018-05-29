@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
 import I18n from 'react-native-i18n';
-import styles from './Styles/ContainerStyles';
-import { Images, Colors } from './../Themes';
-import { pipelineCount, getLeadStages } from '../Redux/LeadRedux';
+import styles from '../Styles/ContainerStyles';
+import { Images, Colors } from '../../Themes/index';
+import { pipelineCount, getLeadStages } from '../../Redux/LeadRedux';
 
 class LeadStagesScreen extends Component {
   constructor(props) {

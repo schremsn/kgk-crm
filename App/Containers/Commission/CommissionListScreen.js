@@ -4,10 +4,10 @@ import { RefreshControl, Text, Image, View, TouchableOpacity, ListView, Alert, B
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import numeral from 'numeral';
-import ProgressBar from '../Components/ProgressBar';
-import styles from './Styles/ContainerStyles';
-import { Colors, Images } from '../Themes';
-import { getCommissionSummary } from '../Redux/CommissionRedux';
+import ProgressBar from '../../Components/ProgressBar';
+import styles from '../Styles/ContainerStyles';
+import { Colors, Images } from '../../Themes/index';
+import { getCommissionSummary } from '../../Redux/CommissionRedux';
 
 class CommissionListScreen extends Component {
   constructor() {
@@ -15,10 +15,8 @@ class CommissionListScreen extends Component {
     this.state = {
       isLoading: true,
       isRefreshing: false,
-      offset: 2,
     };
     this.getCommissionList = this.getCommissionList.bind(this);
-    this.getCommissionListNextPage = this.getCommissionListNextPage.bind(this);
     this.renderCommission = this.renderCommission.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
     this.handleBackAndroid = this.handleBackAndroid.bind(this);
@@ -99,30 +97,16 @@ class CommissionListScreen extends Component {
     }
   }
   getCommissionList(isRefreshed) {
-    getCommissionSummary(this.state.offset)
-      .then((list, offset) => {
+    getCommissionSummary()
+      .then((list) => {
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
         const dataSource = ds.cloneWithRows(list);
         this.setState({
-          list,
-          offset,
           dataSource,
           isLoading: false,
         });
       });
     if (isRefreshed && this.setState({ isRefreshing: false }));
-  }
-  getCommissionListNextPage() {
-    console.log(this.state.offset)
-    getCommissionSummary(this.state.offset)
-      .then((list, offset) => {
-        const data = this.state.list;
-        list.map(item => data.push(item));
-        this.setState({
-          offset,
-          dataSource: this.state.dataSource.cloneWithRows(data),
-        });
-    });
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
@@ -149,12 +133,9 @@ class CommissionListScreen extends Component {
             : <ListView
               style={styles.mainContainer}
               enableEmptySections
-              onEndReached={() => this.getCommissionListNextPage()}
-              onEndReachedThreshold={1200}
               dataSource={dataSource}
               renderRow={item => this.renderCommission(item)}
               renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-              // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
               refreshControl={
                 <RefreshControl
                   refreshing={isRefreshing}

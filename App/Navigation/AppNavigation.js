@@ -8,23 +8,24 @@ import { Colors } from '../Themes';
 import TabBarBottom from '../Components/TabBarBottom';
 
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen';
-import CommissionStatusDetailScreen from '../Containers/CommissionStatusDetailScreen';
-import CommissionStatusListScreen from '../Containers/CommissionStatusListScreen';
+import CommissionStatusDetailScreen from '../Containers/Commission/CommissionStatusDetailScreen';
+import CommissionStatusListScreen from '../Containers/Commission/CommissionStatusListScreen';
 import LoginScreen from '../Containers/LoginScreen';
-import CommissionListScreen from '../Containers/CommissionListScreen';
-import ProductsListScreen from '../Containers/ProductsListScreen';
-import ProductDetailScreen from '../Containers/ProductDetailScreen';
+import CommissionListScreen from '../Containers/Commission/CommissionListScreen';
+import ProductsListScreen from '../Containers/Product/ProductsListScreen';
+import ProductDetailScreen from '../Containers/Product/ProductDetailScreen';
 import MoreScreen from '../Containers/MoreScreen';
-import MessagesListScreen from '../Containers/MessagesListScreen';
-import MessageDetailScreen from '../Containers/MessageDetailScreen';
-import LeadStagesScreen from '../Containers/LeadStagesScreen';
-import LeadDetailScreen from '../Containers/LeadDetailScreen';
-import LeadListScreen from '../Containers/LeadListScreen';
-import LeadEditScreen from '../Containers/LeadEditScreen';
-import LeadAddScreen from '../Containers/LeadAddScreen';
-import ContactsListScreen from '../Containers/ContactsListScreen';
-import ContactsAddScreen from '../Containers/ContactsAddScreen';
-import ContactDetailScreen from '../Containers/ContactDetailScreen';
+import MessagesListScreen from '../Containers/Message/MessagesListScreen';
+import MessageDetailScreen from '../Containers/Message/MessageDetailScreen';
+import LeadStagesScreen from '../Containers/Lead/LeadStagesScreen';
+import LeadDetailScreen from '../Containers/Lead/LeadDetailScreen';
+import LeadListScreen from '../Containers/Lead/LeadListScreen';
+import LeadEditScreen from '../Containers/Lead/LeadEditScreen';
+import LeadAddScreen from '../Containers/Lead/LeadAddScreen';
+import ContactsListScreen from '../Containers/Contact/ContactsListScreen';
+import ContactsAddScreen from '../Containers/Contact/ContactsAddScreen';
+import ContactDetailScreen from '../Containers/Contact/ContactDetailScreen';
+import ContactsEditScreen from '../Containers/Contact/ContactsEditScreen';
 
 const HomeStack = StackNavigator({
   CommissionListScreen: { screen: CommissionListScreen },
@@ -47,6 +48,8 @@ const PipelineStack = StackNavigator({
   LeadListScreen: { screen: LeadListScreen },
   LeadEditScreen: { screen: LeadEditScreen },
   LeadAddScreen: { screen: LeadAddScreen },
+  LeadCommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
+
 }, {
   headerMode: 'none',
   initialRouteName: 'LeadStagesScreen',
@@ -67,8 +70,11 @@ const MoreStack = StackNavigator({
   CommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
   CommissionStatusListScreen: { screen: CommissionStatusListScreen },
   ContactsListScreen: { screen: ContactsListScreen },
-  ContactsAddScreen: { screen: ContactsAddScreen },
   ContactDetailScreen: { screen: ContactDetailScreen },
+  ContactsAddScreen: { screen: ContactsAddScreen },
+  ContactsEditScreen: { screen: ContactsEditScreen },
+  ContactsLeadAddScreen: { screen: LeadAddScreen },
+
 }, {
   headerMode: 'none',
   initialRouteName: 'MoreScreen',
