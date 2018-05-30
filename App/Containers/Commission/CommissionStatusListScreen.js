@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
+import { View, Text, TouchableOpacity, RefreshControl, ListView } from 'react-native';
 import I18n from 'react-native-i18n';
 import moment from 'moment';
-import { Images, Colors } from '../../Themes/index';
+import { Colors } from '../../Themes/index';
 import styles from '../Styles/ContainerStyles';
-import ProgressBar from '../../Components/ProgressBar';
-import Header from '../../Components/Header';
+import BaseScreen from '../../Components/BaseScreen';
 import { getCommissionStatus } from '../../Redux/CommissionRedux';
 
 class CommissionStatusListScreen extends Component {
@@ -76,35 +75,32 @@ class CommissionStatusListScreen extends Component {
   render() {
     const { isLoading, isRefreshing, dataSource } = this.state;
     return (
-      <View style={[styles.container]}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('status')} onPress={() => this.props.navigation.goBack(null)} />
-        {
-          isLoading
-            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
-            : <ListView
-              style={styles.mainContainer}
-              enableEmptySections
-              onEndReached={() => this.getCommissionStatusListNextPage()}
-              onEndReachedThreshold={1200}
-              dataSource={dataSource}
-              renderRow={item => this.renderCommission(item)}
-              renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-              // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
-              refreshControl={
-                <RefreshControl
-                  refreshing={isRefreshing}
-                  onRefresh={this.onRefresh}
-                  colors={[Colors.fire]}
-                  tintColor={Colors.snow}
-                  title={`${I18n.t('loading')}...`}
-                  titleColor={Colors.snow}
-                  progressBackgroundColor={Colors.snow}
-                />
-              }
+      <BaseScreen
+        title={I18n.t('status')}
+        onPress={() => { this.props.navigation.goBack(null); }}
+        fullLoading={isLoading}
+      >
+        <ListView
+          style={styles.mainContainer}
+          enableEmptySections
+          onEndReached={() => this.getCommissionStatusListNextPage()}
+          onEndReachedThreshold={1200}
+          dataSource={dataSource}
+          renderRow={item => this.renderCommission(item)}
+          renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={this.onRefresh}
+              colors={[Colors.fire]}
+              tintColor={Colors.snow}
+              title={`${I18n.t('loading')}...`}
+              titleColor={Colors.snow}
+              progressBackgroundColor={Colors.snow}
             />
-        }
-      </View>
+          }
+        />
+      </BaseScreen>
     );
   }
 }

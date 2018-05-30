@@ -4,17 +4,19 @@ import { RefreshControl, Text, Image, View, TouchableOpacity, ListView, Alert, B
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import numeral from 'numeral';
-import ProgressBar from '../../Components/ProgressBar';
 import styles from '../Styles/ContainerStyles';
-import { Colors, Images } from '../../Themes/index';
+import { Colors } from '../../Themes/index';
 import { getCommissionSummary } from '../../Redux/CommissionRedux';
+import BaseScreen from '../../Components/BaseScreen';
 
 class CommissionListScreen extends Component {
   constructor() {
     super();
+    const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
     this.state = {
       isLoading: true,
       isRefreshing: false,
+      dataSource: ds.cloneWithRows([]),
     };
     this.getCommissionList = this.getCommissionList.bind(this);
     this.renderCommission = this.renderCommission.bind(this);
@@ -106,7 +108,9 @@ class CommissionListScreen extends Component {
           isLoading: false,
         });
       });
-    if (isRefreshed && this.setState({ isRefreshing: false }));
+    if (isRefreshed) {
+      this.setState({ isRefreshing: false });
+    }
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
@@ -125,32 +129,29 @@ class CommissionListScreen extends Component {
   render() {
     const { isLoading, isRefreshing, dataSource } = this.state;
     return (
-      <View style={[styles.container]}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        {
-          isLoading
-            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
-            : <ListView
-              style={styles.mainContainer}
-              enableEmptySections
-              dataSource={dataSource}
-              renderRow={item => this.renderCommission(item)}
-              renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-              refreshControl={
-                <RefreshControl
-                  refreshing={isRefreshing}
-                  onRefresh={this.onRefresh}
-                  colors={[Colors.fire]}
-                  tintColor={Colors.snow}
-                  title={`${I18n.t('loading')}...`}
-                  titleColor={Colors.snow}
-                  progressBackgroundColor={Colors.snow}
-                />
-              }
+      <BaseScreen
+        onPress={() => { this.props.navigation.goBack(null); }}
+        fullLoading={isLoading}
+      >
+        <ListView
+          style={styles.mainContainer}
+          enableEmptySections
+          dataSource={dataSource}
+          renderRow={item => this.renderCommission(item)}
+          renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={this.onRefresh}
+              colors={[Colors.fire]}
+              tintColor={Colors.snow}
+              title={`${I18n.t('loading')}...`}
+              titleColor={Colors.snow}
+              progressBackgroundColor={Colors.snow}
             />
-        }
-
-      </View>
+          }
+        />
+      </BaseScreen>
     );
   }
 }

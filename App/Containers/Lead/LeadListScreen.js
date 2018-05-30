@@ -1,31 +1,29 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, RefreshControl, ListView, TextInput, Keyboard } from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from '../Styles/ContainerStyles';
-import { Images, Colors, Metrics } from '../../Themes/index';
+import { Colors } from '../../Themes/index';
 import { getLeadbyStage, searchLead } from '../../Redux/LeadRedux';
-import ProgressBar from '../../Components/ProgressBar';
-import GetDataFailed from '../../Components/GetDataFailed';
-import Header from '../../Components/Header';
-import CircleButton from '../../Components/CircleButton';
+import BaseScreen from '../../Components/BaseScreen';
 
 class LeadListScreen extends Component {
   constructor(props) {
     super(props);
+    const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
     this.state = {
       isFetching: true,
       isError: false,
       isRefreshing: false,
       searchContent: '',
+      dataSource: ds.cloneWithRows([]),
       stageName: props.navigation.state.params.stageName,
     };
     this.getLeadsList = this.getLeadsList.bind(this);
     // this.getLeadsListNextPage = this.getLeadsListNextPage.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
-    this.onChangeSearchLead = this.onChangeSearchLead.bind(this);
     this.renderProduct = this.renderProduct.bind(this);
     this.handleSearchLead = this.handleSearchLead.bind(this);
   }
@@ -66,10 +64,8 @@ class LeadListScreen extends Component {
       </TouchableOpacity>
     );
   }
-  onChangeSearchLead(searchContent) {
-    this.setState({ searchContent });
-  }
   handleSearchLead() {
+    Keyboard.dismiss();
     const { searchContent } = this.state;
     searchLead(searchContent)
       .then((list) => {
@@ -80,30 +76,25 @@ class LeadListScreen extends Component {
         });
       });
   }
-  get renderAddButton() {
-    return (
-      <View style={styles.buttonBox}>
-        <CircleButton
-          onPress={() => { this.props.navigation.navigate('LeadAddScreen'); }}
-          icon="ios-add-outline"
-        />
-      </View>
-    );
-  }
   render() {
     const {
       stageName, isFetching, isRefreshing, isError, dataSource,
     } = this.state;
     return (
-      <View style={styles.container}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={stageName} onPress={() => this.props.navigation.popToTop('LeadStagesScreen')} />
+      <BaseScreen
+        title={stageName}
+        onPress={() => { this.props.navigation.goBack(null); }}
+        fullLoading={isFetching}
+        isError={isError}
+        onRefresh={this.onRefresh}
+        circleButton={() => { this.props.navigation.navigate('LeadAddScreen'); }}
+      >
         <View style={styles.boxSearch}>
           <TextInput
             style={styles.inputSearch}
             underlineColorAndroid="transparent"
             placeholder={I18n.t('search for name, city')}
-            onChangeText={value => this.onChangeSearchLead(value)}
+            onChangeText={searchContent => this.setState({ searchContent })}
             returnKeyType="search"
             onEndEditing={this.handleSearchLead}
           />
@@ -111,44 +102,26 @@ class LeadListScreen extends Component {
             <Ionicons name="ios-search-outline" size={25} color={Colors.banner} />
           </TouchableOpacity>
         </View>
-        {
-          isFetching &&
-          <ProgressBar
-            isRefreshing={isRefreshing}
-            onRefresh={this.onRefresh}
-            style={{ height: Metrics.screenHeight - 240 }}
-          />
-        }
-        {
-          isError &&
-          <GetDataFailed onRefresh={this.onRefresh} />
-        }
-        {
-          (!isFetching && !isError) &&
-          <ListView
-            style={styles.mainContainer}
-            enableEmptySections
-            onEndReachedThreshold={1200}
-            dataSource={dataSource}
-            renderRow={item => this.renderProduct(item)}
-            renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-            refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                onRefresh={this.onRefresh}
-                colors={[Colors.fire]}
-                tintColor={Colors.snow}
-                title={`${I18n.t('loading')}...`}
-                titleColor={Colors.snow}
-                progressBackgroundColor={Colors.snow}
-              />
+        <ListView
+          style={styles.mainContainer}
+          enableEmptySections
+          onEndReachedThreshold={1200}
+          dataSource={dataSource}
+          renderRow={item => this.renderProduct(item)}
+          renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={this.onRefresh}
+              colors={[Colors.fire]}
+              tintColor={Colors.snow}
+              title={`${I18n.t('loading')}...`}
+              titleColor={Colors.snow}
+              progressBackgroundColor={Colors.snow}
+            />
             }
-          />
-        }
-        {
-          this.renderAddButton
-        }
-      </View>
+        />
+      </BaseScreen>
     );
   }
 }

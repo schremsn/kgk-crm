@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
+import { View, Text, TouchableOpacity, RefreshControl, ListView } from 'react-native';
 import I18n from 'react-native-i18n';
-import ProgressBar from '../../Components/ProgressBar';
 import { getMessages } from '../../Redux/MessageRedux';
 import styles from '../Styles/ContainerStyles';
-import { Images, Colors } from '../../Themes/index';
+import { Colors } from '../../Themes/index';
+import BaseScreen from '../../Components/BaseScreen';
 
 class MessagesListScreen extends Component {
   constructor() {
     super();
+    const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
     this.state = {
       isLoading: true,
       isRefreshing: false,
+      dataSource: ds.cloneWithRows([]),
     };
 
     this.getMessages = this.getMessages.bind(this);
@@ -68,34 +70,30 @@ class MessagesListScreen extends Component {
   render() {
     const { isLoading, isRefreshing, dataSource } = this.state;
     return (
-      <View style={[styles.container]}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        {
-          isLoading
-            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
-            : <ListView
-              style={styles.mainContainer}
-              enableEmptySections
-              onEndReached={this.getMessagesNextPage}
-              onEndReachedThreshold={1200}
-              dataSource={dataSource}
-              renderRow={item => this.renderMessage(item)}
-              renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-              // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
-              refreshControl={
-                <RefreshControl
-                  refreshing={isRefreshing}
-                  onRefresh={this.onRefresh}
-                  colors={[Colors.fire]}
-                  tintColor={Colors.snow}
-                  title={`${I18n.t('loading')}...`}
-                  titleColor={Colors.snow}
-                  progressBackgroundColor={Colors.snow}
-                />
-              }
+      <BaseScreen
+        fullLoading={isLoading}
+      >
+        <ListView
+          style={styles.mainContainer}
+          enableEmptySections
+          onEndReached={this.getMessagesNextPage}
+          onEndReachedThreshold={1200}
+          dataSource={dataSource}
+          renderRow={item => this.renderMessage(item)}
+          renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={this.onRefresh}
+              colors={[Colors.fire]}
+              tintColor={Colors.snow}
+              title={`${I18n.t('loading')}...`}
+              titleColor={Colors.snow}
+              progressBackgroundColor={Colors.snow}
             />
-        }
-      </View>
+          }
+        />
+      </BaseScreen>
     );
   }
 }

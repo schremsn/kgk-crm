@@ -8,14 +8,17 @@ import { Colors } from '../Themes';
 export default class CircleButton extends Component {
   render() {
     return (
-      <TouchableOpacity
-        style={[this.props.styles]}
-        onPress={this.props.onPress}
-      >
-        <View style={styles.button}>
-          <Ionicons name={this.props.icon} size={25} color={Colors.snow} />
-        </View>
-      </TouchableOpacity>
+      <View style={styles.buttonBox}>
+        <TouchableOpacity
+          style={[this.props.styles]}
+          onPress={this.props.onPress}
+        >
+          <View style={styles.button}>
+            <Ionicons name={this.props.icon} size={25} color={Colors.snow} />
+          </View>
+        </TouchableOpacity>
+      </View>
+
     );
   }
 }

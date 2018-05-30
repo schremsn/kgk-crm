@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, TouchableOpacity, RefreshControl, ListView, TextInput, KeyboardAvoidingView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  RefreshControl,
+  ListView,
+  TextInput,
+  KeyboardAvoidingView,
+  Keyboard,
+} from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Colors } from '../../Themes/index';
@@ -59,6 +68,7 @@ class ContactsListModal extends Component {
     this.setState({ searchContent });
   }
   handleSearchLead() {
+    Keyboard.dismiss();
     const { searchContent } = this.state;
     if (searchContent.length > 0) {
       searchCustomer(searchContent)
