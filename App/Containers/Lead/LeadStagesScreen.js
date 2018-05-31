@@ -6,6 +6,7 @@ import I18n from 'react-native-i18n';
 import styles from '../Styles/ContainerStyles';
 import { Images, Colors } from '../../Themes/index';
 import { pipelineCount, getLeadStages } from '../../Redux/LeadRedux';
+import BaseScreen from '../../Components/BaseScreen';
 
 class LeadStagesScreen extends Component {
   constructor(props) {
@@ -65,8 +66,10 @@ class LeadStagesScreen extends Component {
   render() {
     const { isLoading, isRefreshing, leadStages } = this.state;
     return (
-      <View style={[styles.container]}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
+      <BaseScreen
+        fullLoading={isLoading}
+        onRefresh={this.onRefresh}
+      >
         <ScrollView
           style={styles.mainContainer}
           refreshControl={
@@ -87,7 +90,7 @@ class LeadStagesScreen extends Component {
             ))
           }
         </ScrollView>
-      </View>
+      </BaseScreen>
     );
   }
 }
