@@ -68,52 +68,62 @@ export const getLeadStages = () => dispatch => new Promise((resolve, reject) => 
   retryPromise(api, reject, 'getLeadStages');
 });
 export const updateLead = lead => new Promise((resolve, reject) => {
-  retryPromise(dataprovider.updateLead(lead)
-    .then((res) => {
-      resolve(res);
-    })
-    .catch((error) => {
-      throw new Error(error);
-    }), 'updateLead');
+  const api = () => (
+    dataprovider.updateLead(lead)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((error) => {
+        throw new Error(error);
+      })
+  )
+  retryPromise(api, reject, 'updateLead');
 });
 export const createLead = lead => new Promise((resolve, reject) => {
-  retryPromise(dataprovider.createLead(lead)
-    .then((res) => {
-      resolve(res);
-    })
-    .catch((error) => {
-      throw new Error(error);
-    }), 'createLead');
+  const api = () => (
+    dataprovider.createLead(lead)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((error) => {
+        throw new Error(error);
+      })
+  )
+  retryPromise(api, reject, 'createLead');
 });
 export const getLostReasons = () => dispatch => new Promise((resolve, reject) => {
-  dataprovider.getLostReasons()
+  retryPromise(dataprovider.getLostReasons()
     .then((list) => {
       resolve(list);
       dispatch(Creators.getLostReasonsSuccess(list));
     })
     .catch((error) => {
       throw new Error(error);
-    }, 'getLostReasons');
+    }), reject, 'getLostReasons');
 });
 export const markLeadWon = lead => new Promise((resolve, reject) => {
-  dataprovider.markLeadWon(lead)
-    .then((res) => {
-      resolve(res);
-    })
-    .catch((err) => {
-      reject(err);
-    });
+  const api = () => (
+    dataprovider.markLeadWon(lead)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((error) => {
+        throw new Error(error);
+      })
+  );
+  retryPromise(api, reject, 'markLeadWon');
 });
 export const markLeadLost = lead => new Promise((resolve, reject) => {
-  dataprovider.markLeadLost(lead)
-    .then((res) => {
-      console.log(res);
-      resolve(res);
-    })
-    .catch((err) => {
-      console.log(err);
-      reject(err);
-    });
+  const api = () => (
+    dataprovider.markLeadLost(lead)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((error) => {
+        throw new Error(error);
+      })
+  );
+  retryPromise(api, reject, 'markLeadLost');
 });
 export const getLeads = cb => (dispatch) => {
   const api = () => (
@@ -124,7 +134,7 @@ export const getLeads = cb => (dispatch) => {
       .catch(() => {
       })
   );
-  retryPromise(api, reject, 'getLeads');
+  retryPromise(api, 'getLeads');
 };
 export const getLead = leadId => new Promise((resolve, reject) => {
   const api = () => (
@@ -148,14 +158,7 @@ export const getLeadbyStage = stageId => new Promise((resolve, reject) => {
         throw new Error(error);
       })
   );
-  retryPromise(api, reject, 'getLeadbyStage')
-    .then((res) => {
-      if (!res) {
-        reject(res);
-      }
-    }).catch((e) => {
-      console.log('test', e);
-    });
+  retryPromise(api, reject, 'getLeadbyStage');
 });
 export const searchLead = searchTerm => new Promise((resolve, reject) => {
   const api = () => (
@@ -184,9 +187,7 @@ export const pipelineCount = () => new Promise((resolve, reject) => {
 /* ------------- Reducers ------------- */
 
 // request the data from an api
-export const getLeadStagesRequest = (state, action) => {
-  return state.merge({ list: [], fetching: true, error: false });
-};
+export const getLeadStagesRequest = (state, action) => state.merge({ list: [], fetching: true, error: false });
 // successful api lookup
 
 export const getLeadStagesSuccess = (state, action) => {

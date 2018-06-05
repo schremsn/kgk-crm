@@ -8,9 +8,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Toast from 'react-native-easy-toast';
 import { Images, Colors } from '../../Themes/index';
 import styles, { stylesheet } from '../Styles/ContainerStyles';
-import ContactsAddModal from '../Contact/ContactsAddModal';
-import ContactsListModal from '../Contact/ContactsListModal';
-import ProductsListModal from '../Product/ProductsListModal';
 import Header from '../../Components/Header';
 import RoundedButton from '../../Components/RoundedButton';
 import Input from '../../Components/Form/Input';
