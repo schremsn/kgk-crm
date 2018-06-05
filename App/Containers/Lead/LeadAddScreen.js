@@ -31,9 +31,6 @@ class LeadAddScreen extends Component {
       customerName: this.props.navigation.state.params ? this.props.navigation.state.params.contactName : '',
       productName: '',
       isLoading: false,
-      isModalSearchContact: false,
-      isModalAddContact: false,
-      isModalSearchProduct: false,
     };
     this.onChangeForm = this.onChangeForm.bind(this);
     this.onPress = this.onPress.bind(this);
@@ -43,7 +40,6 @@ class LeadAddScreen extends Component {
     this.templateInputNotes = this.templateInputNotes.bind(this);
     this.onSelectContact = this.onSelectContact.bind(this);
     this.onSelectProduct = this.onSelectProduct.bind(this);
-    this.onShowAddContactModal = this.onShowAddContactModal.bind(this);
     this.options = {
       hasError: true,
       fields: {
@@ -117,46 +113,29 @@ class LeadAddScreen extends Component {
     }
   }
   onSelectContact(value) {
-    if (value === null) {
-      this.setState({
-        isModalSearchContact: false,
-      });
-    } else {
-      this.setState({
-        isModalSearchContact: false,
-        value: { ...this.state.value, partner_id: parseInt(value.id, 0) },
-        customerName: value.name,
-      });
-    }
+    this.setState({
+      value: { ...this.state.value, partner_id: parseInt(value.id, 0) },
+      customerName: value.name,
+    });
+    this.props.navigation.goBack(null);
   }
   onSelectProduct(value) {
-    if (value === null) {
-      this.setState({
-        isModalSearchProduct: false,
-      });
-    } else {
-      this.setState({
-        isModalSearchProduct: false,
-        value: { ...this.state.value, product: parseInt(value.id, 0) },
-        productName: value.name,
-      });
-    }
-  }
-  onShowAddContactModal(value) {
     this.setState({
-      isModalAddContact: value,
+      value: { ...this.state.value, product: parseInt(value.id, 0) },
+      productName: value.name,
     });
+    this.props.navigation.goBack(null);
   }
   templateInputCustomer() {
     const value = this.state.customerName;
     return (
-      <Input label={I18n.t('Customer')} value={value} press={() => { this.setState({ isModalSearchContact: true }); }} />
+      <Input label={I18n.t('Customer')} value={value} press={() => { this.props.navigation.navigate('ContactListScreen', { onSelectContact: this.onSelectContact }); }} />
     );
   }
   templateInputProduct() {
     const value = this.state.productName;
     return (
-      <Input label={I18n.t('product')} value={value} press={() => this.setState({ isModalSearchProduct: true })} />
+      <Input label={I18n.t('product')} value={value} press={() => { this.props.navigation.navigate('ProductsListScreen', { onSelectProduct: this.onSelectProduct }); }} />
     );
   }
   templateInputNotes() {
@@ -171,63 +150,6 @@ class LeadAddScreen extends Component {
           this.setState({ value: valueNew });
         }}
       />
-    );
-  }
-  get renderSearchContactModal() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent
-        visible={this.state.isModalSearchContact}
-        onRequestClose={() => {
-          this.setState({ isModalSearchContact: false });
-        }}
-      >
-        <View>
-          <ContactsListModal
-            onSelectContact={value => this.onSelectContact(value)}
-            onShowAddContactModal={value => this.onShowAddContactModal(value)}
-          />
-        </View>
-      </Modal>
-    );
-  }
-  get renderSearchProductModal() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent
-        visible={this.state.isModalSearchProduct}
-        onRequestClose={() => {
-          this.setState({ isModalSearchProduct: false });
-        }}
-      >
-        <View style={{}}>
-          <ProductsListModal
-            navigation={this.props.navigation}
-            onSelectProduct={value => this.onSelectProduct(value)}
-          />
-        </View>
-      </Modal>
-    );
-  }
-  get renderAddContactModal() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent
-        visible={this.state.isModalAddContact}
-        onRequestClose={() => {
-          this.setState({ isModalAddContact: false });
-        }}
-      >
-        <View>
-          <ContactsAddModal
-            navigation={this.props.navigation}
-            onShowAddContactModal={value => this.onShowAddContactModal(value)}
-          />
-        </View>
-      </Modal>
     );
   }
   render() {
@@ -266,9 +188,6 @@ class LeadAddScreen extends Component {
           }
           <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
-        { this.renderSearchContactModal }
-        { this.renderSearchProductModal }
-        { this.renderAddContactModal }
       </View>
     );
   }

@@ -13,8 +13,10 @@ class MessagesListScreen extends Component {
     super();
     const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
     this.state = {
-      isLoading: true,
+      offset: 0,
+      fetching: true,
       isRefreshing: false,
+      isError: false,
       dataSource: ds.cloneWithRows([]),
     };
 
@@ -27,31 +29,38 @@ class MessagesListScreen extends Component {
     this.getMessages();
   }
 
-  getMessages(isRefreshed) {
-    this.props.getMessages(50, (list) => {
-      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-      const dataSource = ds.cloneWithRows(list);
-      this.setState({
-        list,
-        dataSource,
-        isLoading: false,
+  getMessages() {
+    getMessages(0)
+      .then((list, offset) => {
+        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+        const dataSource = ds.cloneWithRows(list);
+        this.setState({
+          list,
+          dataSource,
+          fetching: false,
+          isRefreshing: false,
+          offset,
+        });
+      })
+      .catch((err) => {
+        this.setState({ fetching: false, isError: true, isRefreshing: false });
       });
-    });
-    if (isRefreshed) {
-      this.setState({ isRefreshing: false });
-    }
   }
   getMessagesNextPage() {
-    this.props.getMessages(this.props.offset, (list) => {
-      const data = this.state.list;
-      list.map(item => data.push(item));
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(data),
-      });
-    });
+    setTimeout(() => {
+      getMessages(this.state.offset)
+        .then((list, offset) => {
+          const data = this.state.list;
+          list.map(item => data.push(item));
+          this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(data),
+            offset,
+          });
+        });
+    }, 500);
   }
   onRefresh() {
-    this.setState({ isRefreshing: true });
+    this.setState({ isRefreshing: true, isError: false });
     this.getMessages('isRefreshed');
   }
   renderMessage(item) {
@@ -68,10 +77,14 @@ class MessagesListScreen extends Component {
     );
   }
   render() {
-    const { isLoading, isRefreshing, dataSource } = this.state;
+    const {
+      fetching, isRefreshing, isError, dataSource,
+    } = this.state;
     return (
       <BaseScreen
-        fullLoading={isLoading}
+        fullLoading={fetching}
+        isError={isError}
+        onRefresh={this.onRefresh}
       >
         <ListView
           style={styles.mainContainer}
@@ -98,7 +111,6 @@ class MessagesListScreen extends Component {
   }
 }
 const mapStateToProps = state => ({
-  offset: state.message.offset,
   mailChannels: state.auth.mailChannels,
 });
 
@@ -107,7 +119,6 @@ const mapDispatchToProps = dispatch => ({
 });
 MessagesListScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  offset: PropTypes.number.isRequired,
   mailChannels: PropTypes.array.isRequired,
   getMessages: PropTypes.func.isRequired,
 };

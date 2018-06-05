@@ -1,6 +1,7 @@
 import { createReducer, createActions } from 'reduxsauce';
 import Immutable from 'seamless-immutable';
 import DataProvider from '../Lib/dataprovider';
+import retryPromise from '../Services/Api';
 
 const dataprovider = DataProvider.getInstance();
 
@@ -20,19 +21,22 @@ export default Creators;
 export const INITIAL_STATE = Immutable({
   list: [],
   offset: 0,
-  error: null,
+  error: false,
+  fetching: true,
 });
 
-export const getMessages = (offset, cb) => (dispatch) => {
-  dataprovider.getMessages(offset)
-    .then((list) => {
-      dispatch(Creators.getMessagesSuccess(list, offset));
-      if (cb) { cb(list); }
-    })
-    .catch(() => {
-      dispatch(Creators.messageFailure());
-    });
-};
+export const getMessages = offset => new Promise((resolve, reject) => {
+  const api = () => (
+    dataprovider.getMessages(offset)
+      .then((list) => {
+        resolve(list, offset + 50);
+      })
+      .catch((error) => {
+        throw new Error(error);
+      })
+  );
+  retryPromise(api, reject, 'getMessages');
+});
 /* ------------- Reducers ------------- */
 
 // request the data from an api
@@ -42,11 +46,11 @@ export const request = (state, { params }) =>
 // successful api lookup
 export const getMessagesSuccess = (state, action) => {
   const { list, offset } = action;
-  return state.merge({ list, offset: offset + 5 });
+  return state.merge({ list, offset: offset + 50 });
 };
 // Something went wrong somewhere.
 export const getMessagesFailure = state =>
-  state.merge({ list: [] });
+  state.merge({ list: [], fetching: false, error: true });
 
 /* ------------- Hookup Reducers To Types ------------- */
 

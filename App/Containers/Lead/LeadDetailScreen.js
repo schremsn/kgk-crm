@@ -50,9 +50,9 @@ class LeadDetailScreen extends Component {
     this.onMarkLeadLost = this.onMarkLeadLost.bind(this);
   }
   componentWillMount() {
-    this.getLeadDetail()
+    this.getLeadDetail();
   }
-  getLeadDetail(){
+  getLeadDetail() {
     const { leadId } = this.props.navigation.state.params;
     getLead(leadId)
       .then((leadDetail) => {
@@ -189,7 +189,7 @@ class LeadDetailScreen extends Component {
         >
 
           <FullButton text={I18n.t('New lead')} onPress={() => this.props.navigation.navigate('LeadAddScreen')} />
-          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail, reloadData: () => { this.getLeadDetail()} })} />
+          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail, reloadData: () => { this.getLeadDetail(); } })} />
           <FullButton
             text={I18n.t('Log activity')}
             disable
@@ -251,15 +251,9 @@ class LeadDetailScreen extends Component {
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header
           title={I18n.t('lead detail')}
-          onPress={() => {
-            if (leadDetail.stage_id[0]) {
-              this.props.navigation.navigate('LeadListScreen', { stageId: leadDetail.stage_id[0], stageName: leadDetail.stage_id[1] });
-            } else {
-              this.props.navigation.navigate('LeadStagesScreen');
-            }
-          }}
+          onPress={() => { this.props.navigation.goBack(null); }}
         />
-        <ScrollView style={[styles.mainContainer]}>
+        <ScrollView style={[styles.mainContainerModal]}>
           {leadDetail.id && this.renderCard('Lead Information', leadDetail)}
         </ScrollView>
         {

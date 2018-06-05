@@ -14,8 +14,9 @@ class CommissionListScreen extends Component {
     super();
     const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
     this.state = {
-      isLoading: true,
+      isFetching: true,
       isRefreshing: false,
+      isError: false,
       dataSource: ds.cloneWithRows([]),
     };
     this.getCommissionList = this.getCommissionList.bind(this);
@@ -105,15 +106,16 @@ class CommissionListScreen extends Component {
         const dataSource = ds.cloneWithRows(list);
         this.setState({
           dataSource,
-          isLoading: false,
+          isFetching: false,
+          isRefreshing: false,
         });
+      })
+      .catch((e) => {
+        this.setState({ isFetching: false, isError: true, isRefreshing: false });
       });
-    if (isRefreshed) {
-      this.setState({ isRefreshing: false });
-    }
   }
   onRefresh() {
-    this.setState({ isRefreshing: true });
+    this.setState({ isRefreshing: true, isError: false });
     this.getCommissionList('isRefreshed');
   }
   renderCommission(commission) {
@@ -127,11 +129,15 @@ class CommissionListScreen extends Component {
     );
   }
   render() {
-    const { isLoading, isRefreshing, dataSource } = this.state;
+    const {
+      isFetching, isRefreshing, isError, dataSource,
+    } = this.state;
     return (
       <BaseScreen
         onPress={() => { this.props.navigation.goBack(null); }}
-        fullLoading={isLoading}
+        fullLoading={isFetching}
+        isError={isError}
+        onRefresh={this.onRefresh}
       >
         <ListView
           style={styles.mainContainer}

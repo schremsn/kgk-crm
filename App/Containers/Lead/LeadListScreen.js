@@ -39,17 +39,15 @@ class LeadListScreen extends Component {
         this.setState({
           dataSource,
           isFetching: false,
+          isRefreshing: false,
         });
       })
       .catch(() => {
-        this.setState({ isFetching: false, isError: true });
+        this.setState({ isFetching: false, isError: true, isRefreshing: false });
       });
-    if (isRefreshed) {
-      this.setState({ isRefreshing: false });
-    }
   }
   onRefresh() {
-    this.setState({ isRefreshing: true });
+    this.setState({ isRefreshing: true, isError: false });
     this.getLeadsList('isRefreshed');
   }
   renderProduct(item) {
@@ -103,7 +101,7 @@ class LeadListScreen extends Component {
           </TouchableOpacity>
         </View>
         <ListView
-          style={styles.mainContainer}
+          style={styles.mainContainerModal}
           enableEmptySections
           onEndReachedThreshold={1200}
           dataSource={dataSource}

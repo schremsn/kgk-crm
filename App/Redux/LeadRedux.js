@@ -8,9 +8,11 @@ const dataprovider = DataProvider.getInstance();
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
+  getLeadStagesRequest: null,
   getLeadStagesSuccess: ['list'],
-  getLostReasonsSuccess: ['listReasonLost'],
   getLeadStagesFailure: null,
+  getLostReasonsSuccess: ['listReasonLost'],
+
 });
 
 export const MessageTypes = Types;
@@ -21,8 +23,9 @@ export default Creators;
 export const INITIAL_STATE = Immutable({
   list: [],
   offset: 0,
-  error: null,
   listReasonLost: [],
+  fetching: true,
+  error: null,
 });
 
 
@@ -36,7 +39,7 @@ export const getLeadStatus = leadId => new Promise((resolve, reject) => {
         throw new Error(error);
       })
   );
-  retryPromise(api, 'getLeadStatus');
+  retryPromise(api, reject, 'getLeadStatus');
 });
 export const getProducts = index => new Promise((resolve, reject) => {
   const api = () => (
@@ -48,7 +51,7 @@ export const getProducts = index => new Promise((resolve, reject) => {
         throw new Error(error);
       })
   );
-  retryPromise(api, 'getProducts');
+  retryPromise(api, reject, 'getProducts');
 });
 export const getLeadStages = () => dispatch => new Promise((resolve, reject) => {
   const api = () => (
@@ -62,7 +65,7 @@ export const getLeadStages = () => dispatch => new Promise((resolve, reject) => 
         throw new Error(error);
       })
   );
-  retryPromise(api, 'getLeadStages');
+  retryPromise(api, reject, 'getLeadStages');
 });
 export const updateLead = lead => new Promise((resolve, reject) => {
   retryPromise(dataprovider.updateLead(lead)
@@ -121,7 +124,7 @@ export const getLeads = cb => (dispatch) => {
       .catch(() => {
       })
   );
-  retryPromise(api, 'getLeads');
+  retryPromise(api, reject, 'getLeads');
 };
 export const getLead = leadId => new Promise((resolve, reject) => {
   const api = () => (
@@ -133,7 +136,7 @@ export const getLead = leadId => new Promise((resolve, reject) => {
         throw new Error(error);
       })
   );
-  retryPromise(api, 'getLead');
+  retryPromise(api, reject, 'getLead');
 });
 export const getLeadbyStage = stageId => new Promise((resolve, reject) => {
   const api = () => (
@@ -145,7 +148,7 @@ export const getLeadbyStage = stageId => new Promise((resolve, reject) => {
         throw new Error(error);
       })
   );
-  retryPromise(api, 'getLeadbyStage')
+  retryPromise(api, reject, 'getLeadbyStage')
     .then((res) => {
       if (!res) {
         reject(res);
@@ -164,7 +167,7 @@ export const searchLead = searchTerm => new Promise((resolve, reject) => {
         throw new Error(error);
       })
   );
-  retryPromise(api, 'searchLead');
+  retryPromise(api, reject, 'searchLead');
 });
 export const pipelineCount = () => new Promise((resolve, reject) => {
   const api = () => (
@@ -176,16 +179,19 @@ export const pipelineCount = () => new Promise((resolve, reject) => {
         throw new Error(error);
       })
   );
-  retryPromise(api, 'pipelineCount');
+  retryPromise(api, reject, 'pipelineCount');
 });
 /* ------------- Reducers ------------- */
 
 // request the data from an api
-
+export const getLeadStagesRequest = (state, action) => {
+  return state.merge({ list: [], fetching: true, error: false });
+};
 // successful api lookup
+
 export const getLeadStagesSuccess = (state, action) => {
   const { list } = action;
-  return state.merge({ list });
+  return state.merge({ list, error: false, fetching: false });
 };
 export const getLostReasonsSuccess = (state, action) => {
   const { listReasonLost } = action;
@@ -193,11 +199,12 @@ export const getLostReasonsSuccess = (state, action) => {
 };
 // Something went wrong somewhere.
 export const getLeadStagesFailure = state =>
-  state.merge({ list: [] });
+  state.merge({ fetching: false, error: true });
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
+  [Types.GET_LEAD_STAGES_REQUEST]: getLeadStagesRequest,
   [Types.GET_LEAD_STAGES_SUCCESS]: getLeadStagesSuccess,
   [Types.GET_LEAD_STAGES_FAILURE]: getLeadStagesFailure,
   [Types.GET_LOST_REASONS_SUCCESS]: getLostReasonsSuccess,

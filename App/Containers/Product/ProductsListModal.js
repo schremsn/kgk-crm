@@ -13,8 +13,9 @@ class ProductsListModal extends Component {
   constructor() {
     super();
     this.state = {
-      isLoading: true,
+      isFetching: true,
       isRefreshing: false,
+      isError: false,
     };
     this.getProductList = this.getProductList.bind(this);
     this.getProductListNextPage = this.getProductListNextPage.bind(this);
@@ -25,30 +26,33 @@ class ProductsListModal extends Component {
     this.getProductList();
   }
   getProductList(isRefreshed) {
-    this.props.getProducts(0, (list) => {
-      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-      const dataSource = ds.cloneWithRows(list);
-      this.setState({
-        list,
-        dataSource,
-        isLoading: false,
+    getProducts(0)
+      .then((list, offset) => {
+        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+        const dataSource = ds.cloneWithRows(list);
+        this.setState({
+          dataSource,
+          isFetching: false,
+          isRefreshing: false,
+          offset,
+        });
+      })
+      .catch((e) => {
+        this.setState({ isFetching: false, isError: true, isRefreshing: false });
       });
-    });
-    if (isRefreshed) {
-      this.setState({ isRefreshing: false });
-    }
   }
   getProductListNextPage() {
-    this.props.getProducts(this.props.offset, (list) => {
+    getProducts(this.state.offset, (list, offset) => {
       const data = this.state.list;
       list.map(item => data.push(item));
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(data),
+        offset,
       });
     });
   }
   onRefresh() {
-    this.setState({ isRefreshing: true });
+    this.setState({ isRefreshing: true, isError: false });
     this.getProductList('isRefreshed');
   }
   renderProduct(item) {
@@ -65,11 +69,11 @@ class ProductsListModal extends Component {
     );
   }
   render() {
-    const { isLoading, isRefreshing, dataSource } = this.state;
+    const { isFetching, isRefreshing, dataSource } = this.state;
     return (
       <View style={styles.containerModal}>
         {
-          isLoading
+          isFetching
             ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} />
             : <ListView
               style={styles.mainContainerModal}
@@ -107,17 +111,13 @@ class ProductsListModal extends Component {
 }
 ProductsListModal.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getProducts: PropTypes.func.isRequired,
-  offset: PropTypes.number.isRequired,
   onSelectProduct: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  offset: state.product.offset,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getProducts: (offset, cb) => { dispatch(getProducts(offset, cb)); },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductsListModal);
