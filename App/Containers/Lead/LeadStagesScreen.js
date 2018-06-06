@@ -13,7 +13,8 @@ class LeadStagesScreen extends Component {
     super(props);
     this.state = {
       leadStages: props.leadStages,
-      isLoading: true,
+      isFetching: true,
+      isError: false,
       isRefreshing: false,
       list: {},
     };
@@ -36,18 +37,19 @@ class LeadStagesScreen extends Component {
       .then((list) => {
         this.setState({
           list,
-          isLoading: false,
+          isFetching: false,
+          isRefreshing: false,
         });
+      })
+      .catch((error) => {
+        this.setState({ isFetching: false, isError: true, isRefreshing: false });
       });
-    if (isRefreshed) {
-      this.setState({ isRefreshing: false });
-    }
   }
   getLeadStages() {
     this.props.getLeadStages();
   }
   onRefresh() {
-    this.setState({ isRefreshing: true });
+    this.setState({ isRefreshing: true, isError: false });
     this.getPipelineCount('isRefreshed');
   }
   renderLeadStage(item) {
@@ -64,10 +66,13 @@ class LeadStagesScreen extends Component {
     );
   }
   render() {
-    const { isLoading, isRefreshing, leadStages } = this.state;
+    const {
+      isFetching, isRefreshing, leadStages, isError,
+    } = this.state;
     return (
       <BaseScreen
-        fullLoading={isLoading}
+        fullLoading={isFetching}
+        isError={isError}
         onRefresh={this.onRefresh}
       >
         <ScrollView

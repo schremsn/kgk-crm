@@ -44,7 +44,7 @@ export default StyleSheet.create({
     // padding: Metrics.doubleBaseMargin,
   },
   mainContainerModal: {
-    marginBottom: 0,
+    marginBottom: 20,
   },
   mainContainerHasFormModal: {
     marginBottom: 120,
@@ -114,7 +114,7 @@ export default StyleSheet.create({
   buttonBox: {
     position: 'absolute',
     right: 30,
-    bottom: 100,
+    bottom: 50,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -268,7 +268,7 @@ export default StyleSheet.create({
   },
   boxActions: {
     position: 'absolute',
-    bottom: 70,
+    bottom: 0,
     left: 0,
     right: 0,
     top: 0,

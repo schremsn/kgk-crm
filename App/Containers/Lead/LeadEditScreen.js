@@ -13,7 +13,6 @@ import { updateLead } from '../../Redux/LeadRedux';
 import RoundedButton from '../../Components/RoundedButton';
 import ProgressBar from '../../Components/ProgressBar';
 import Input from '../../Components/Form/Input';
-import ProductsListModal from '../Product/ProductsListModal';
 
 
 const { Form } = t.form;
@@ -41,7 +40,6 @@ class LeadEditScreen extends Component {
         zip: leadDetail.zip ? leadDetail.zip : null,
       },
       isLoading: false,
-      isModalSearchProduct: false,
       productName: leadDetail.product[1] ? leadDetail.product[1] : null,
     };
     this.onChange = this.onChange.bind(this);
@@ -171,17 +169,11 @@ class LeadEditScreen extends Component {
     this.setState({ value });
   }
   onSelectProduct(value) {
-    if (value === null) {
-      this.setState({
-        isModalSearchProduct: false,
-      });
-    } else {
-      this.setState({
-        isModalSearchProduct: false,
-        value: { ...this.state.value, product: parseInt(value.id, 0) },
-        productName: value.name,
-      });
-    }
+    this.setState({
+      value: { ...this.state.value, product: parseInt(value.id, 0) },
+      productName: value.name,
+    });
+    this.props.navigation.goBack(null);
   }
   onPress() {
     if (this.form.getValue()) {
@@ -215,28 +207,9 @@ class LeadEditScreen extends Component {
   templateInputProduct() {
     const value = this.state.productName;
     return (
-      <Input label={I18n.t('product')} value={value} press={() => this.setState({ isModalSearchProduct: true })} />
+      <Input label={I18n.t('product')} value={value} press={() => { this.props.navigation.navigate('ProductsListScreen', { onSelectProduct: this.onSelectProduct });}} />
     );
   }
-  get renderSearchProductModal() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent
-        visible={this.state.isModalSearchProduct}
-        onRequestClose={() => {
-          this.setState({ isModalSearchProduct: false });
-        }}
-      >
-        <ProductsListModal
-          navigation={this.props.navigation}
-          isModal
-          onSelectProduct={value => this.onSelectProduct(value)}
-        />
-      </Modal>
-    );
-  }
-
   render() {
     const { value, isLoading, type } = this.state;
     return (
@@ -261,9 +234,6 @@ class LeadEditScreen extends Component {
         </KeyboardAwareScrollView>
         {
           isLoading && <ProgressBar isSubmitLoading />
-        }
-        {
-          this.renderSearchProductModal
         }
       </View>
     );

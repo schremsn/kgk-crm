@@ -80,7 +80,13 @@ class ContactListScreen extends Component {
     return (
       <TouchableOpacity
         style={styles.sectionHeaderContainer}
-        onPress={() => { this.props.navigation.navigate('ContactDetailScreen', { contactId: item.id }); }}
+        onPress={() => {
+          if (this.props.navigation.state.params.onSelectContact) {
+            this.props.navigation.state.params.onSelectContact(item);
+          } else {
+            this.props.navigation.navigate('ContactDetailScreen', { contactId: item.id });
+          }
+        }}
       >
         <Text style={styles.sectionHeader}>{item.id}</Text>
         <Text style={styles.sectionText}>{I18n.t('Company')}: {item.company_name}</Text>
@@ -115,7 +121,7 @@ class ContactListScreen extends Component {
           </TouchableOpacity>
         </KeyboardAvoidingView>
         <ListView
-          style={[styles.mainContainer, { marginBottom: 60 }]}
+          style={[styles.mainContainerModal]}
           enableEmptySections
           // onEndReached={() => this.getCustomersListNextPage()}
           onEndReachedThreshold={1200}

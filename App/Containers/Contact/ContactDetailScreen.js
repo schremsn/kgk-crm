@@ -153,7 +153,7 @@ class ContactDetailScreen extends Component {
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title={I18n.t('Contact Detail')} onPress={() => this.props.navigation.goBack(null)} />
         <ScrollView
-          style={[styles.mainContainer]}
+          style={[styles.mainContainerModal]}
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
