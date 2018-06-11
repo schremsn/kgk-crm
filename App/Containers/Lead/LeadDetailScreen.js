@@ -9,7 +9,7 @@ import * as Animatable from 'react-native-animatable';
 import Toast from 'react-native-easy-toast';
 import styles from '../Styles/ContainerStyles';
 import { Images, Colors } from '../../Themes/index';
-import { getLead, markLeadWon, markLeadLost, getLeadStatus } from '../../Redux/LeadRedux';
+import { getLead, markLeadWon, markLeadLost, getLeadStatus, getLostReasons } from '../../Redux/LeadRedux';
 import Header from '../../Components/Header';
 
 import FullButton from '../../Components/FullButton';
@@ -51,6 +51,11 @@ class LeadDetailScreen extends Component {
   }
   componentWillMount() {
     this.getLeadDetail();
+  }
+  componentDidMount() {
+    if (!this.state.reasonLost.id) {
+      this.props.getLostReasons();
+    }
   }
   getLeadDetail() {
     const { leadId } = this.props.navigation.state.params;
@@ -282,11 +287,14 @@ class LeadDetailScreen extends Component {
 LeadDetailScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   listReasonLost: PropTypes.array.isRequired,
+  getLostReasons: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   listReasonLost: state.lead.listReasonLost,
 });
+const mapDispatchToProps = dispatch => ({
+  getLostReasons: () => dispatch(getLostReasons()),
+});
 
-
-export default connect(mapStateToProps, null)(LeadDetailScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(LeadDetailScreen);

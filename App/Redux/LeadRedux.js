@@ -92,14 +92,18 @@ export const createLead = lead => new Promise((resolve, reject) => {
   retryPromise(api, reject, 'createLead');
 });
 export const getLostReasons = () => dispatch => new Promise((resolve, reject) => {
-  retryPromise(dataprovider.getLostReasons()
-    .then((list) => {
-      resolve(list);
-      dispatch(Creators.getLostReasonsSuccess(list));
-    })
-    .catch((error) => {
-      throw new Error(error);
-    }), reject, 'getLostReasons');
+  const api = () => (
+    dataprovider.getLostReasons()
+      .then((list) => {
+        resolve(list);
+        dispatch(Creators.getLostReasonsSuccess(list));
+      })
+      .catch((error) => {
+        console.log(error)
+        throw new Error(error);
+      })
+  )
+  retryPromise(api, reject, 'getLostReasons');
 });
 export const markLeadWon = lead => new Promise((resolve, reject) => {
   const api = () => (
