@@ -20,8 +20,8 @@ export const ProductsListModal = StackNavigator({
   mode: 'modal',
   initialRouteName: 'ProductsListScreen',
   navigationOptions: {
-    tabBarVisible: false,
-    swipeEnabled: false,
+    // tabBarVisible: false,
+    // swipeEnabled: false,
   },
 });
 export const ProductsDetailModal = StackNavigator({
@@ -31,8 +31,8 @@ export const ProductsDetailModal = StackNavigator({
   mode: 'modal',
   initialRouteName: 'ProductDetailScreen',
   navigationOptions: {
-    tabBarVisible: false,
-    swipeEnabled: false,
+    // tabBarVisible: false,
+    // swipeEnabled: false,
   },
 });
 export const ContactsListModal = StackNavigator({
@@ -42,8 +42,8 @@ export const ContactsListModal = StackNavigator({
   mode: 'modal',
   initialRouteName: 'ContactsListScreen',
   navigationOptions: {
-    tabBarVisible: false,
-    swipeEnabled: false,
+    // tabBarVisible: false,
+    // swipeEnabled: false,
   },
 });
 export const ContactsAddModal = StackNavigator({
@@ -53,8 +53,8 @@ export const ContactsAddModal = StackNavigator({
   mode: 'modal',
   initialRouteName: 'ContactsAddScreen',
   navigationOptions: {
-    tabBarVisible: false,
-    swipeEnabled: false,
+    // tabBarVisible: false,
+    // swipeEnabled: false,
   },
 });
 export const ContactDetailModal = StackNavigator({
@@ -64,8 +64,8 @@ export const ContactDetailModal = StackNavigator({
   mode: 'modal',
   initialRouteName: 'ContactDetailScreen',
   navigationOptions: {
-    tabBarVisible: false,
-    swipeEnabled: false,
+    // tabBarVisible: false,
+    // swipeEnabled: false,
   },
 });
 export const ContactsEditModal = StackNavigator({
@@ -75,8 +75,8 @@ export const ContactsEditModal = StackNavigator({
   mode: 'modal',
   initialRouteName: 'ContactsEditScreen',
   navigationOptions: {
-    tabBarVisible: false,
-    swipeEnabled: false,
+    // tabBarVisible: false,
+    // swipeEnabled: false,
   },
 });
 export const LeadListModal = StackNavigator({
@@ -86,8 +86,8 @@ export const LeadListModal = StackNavigator({
   mode: 'modal',
   initialRouteName: 'LeadListScreen',
   navigationOptions: {
-    tabBarVisible: false,
-    swipeEnabled: false,
+    // tabBarVisible: false,
+    // swipeEnabled: false,
   },
 });
 export const LeadEditModal = StackNavigator({
@@ -97,8 +97,8 @@ export const LeadEditModal = StackNavigator({
   mode: 'modal',
   initialRouteName: 'LeadEditScreen',
   navigationOptions: {
-    tabBarVisible: false,
-    swipeEnabled: false,
+    // tabBarVisible: false,
+    // swipeEnabled: false,
   },
 });
 export const LeadAddModal = StackNavigator({
@@ -108,8 +108,8 @@ export const LeadAddModal = StackNavigator({
   mode: 'modal',
   initialRouteName: 'LeadAddScreen',
   navigationOptions: {
-    tabBarVisible: false,
-    swipeEnabled: false,
+    // tabBarVisible: false,
+    // swipeEnabled: false,
   },
 });
 export const LeadDetailModal = StackNavigator({
@@ -119,8 +119,8 @@ export const LeadDetailModal = StackNavigator({
   mode: 'modal',
   initialRouteName: 'LeadDetailScreen',
   navigationOptions: {
-    tabBarVisible: false,
-    swipeEnabled: false,
+    // tabBarVisible: false,
+    // swipeEnabled: false,
   },
 });
 export const  CommissionStatusDetailModal = StackNavigator({
@@ -130,8 +130,8 @@ export const  CommissionStatusDetailModal = StackNavigator({
   mode: 'modal',
   initialRouteName: 'CommissionStatusDetailScreen',
   navigationOptions: {
-    tabBarVisible: false,
-    swipeEnabled: false,
+    // tabBarVisible: false,
+    // swipeEnabled: false,
   },
 });
 
