@@ -81,7 +81,7 @@ class ContactListScreen extends Component {
       <TouchableOpacity
         style={styles.sectionHeaderContainer}
         onPress={() => {
-          if (this.props.navigation.state.params.onSelectContact) {
+          if (this.props.navigation.state.params && this.props.navigation.state.params.onSelectContact) {
             this.props.navigation.state.params.onSelectContact(item);
           } else {
             this.props.navigation.navigate('ContactDetailScreen', { contactId: item.id });
