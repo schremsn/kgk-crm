@@ -525,7 +525,7 @@ export default class DataProvider {
    */
   getLeadTags() {
     const params = {
-      fields: ['id', 'name'],
+      fields: DD.leadTag,
     };
 
     return new Promise((resolve, reject) => {
@@ -1188,6 +1188,26 @@ export default class DataProvider {
 
     return new Promise((resolve, reject) => {
       this.odoo.create('ir.attachment', attachment, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+
+  /**
+   * retrieve the names for the tag_ids
+   */
+  getContactCategories() {
+    const params = {
+      fields: DD.contactCategory,
+    };
+
+    return new Promise((resolve, reject) => {
+      this.odoo.search_read('res.partner.category', params, (err, data) => {
         if (err) {
           reject(err);
         } else {

@@ -108,7 +108,6 @@ export default class DD {
       'state_id',
       'street',
       'street2',
-      'function',
       'stage_id',
       'tag_ids',
       'product',
@@ -137,6 +136,7 @@ export default class DD {
       'zip',
       'state_id',
       'identification_id',
+      'category_id',
     ];
   }
 
@@ -211,5 +211,19 @@ export default class DD {
       'id',
       'name',
     ];
+  }
+
+  static get leadTag() {
+    return [
+      'id',
+      'name',
+    ]
+  }
+
+  static get contactCategory() {
+    return [
+      'id',
+      'display_name',
+    ]
   }
 }
