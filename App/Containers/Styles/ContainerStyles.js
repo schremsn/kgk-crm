@@ -28,6 +28,7 @@ export default StyleSheet.create({
   container: {
     padding: Metrics.doubleBaseMargin,
     height: Metrics.screenHeight,
+    backgroundColor: 'red'
   },
   containerHasForm: {
     padding: Metrics.doubleBaseMargin,
@@ -41,6 +42,8 @@ export default StyleSheet.create({
   },
   mainContainer: {
     marginBottom: 60,
+    height: Metrics.screenHeight,
+
     // padding: Metrics.doubleBaseMargin,
   },
   mainContainerModal: {
@@ -63,6 +66,7 @@ export default StyleSheet.create({
     borderColor: Colors.border,
     padding: Metrics.baseMargin,
     marginBottom: 20,
+    backgroundColor: 'transparent'
   },
   sectionHeaderContainerModal: {
     // borderWidth: 1,

@@ -32,45 +32,22 @@ class CommissionListScreen extends Component {
   componentDidMount() {
     BackHandler.addEventListener('backPress', this.handleBackAndroid);
 
-    NetInfo.isConnected.addEventListener(
-      'connectionChange',
-      this.handleConnectivityChange,
-    );
+    NetInfo.isConnected.fetch().then().done(() => {
+      NetInfo.isConnected.addEventListener('connectionChange', this.handleCheckNetwork);
+    });
   }
   componentWillUnmount() {
     BackHandler.removeEventListener('backPress');
     NetInfo.isConnected.removeEventListener(
       'connectionChange',
-      this.handleConnectivityChange,
+      this.handleCheckNetwork,
     );
   }
-  handleCheckNetwork() {
-    NetInfo.isConnected.fetch().then((isConnected) => {
-      console.log('netword status', isConnected);
-      if (isConnected) {
-        this.getCommissionList();
-      } else {
-        Alert.alert(
-          'Alert',
-          'Network is not connected!',
-          [
-            {
-              text: 'Cancel',
-              onPress: () => true,
-              style: 'cancel',
-            },
-            {
-              text: 'RETRY',
-              onPress: () => {
-                setTimeout(() => {
-                  this.handleCheckNetwork();
-                }, 2000);
-              },
-            },
-          ],
-        );
-      }
-    });
+  handleCheckNetwork(isConnected) {
+    console.log(isConnected)
+    if(isConnected){
+      this.getCommissionList();
+    }
   }
   handleBackAndroid() {
     this.props.navigation.goBack(null);
@@ -102,6 +79,7 @@ class CommissionListScreen extends Component {
   getCommissionList(isRefreshed) {
     getCommissionSummary()
       .then((list) => {
+        console.log(list)
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
         const dataSource = ds.cloneWithRows(list);
         this.setState({
@@ -134,7 +112,6 @@ class CommissionListScreen extends Component {
     } = this.state;
     return (
       <BaseScreen
-        onPress={() => { this.props.navigation.goBack(null); }}
         fullLoading={isFetching}
         isError={isError}
         onRefresh={this.onRefresh}
