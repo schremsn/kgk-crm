@@ -15,6 +15,17 @@ import MoreScreen from '../Containers/MoreScreen';
 import MessagesListScreen from '../Containers/Message/MessagesListScreen';
 import MessageDetailScreen from '../Containers/Message/MessageDetailScreen';
 import LeadStagesScreen from '../Containers/Lead/LeadStagesScreen';
+import ProductsListScreen from '../Containers/Product/ProductsListScreen';
+import ProductDetailScreen from '../Containers/Product/ProductDetailScreen';
+import ContactsListScreen from '../Containers/Contact/ContactsListScreen';
+import ContactsAddScreen from '../Containers/Contact/ContactsAddScreen';
+import ContactDetailScreen from '../Containers/Contact/ContactDetailScreen';
+import ContactsEditScreen from '../Containers/Contact/ContactsEditScreen';
+import LeadListScreen from '../Containers/Lead/LeadListScreen';
+import LeadEditScreen from '../Containers/Lead/LeadEditScreen';
+import LeadAddScreen from '../Containers/Lead/LeadAddScreen';
+import LeadDetailScreen from '../Containers/Lead/LeadDetailScreen';
+import CommissionStatusDetailScreen from '../Containers/Commission/CommissionStatusDetailScreen';
 
 import {
   ProductsListModal,
@@ -47,14 +58,14 @@ const HomeStack = StackNavigator({
 });
 const PipelineStack = StackNavigator({
   LeadStagesScreen: { screen: LeadStagesScreen },
-  LeadDetailScreen: { screen: LeadDetailModal },
-  LeadListScreen: { screen: LeadListModal },
-  LeadEditScreen: { screen: LeadEditModal },
-  LeadAddScreen: { screen: LeadAddModal },
-  LeadCommissionStatusDetailScreen: { screen: CommissionStatusDetailModal },
-  ProductsListScreen: { screen: ProductsListModal },
-  ContactListScreen: { screen: ContactsListModal },
-  ContactsAddScreen: { screen: ContactsAddModal },
+  LeadDetailScreen: { screen: LeadDetailScreen },
+  LeadListScreen: { screen: LeadListScreen },
+  LeadEditScreen: { screen: LeadEditScreen },
+  LeadAddScreen: { screen: LeadAddScreen },
+  LeadCommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
+  ProductsListPipelineScreen: { screen: ProductsListScreen },
+  ContactListPipelineScreen: { screen: ContactsListScreen },
+  ContactsAddPipelineScreen: { screen: ContactsAddScreen },
 
 }, {
   headerMode: 'none',
@@ -71,15 +82,15 @@ const PipelineStack = StackNavigator({
 });
 const MoreStack = StackNavigator({
   MoreScreen: { screen: MoreScreen },
-  ProductsListScreen: { screen: ProductsListModal },
-  ProductDetailScreen: { screen: ProductsDetailModal },
-  CommissionStatusDetailScreen: { screen: CommissionStatusDetailModal },
+  ProductsListScreen: { screen: ProductsListScreen },
+  ProductDetailScreen: { screen: ProductDetailScreen },
+  CommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
   CommissionStatusListScreen: { screen: CommissionStatusListScreen },
-  ContactsListScreen: { screen: ContactsListModal },
-  ContactDetailScreen: { screen: ContactDetailModal },
-  ContactsAddScreen: { screen: ContactsAddModal },
-  ContactsEditScreen: { screen: ContactsEditModal },
-  ContactsLeadAddScreen: { screen: LeadAddModal },
+  ContactsListScreen: { screen: ContactsListScreen },
+  ContactDetailScreen: { screen: ContactDetailScreen },
+  ContactsAddScreen: { screen: ContactsAddScreen },
+  ContactsEditScreen: { screen: ContactsEditScreen },
+  ContactsLeadAddScreen: { screen: LeadAddScreen },
 
 }, {
   headerMode: 'none',

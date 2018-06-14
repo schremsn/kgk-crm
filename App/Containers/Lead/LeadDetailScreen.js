@@ -27,7 +27,7 @@ const data = [
   { name: 'street', value: I18n.t('Street') },
   { name: 'street2', value: I18n.t('Street2') },
   { name: 'city', value: I18n.t('City') },
-  { name: 'state', value: I18n.t('Province') },
+  { name: 'state_id', value: I18n.t('Province') },
   { name: 'zip', value: I18n.t('Zip') },
   { name: 'email_from', value: I18n.t('Email') },
   { name: 'description', value: I18n.t('Description') },
@@ -131,6 +131,7 @@ class LeadDetailScreen extends Component {
     );
   }
   renderField(name, value) {
+    console.log(name, typeof (value) )
     switch (name) {
       case 'phone': return (
         <View style={styles.boxLeadPhone}>

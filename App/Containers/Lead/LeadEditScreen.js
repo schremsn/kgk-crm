@@ -35,6 +35,7 @@ class LeadEditScreen extends Component {
         product: leadDetail.product[0] ? parseInt(leadDetail.product[0], 0) : null,
         phone: leadDetail.phone ? leadDetail.phone : null,
         stage_id: leadDetail.stage_id[0] ? parseInt(leadDetail.stage_id[0], 0) : null,
+        state_id: leadDetail.state_id[0] ? parseInt(leadDetail.state_id[0], 0) : null,
         street: leadDetail.street ? leadDetail.street : null,
         street2: leadDetail.street2 ? leadDetail.street2 : null,
         zip: leadDetail.zip ? leadDetail.zip : null,
@@ -97,7 +98,7 @@ class LeadEditScreen extends Component {
           label: I18n.t('City'),
           stylesheet,
         },
-        state: {
+        state_id: {
           label: I18n.t('Province'),
           stylesheet,
           mode: 'dropdown',
@@ -141,7 +142,7 @@ class LeadEditScreen extends Component {
       const stateOptions = {};
       const stateLength = states.length;
       for (let i = 0; i < stateLength; i += 1) {
-        stateOptions[states[i].name] = states[i].name;
+        stateOptions[states[i].id] = states[i].name;
       }
       return stateOptions;
     };
@@ -157,7 +158,7 @@ class LeadEditScreen extends Component {
       street: t.maybe(t.String),
       street2: t.maybe(t.String),
       city: t.String,
-      state: t.enums(setStateOption(), 'province'),
+      state_id: t.enums(setStateOption(), 'province'),
       zip: t.maybe(t.String),
       email_from: t.maybe(t.String),
       description: t.maybe(t.String),
@@ -177,7 +178,8 @@ class LeadEditScreen extends Component {
   }
   onPress() {
     if (this.form.getValue()) {
-      const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
+      const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0), state: parseInt(this.form.getValue().state_id, 0) };
+      console.log(value)
       this.setState({ isLoading: true });
       updateLead(value)
         .then(() => {
@@ -207,7 +209,7 @@ class LeadEditScreen extends Component {
   templateInputProduct() {
     const value = this.state.productName;
     return (
-      <Input label={I18n.t('product')} value={value} press={() => { this.props.navigation.navigate('ProductsListScreen', { onSelectProduct: this.onSelectProduct });}} />
+      <Input label={I18n.t('product')} value={value} press={() => { this.props.navigation.navigate('ProductsListPipelineScreen', { onSelectProduct: this.onSelectProduct });}} />
     );
   }
   render() {

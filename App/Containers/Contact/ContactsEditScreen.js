@@ -28,7 +28,7 @@ class ContactsEditScreen extends Component {
         street: contactDetail.street ? contactDetail.street : null,
         street2: contactDetail.street2 ? contactDetail.street2 : null,
         city: contactDetail.city ? contactDetail.city : null,
-        state: contactDetail.state ? contactDetail.state : null,
+        state_id: contactDetail.state_id[0] ? contactDetail.state_id[0] : null,
         code_zip: contactDetail.code_zip ? contactDetail.code_zip : null,
         phone: contactDetail.phone ? contactDetail.phone : null,
         mobile: contactDetail.mobile ? contactDetail.mobile : null,
@@ -89,7 +89,7 @@ class ContactsEditScreen extends Component {
           label: I18n.t('Website'),
           stylesheet,
         },
-        state: {
+        state_id: {
           label: I18n.t('Province'),
           stylesheet,
           mode: 'dropdown',
@@ -119,7 +119,7 @@ class ContactsEditScreen extends Component {
       const stateOptions = {};
       const stateLength = states.length;
       for (let i = 0; i < stateLength; i += 1) {
-        stateOptions[states[i].name] = states[i].name;
+        stateOptions[states[i].id] = states[i].name;
       }
       return stateOptions;
     };
@@ -131,7 +131,7 @@ class ContactsEditScreen extends Component {
       street: t.maybe(t.String),
       street2: t.maybe(t.String),
       city: t.maybe(t.String),
-      state: t.enums(setStateOption(), 'state'),
+      state_id: t.enums(setStateOption(), 'state'),
       code_zip: t.maybe(t.Number),
       phone: t.maybe(t.Number),
       mobile: t.maybe(t.Number),
@@ -159,8 +159,9 @@ class ContactsEditScreen extends Component {
     this.setState({ value });
   }
   onPress() {
-    const value = this.form.getValue();
-    if (value) {
+    if (this.form.getValue()) {
+      const value = { ...this.form.getValue(), state: parseInt(this.form.getValue().state_id, 0) };
+      console.log(value)
       this.setState({ isLoading: true });
       updateCustomer(value)
         .then(() => {

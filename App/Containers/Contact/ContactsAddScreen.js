@@ -73,7 +73,7 @@ class ContactsAddScreen extends Component {
           stylesheet,
         },
         state: {
-          label: I18n.t('Province'),
+          label: `${I18n.t('Province')} ( ${I18n.t('required')} )`,
           stylesheet,
           mode: 'dropdown',
         },
@@ -98,11 +98,12 @@ class ContactsAddScreen extends Component {
   }
   async getTypeForm() {
     const { states } = this.props;
+    console.log(states)
     const setStateOption = () => {
       const stateOptions = {};
       const stateLength = states.length;
       for (let i = 0; i < stateLength; i += 1) {
-        stateOptions[states[i].name] = states[i].name;
+        stateOptions[states[i].id] = states[i].name;
       }
       return stateOptions;
     };
@@ -141,8 +142,8 @@ class ContactsAddScreen extends Component {
     this.setState({ value });
   }
   onPress() {
-    const value = this.form.getValue();
-    if (value) {
+    if (this.form.getValue()) {
+      const value = { ...this.form.getValue(), state: parseInt(this.form.getValue().state, 0) };
       this.setState({ isLoading: true });
       createCustomer(value)
         .then(() => {
