@@ -126,13 +126,13 @@ class LeadAddScreen extends Component {
   templateInputCustomer() {
     const value = this.state.customerName;
     return (
-      <Input label={I18n.t('Customer')} value={value} press={() => { this.props.navigation.navigate('ContactListScreen', { onSelectContact: this.onSelectContact }); }} />
+      <Input label={I18n.t('Customer')} value={value} press={() => { this.props.navigation.navigate('ContactListPipelineScreen', { onSelectContact: this.onSelectContact }); }} />
     );
   }
   templateInputProduct() {
     const value = this.state.productName;
     return (
-      <Input label={I18n.t('product')} value={value} press={() => { this.props.navigation.navigate('ProductsListScreen', { onSelectProduct: this.onSelectProduct }); }} />
+      <Input label={I18n.t('product')} value={value} press={() => { this.props.navigation.navigate('ProductsListPipelineScreen', { onSelectProduct: this.onSelectProduct }); }} />
     );
   }
   templateInputNotes() {

@@ -28,7 +28,7 @@ const data = [
   { name: 'website', value: I18n.t('Website') },
   { name: 'zip', value: I18n.t('Zip') },
   { name: 'email_from', value: I18n.t('Email') },
-  { name: 'state', value: I18n.t('Province') },
+  { name: 'state_id', value: I18n.t('Province') },
   { name: 'identification_id', value: I18n.t('identification id') },
 ];
 class ContactDetailScreen extends Component {
@@ -106,7 +106,7 @@ class ContactDetailScreen extends Component {
                     </TouchableOpacity>
                   }
                   </View>
-                : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
+                : <Text style={styles.rowInfo}>{typeof (rowData[item.name]) === 'object' ? rowData[item.name][1] : rowData[item.name]}</Text>
             }
           </View>
 
@@ -148,6 +148,7 @@ class ContactDetailScreen extends Component {
   }
   render() {
     const { contactDetail, isShowActions, isRefreshing } = this.state;
+    console.log(contactDetail)
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
