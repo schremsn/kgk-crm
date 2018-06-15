@@ -1,31 +1,25 @@
-import React, { Component } from 'react';
-import {
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  Image,
-  View,
-  Alert,
-} from 'react-native';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { Alert, Image, KeyboardAvoidingView, TouchableOpacity, View } from 'react-native';
+import CheckBox from 'react-native-check-box';
 // libraries
 import I18n from 'react-native-i18n';
-import CheckBox from 'react-native-check-box';
 import * as Keychain from 'react-native-keychain';
-// components
-import Wallpaper from '../Components/Wallpaper';
+import { connect } from 'react-redux';
 import ButtonSubmit from '../Components/ButtonSubmit';
-import { login } from '../Redux/AuthRedux';
 import styles from '../Components/Styles/ComponentStyles';
 import UserInput from '../Components/UserInput';
-import { Images, Colors } from '../Themes';
+// components
+import Wallpaper from '../Components/Wallpaper';
+import { login } from '../Redux/AuthRedux';
+import { Colors, Images } from '../Themes';
 
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'josef@kgk.vn',
-      password: 'zaq12wsx',
+      username: '',
+      password: '',
       showPass: true,
       isRemember: false,
     };
