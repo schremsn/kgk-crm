@@ -9,7 +9,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     height: 50,
     marginBottom: Metrics.doubleBaseMargin,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
 
   },
   boxButton: {
@@ -22,7 +22,7 @@ export default StyleSheet.create({
     color: Colors.snow,
     fontSize: 23,
     fontWeight: '600',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   // wallpaper
   picture: {

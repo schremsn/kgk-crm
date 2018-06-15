@@ -10,12 +10,12 @@ stylesheet.controlLabel.normal.color = Colors.silver;
 stylesheet.controlLabel.normal.backgroundColor = 'transparent';
 stylesheet.controlLabel.error.backgroundColor = 'transparent';
 stylesheet.textbox.normal.color = Colors.silver;
-stylesheet.textbox.normal.backgroundColor = 'transparent'
-stylesheet.textbox.error.backgroundColor = 'transparent'
+stylesheet.textbox.normal.backgroundColor = 'transparent';
+stylesheet.textbox.error.backgroundColor = 'transparent';
 stylesheet.textbox.normal.height = 45;
 stylesheet.textboxView.normal.height = 45;
-stylesheet.textboxView.normal.backgroundColor = 'transparent'
-stylesheet.textboxView.error.backgroundColor = 'transparent'
+stylesheet.textboxView.normal.backgroundColor = 'transparent';
+stylesheet.textboxView.error.backgroundColor = 'transparent';
 stylesheet.textbox.notEditable.height = 45;
 stylesheet.textbox.error.color = Colors.silver;
 if (Platform.OS !== 'ios') {
@@ -38,7 +38,7 @@ export default StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 40 : Metrics.doubleBaseMargin,
     padding: Metrics.doubleBaseMargin,
     height: Metrics.screenHeight,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   containerHasForm: {
     padding: Metrics.doubleBaseMargin,
@@ -76,7 +76,7 @@ export default StyleSheet.create({
     borderColor: Colors.border,
     padding: Metrics.baseMargin,
     marginBottom: 20,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   sectionHeaderContainerModal: {
     // borderWidth: 1,
@@ -128,7 +128,7 @@ export default StyleSheet.create({
   buttonBox: {
     position: 'absolute',
     right: 30,
-    bottom: Platform.OS === 'ios' ? 60 : 50,
+    bottom: Platform.OS === 'ios' ? 60 : 100,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -158,7 +158,7 @@ export default StyleSheet.create({
   text: {
     paddingRight: 20,
     color: 'white',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   // Style Car
   cardTitle: {
@@ -241,7 +241,7 @@ export default StyleSheet.create({
     backgroundColor: Colors.snow,
     borderRadius: 20,
     paddingLeft: 20,
-    height: 40
+    height: 40,
   },
   inputText: {
     backgroundColor: 'transparent',
@@ -285,7 +285,7 @@ export default StyleSheet.create({
   },
   boxActions: {
     position: 'absolute',
-    bottom: 35,
+    bottom: Platform.OS === 'ios' ? 35 : 60,
     left: 0,
     right: 0,
     top: 0,

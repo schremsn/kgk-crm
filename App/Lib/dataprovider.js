@@ -1152,7 +1152,7 @@ export default class DataProvider {
       res_model: 'crm.lead',
       res_id: leadId,
       datas: data,
-    }
+    };
 
     return new Promise((resolve, reject) => {
       this.odoo.create('ir.attachment', attachment, (err, data) => {
@@ -1165,7 +1165,7 @@ export default class DataProvider {
     });
   }
 
-    /**
+  /**
    * upload a base64 encoded buffer as and attachment
    * @param {number} contactId
    * @param {base64} data
@@ -1182,7 +1182,7 @@ export default class DataProvider {
       res_model: 'res.partner',
       res_id: contactId,
       datas: data,
-    }
+    };
 
     return new Promise((resolve, reject) => {
       this.odoo.create('ir.attachment', attachment, (err, data) => {
@@ -1194,5 +1194,4 @@ export default class DataProvider {
       });
     });
   }
-
 }

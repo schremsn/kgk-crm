@@ -123,7 +123,7 @@ export const LeadDetailModal = StackNavigator({
     // swipeEnabled: false,
   },
 });
-export const  CommissionStatusDetailModal = StackNavigator({
+export const CommissionStatusDetailModal = StackNavigator({
   CommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
 }, {
   headerMode: 'none',

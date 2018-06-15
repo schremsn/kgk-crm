@@ -38,7 +38,7 @@ import {
   LeadEditModal,
   LeadAddModal,
   LeadDetailModal,
-  CommissionStatusDetailModal
+  CommissionStatusDetailModal,
 } from './ModalNavigation';
 
 const HomeStack = StackNavigator({
@@ -160,7 +160,7 @@ const AppStack = TabNavigator(
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     lazy: false,
-    swipeEnabled: true
+    swipeEnabled: true,
   },
 );
 const AuthStack = StackNavigator(

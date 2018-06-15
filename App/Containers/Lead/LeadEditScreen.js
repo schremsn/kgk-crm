@@ -8,13 +8,13 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Toast from 'react-native-easy-toast';
 // components
 import RoundedButton from '../../Components/RoundedButton';
-import BaseScreen from '../../Components/BaseScreen'
+import BaseScreen from '../../Components/BaseScreen';
 import ProgressBar from '../../Components/ProgressBar';
 import Input from '../../Components/Form/Input';
 // actions
 import { updateLead } from '../../Redux/LeadRedux';
 // styles
-import { Colors } from '../../Themes'
+import { Colors } from '../../Themes';
 import { stylesheet } from '../Styles/ContainerStyles';
 
 const { Form } = t.form;
@@ -106,7 +106,7 @@ class LeadEditScreen extends Component {
           mode: 'dropdown',
           itemStyle: {
             color: Colors.snow,
-            backgroundColor: 'transparent'
+            backgroundColor: 'transparent',
           },
         },
         zip: {
@@ -126,7 +126,7 @@ class LeadEditScreen extends Component {
           mode: 'dropdown',
           itemStyle: {
             color: Colors.snow,
-            backgroundColor: 'transparent'
+            backgroundColor: 'transparent',
           },
         },
       },
@@ -218,7 +218,7 @@ class LeadEditScreen extends Component {
   templateInputProduct() {
     const value = this.state.productName;
     return (
-      <Input label={I18n.t('product')} value={value} press={() => { this.props.navigation.navigate('ProductsListPipelineScreen', { onSelectProduct: this.onSelectProduct });}} />
+      <Input label={I18n.t('product')} value={value} press={() => { this.props.navigation.navigate('ProductsListPipelineScreen', { onSelectProduct: this.onSelectProduct }); }} />
     );
   }
   render() {
@@ -226,7 +226,7 @@ class LeadEditScreen extends Component {
     return (
       <BaseScreen
         title={I18n.t('Edit Lead')}
-        onPress={() => { this.props.navigation.goBack(null) }}
+        onPress={() => { this.props.navigation.goBack(null); }}
       >
         {isLoading && <ProgressBar isSubmitLoading />}
         <KeyboardAwareScrollView

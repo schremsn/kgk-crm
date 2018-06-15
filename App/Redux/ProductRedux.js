@@ -33,7 +33,7 @@ export const getProducts = (offset, cb) => new Promise((resolve, reject) => {
   const requestApi = () => (
     dataprovider.getProducts(offset)
       .then((list) => {
-        resolve(list, offset + 50)
+        resolve(list, offset + 50);
       })
       .catch((error) => {
         throw new Error(error);

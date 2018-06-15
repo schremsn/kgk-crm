@@ -25,9 +25,11 @@ export const getCommissionSummary = (month = 2) => new Promise((resolve, reject)
   const requestApi = () => (
     dataprovider.getCommissionSummary(month)
       .then((data) => {
+        console.log(data);
         resolve(data);
       })
       .catch((err) => {
+        console.log(err);
         throw new Error(err);
       })
   );

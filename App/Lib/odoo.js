@@ -1,14 +1,14 @@
 import { Platform } from 'react-native';
 
 const Odoo = function (config) {
-  config = config || {}
+  config = config || {};
 
-  this.host = config.host
-  this.port = config.port || 80
-  this.database = config.database
-  this.username = config.username
-  this.password = config.password
-}
+  this.host = config.host;
+  this.port = config.port || 80;
+  this.database = config.database;
+  this.username = config.username;
+  this.password = config.password;
+};
 
 // Connect
 
@@ -16,41 +16,41 @@ Odoo.prototype.connect = function (cb) {
   const params = {
     db: this.database,
     login: this.username,
-    password: this.password
-  }
+    password: this.password,
+  };
 
-  const json = JSON.stringify({ params })
-  const url = `${this.host}:${this.port}/web/session/authenticate`
+  const json = JSON.stringify({ params });
+  const url = `${this.host}:${this.port}/web/session/authenticate`;
 
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'Content-Length': json.length
+      'Content-Length': json.length,
     },
-    body: json
-  }
+    body: json,
+  };
   fetch(url, options)
     .then((res) => {
-      this.sid = res.headers.map['set-cookie'][0].split(';')[0]
-      return res.json()
+      this.sid = res.headers.map['set-cookie'][0].split(';')[0];
+      return res.json();
     })
     .then((data) => {
       if (data.error) {
-        cb(data.error, null)
+        cb(data.error, null);
       } else {
-        this.partnerId = data.result.partner_id
-        this.uid = data.result.uid
-        this.session_id = data.result.session_id
-        this.context = data.result.user_context
-        this.username = data.result.username
-        cb(null, data.result)
+        this.partnerId = data.result.partner_id;
+        this.uid = data.result.uid;
+        this.session_id = data.result.session_id;
+        this.context = data.result.user_context;
+        this.username = data.result.username;
+        cb(null, data.result);
       }
     }, (err) => {
-      cb(err, null)
-    })
-}
+      cb(err, null);
+    });
+};
 
 // Search records
 Odoo.prototype.search = function (model, params, callback) {
@@ -59,15 +59,15 @@ Odoo.prototype.search = function (model, params, callback) {
 
   this._request('/web/dataset/call_kw', {
     kwargs: {
-      context: this.context
+      context: this.context,
     },
     model,
     method: 'search',
     args: [
-      params.domain
-    ]
-  }, callback)
-}
+      params.domain,
+    ],
+  }, callback);
+};
 
 // Search & Read records
 // https://www.odoo.com/documentation/8.0/api_integration.html#search-and-read
@@ -87,10 +87,10 @@ Odoo.prototype.search_read = function (model, params, callback) {
       offset: params.offset,
       limit: params.limit,
       order: params.order,
-      fields: params.fields
-    }
-  }, callback)
-}
+      fields: params.fields,
+    },
+  }, callback);
+};
 
 // Get record
 // https://www.odoo.com/documentation/8.0/api_integration.html#read-records
@@ -102,59 +102,59 @@ Odoo.prototype.get = function (model, params, callback) {
     model,
     method: 'read',
     args: [
-      params.ids
+      params.ids,
     ],
     kwargs: {
-      fields: params.fields
-    }
-  }, callback)
-} // get
+      fields: params.fields,
+    },
+  }, callback);
+}; // get
 
 // Browse records by ID
 // Not a direct implementation of Odoo RPC 'browse' but rather a workaround based on 'search_read'
 // https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model.browse
 Odoo.prototype.browse_by_id = function (model, params, callback) {
-  params.domain = [['id', '>', '0']] // assumes all records IDs are > 0
-  this.search_read(model, params, callback)
-} // browse
+  params.domain = [['id', '>', '0']]; // assumes all records IDs are > 0
+  this.search_read(model, params, callback);
+}; // browse
 
 // Create record
 Odoo.prototype.create = function (model, params, callback) {
   this._request('/web/dataset/call_kw', {
     kwargs: {
-      context: this.context
+      context: this.context,
     },
     model,
     method: 'create',
-    args: [params]
-  }, callback)
-}
+    args: [params],
+  }, callback);
+};
 
 // Update record
 Odoo.prototype.update = function (model, id, params, callback) {
   if (id) {
     this._request('/web/dataset/call_kw', {
       kwargs: {
-        context: this.context
+        context: this.context,
       },
       model,
       method: 'write',
-      args: [[id], params]
-    }, callback)
+      args: [[id], params],
+    }, callback);
   }
-}
+};
 
 // Delete record
 Odoo.prototype.delete = function (model, id, callback) {
   this._request('/web/dataset/call_kw', {
     kwargs: {
-      context: this.context
+      context: this.context,
     },
     model,
     method: 'unlink',
-    args: [[id]]
-  }, callback)
-}
+    args: [[id]],
+  }, callback);
+};
 
 // Generic RPC wrapper
 // DOES NOT AUTO-INCLUDE context
@@ -165,19 +165,19 @@ Odoo.prototype.rpc_call = function (endpoint, params, callback) {
   // assert(params.kwargs);
   // assert(params.kwargs.context);
 
-  this._request(endpoint, params, callback)
-} // generic
+  this._request(endpoint, params, callback);
+}; // generic
 
 // Private functions
 Odoo.prototype._request = function (path, params, cb) {
-  params = params || {}
-  const url = `${this.host}:${this.port}${path || '/'}`
+  params = params || {};
+  const url = `${this.host}:${this.port}${path || '/'}`;
   const options = {
     method: 'POST',
-    headers: Platform.OS === "ios" ? {
+    headers: Platform.OS === 'ios' ? {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      "Set-Cookie": `${this.sid};`,
+      'Set-Cookie': `${this.sid};`,
     } : {
       'Content-Type': 'application/json',
       Accept: 'application/json',
@@ -185,20 +185,20 @@ Odoo.prototype._request = function (path, params, cb) {
     },
     credentials: 'include',
     body: JSON.stringify({
-      jsonrpc: '2.0', id: new Date().getUTCMilliseconds(), method: 'call', params
-    })
-  }
+      jsonrpc: '2.0', id: new Date().getUTCMilliseconds(), method: 'call', params,
+    }),
+  };
   fetch(url, options)
     .then(res => res.json())
     .then((data) => {
       if (data.error) {
-        cb(data.error, null)
+        cb(data.error, null);
       } else {
-        cb(null, data.result)
+        cb(null, data.result);
       }
     }, (err) => {
-      cb(err, null)
-    })
-}
+      cb(err, null);
+    });
+};
 
-module.exports = Odoo
+module.exports = Odoo;

@@ -47,7 +47,7 @@ class ContactDetailScreen extends Component {
   componentWillMount() {
     this.getContactDetail();
   }
-  getContactDetail(isRefreshed){
+  getContactDetail(isRefreshed) {
     const { contactId } = this.props.navigation.state.params;
     getCustomerDetail(contactId)
       .then((result) => {
@@ -76,7 +76,7 @@ class ContactDetailScreen extends Component {
     );
   }
   renderCard(cardTitle, rowData) {
-    return this.renderRows(rowData)
+    return this.renderRows(rowData);
   }
   renderRows(rowData) {
     return (
@@ -124,7 +124,7 @@ class ContactDetailScreen extends Component {
           style={styles.boxActionContent}
         >
           <FullButton text={I18n.t('Add Contact')} onPress={() => this.props.navigation.navigate('ContactsAddScreen')} />
-          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('ContactsEditScreen', { contactDetail: this.state.contactDetail, reloadData: () => { this.getContactDetail()} })} />
+          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('ContactsEditScreen', { contactDetail: this.state.contactDetail, reloadData: () => { this.getContactDetail(); } })} />
           <FullButton
             text={I18n.t('Add Lead')}
             onPress={() => this.props.navigation.navigate('ContactsLeadAddScreen', { contactId: this.state.contactDetail.id, contactName: this.state.contactDetail.name })}

@@ -14,7 +14,7 @@ import { Colors, Metrics } from '../Themes';
 import RoundedButton from './RoundedButton';
 import styles from '../Containers/Styles/ContainerStyles';
 
-const GetDataFailed = ({ onRefresh, style, }) => (
+const GetDataFailed = ({ onRefresh, style }) => (
   <ScrollView
     style={[styles.mainContainer]}
   >

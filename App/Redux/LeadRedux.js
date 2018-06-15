@@ -76,7 +76,7 @@ export const updateLead = lead => new Promise((resolve, reject) => {
       .catch((error) => {
         throw new Error(error);
       })
-  )
+  );
   retryPromise(api, reject, 'updateLead');
 });
 export const createLead = lead => new Promise((resolve, reject) => {
@@ -88,7 +88,7 @@ export const createLead = lead => new Promise((resolve, reject) => {
       .catch((error) => {
         throw new Error(error);
       })
-  )
+  );
   retryPromise(api, reject, 'createLead');
 });
 export const getLostReasons = () => dispatch => new Promise((resolve, reject) => {

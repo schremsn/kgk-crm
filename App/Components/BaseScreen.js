@@ -20,7 +20,7 @@ export default class BaseScreen extends Component {
       title,
       onPress,
       onRefresh,
-      circleButton
+      circleButton,
     } = this.props;
     return (
       <View style={[styles.container]}>
@@ -33,13 +33,13 @@ export default class BaseScreen extends Component {
         }
         {(!fullLoading && !isError) && children}
         {
-          circleButton && <CircleButton onPress={circleButton} icon="ios-add-outline"/>
+          circleButton && <CircleButton onPress={circleButton} icon="ios-add-outline" />
         }
         {fullLoading && <ProgressBar style={{ height: Metrics.screenHeight - 240 }} />}
         {
           isError && <GetDataFailed onRefresh={onRefresh} />
         }
-        {/*<Toast ref={(c) => { this.toast = c; }} />*/}
+        {/* <Toast ref={(c) => { this.toast = c; }} /> */}
       </View>
     );
   }
