@@ -160,6 +160,7 @@ const AppStack = TabNavigator(
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     lazy: false,
+    swipeEnabled: true
   },
 );
 const AuthStack = StackNavigator(

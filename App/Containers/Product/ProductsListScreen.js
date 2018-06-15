@@ -66,7 +66,7 @@ class ProductsListScreen extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          if (this.props.navigation.state.params.onSelectProduct) {
+          if (this.props.navigation.state.params && this.props.navigation.state.params.onSelectProduct) {
             this.props.navigation.state.params.onSelectProduct(item);
           } else {
             this.props.navigation.navigate('ProductDetailScreen', { productId: item.id });

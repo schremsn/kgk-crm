@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Image, Modal } from 'react-native';
 import I18n from 'react-native-i18n';
+// libraries
 import t from 'tcomb-form-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
-import { Images } from '../../Themes/index';
-import styles, { stylesheet } from '../Styles/ContainerStyles';
-import Header from '../../Components/Header';
-import { updateLead } from '../../Redux/LeadRedux';
+// components
 import RoundedButton from '../../Components/RoundedButton';
+import BaseScreen from '../../Components/BaseScreen'
 import ProgressBar from '../../Components/ProgressBar';
 import Input from '../../Components/Form/Input';
-
+// actions
+import { updateLead } from '../../Redux/LeadRedux';
+// styles
+import { Colors } from '../../Themes'
+import { stylesheet } from '../Styles/ContainerStyles';
 
 const { Form } = t.form;
 
@@ -102,6 +104,10 @@ class LeadEditScreen extends Component {
           label: I18n.t('Province'),
           stylesheet,
           mode: 'dropdown',
+          itemStyle: {
+            color: Colors.snow,
+            backgroundColor: 'transparent'
+          },
         },
         zip: {
           label: I18n.t('Zip'),
@@ -118,6 +124,10 @@ class LeadEditScreen extends Component {
           label: I18n.t('Stage'),
           stylesheet,
           mode: 'dropdown',
+          itemStyle: {
+            color: Colors.snow,
+            backgroundColor: 'transparent'
+          },
         },
       },
       i18n: {
@@ -179,7 +189,6 @@ class LeadEditScreen extends Component {
   onPress() {
     if (this.form.getValue()) {
       const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0), state: parseInt(this.form.getValue().state_id, 0) };
-      console.log(value)
       this.setState({ isLoading: true });
       updateLead(value)
         .then(() => {
@@ -215,9 +224,11 @@ class LeadEditScreen extends Component {
   render() {
     const { value, isLoading, type } = this.state;
     return (
-      <View style={[styles.containerHasForm]}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('Edit Lead')} onPress={() => this.props.navigation.goBack(null)} />
+      <BaseScreen
+        title={I18n.t('Edit Lead')}
+        onPress={() => { this.props.navigation.goBack(null) }}
+      >
+        {isLoading && <ProgressBar isSubmitLoading />}
         <KeyboardAwareScrollView
           style={{ marginBottom: 60 }}
           innerRef={(ref) => { this.scrollView = ref; }}
@@ -234,10 +245,7 @@ class LeadEditScreen extends Component {
           }
           <RoundedButton onPress={this.onPress} text={I18n.t('Update')} />
         </KeyboardAwareScrollView>
-        {
-          isLoading && <ProgressBar isSubmitLoading />
-        }
-      </View>
+      </BaseScreen>
     );
   }
 }

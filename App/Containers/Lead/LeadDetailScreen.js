@@ -1,19 +1,21 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { View, ScrollView, Text, Image, TouchableOpacity, Alert, TouchableHighlight, TextInput, KeyboardAvoidingView, Picker } from 'react-native';
-import I18n from 'react-native-i18n';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Communications from 'react-native-communications';
-import * as Animatable from 'react-native-animatable';
-import Toast from 'react-native-easy-toast';
-import styles from '../Styles/ContainerStyles';
-import { Images, Colors } from '../../Themes/index';
-import { getLead, markLeadWon, markLeadLost, getLeadStatus, getLostReasons } from '../../Redux/LeadRedux';
-import Header from '../../Components/Header';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { View, ScrollView, Text, Image, TouchableOpacity, Alert, TouchableHighlight, Platform, KeyboardAvoidingView, Picker } from 'react-native'
+import I18n from 'react-native-i18n'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Communications from 'react-native-communications'
+import * as Animatable from 'react-native-animatable'
+import Toast from 'react-native-easy-toast'
+import ModalSelector from 'react-native-modal-selector'
 
-import FullButton from '../../Components/FullButton';
-import RoundedButton from '../../Components/RoundedButton';
+import styles from '../Styles/ContainerStyles'
+import { Images, Colors } from '../../Themes/index'
+import { getLead, markLeadWon, markLeadLost, getLeadStatus, getLostReasons } from '../../Redux/LeadRedux'
+import Header from '../../Components/Header'
+
+import FullButton from '../../Components/FullButton'
+import RoundedButton from '../../Components/RoundedButton'
 
 const data = [
   { name: 'id', value: I18n.t('id') },
@@ -31,40 +33,41 @@ const data = [
   { name: 'zip', value: I18n.t('Zip') },
   { name: 'email_from', value: I18n.t('Email') },
   { name: 'description', value: I18n.t('Description') },
-  { name: 'stage_id', value: I18n.t('Stage') },
-];
+  { name: 'stage_id', value: I18n.t('Stage') }
+]
 class LeadDetailScreen extends Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       leadDetail: {},
       isShowActions: false,
       isSelectLostReason: false,
       reasonLost: props.listReasonLost[0],
-    };
-    this.renderCard = this.renderCard.bind(this);
-    this.renderRows = this.renderRows.bind(this);
-    this.renderListActions = this.renderListActions.bind(this);
-    this.renderSelectLostReason = this.renderSelectLostReason.bind(this);
-    this.onMarkLeadWon = this.onMarkLeadWon.bind(this);
-    this.onMarkLeadLost = this.onMarkLeadLost.bind(this);
+      textInputValue: ''
+    }
+    this.renderCard = this.renderCard.bind(this)
+    this.renderRows = this.renderRows.bind(this)
+    this.renderListActions = this.renderListActions.bind(this)
+    this.renderSelectLostReason = this.renderSelectLostReason.bind(this)
+    this.onMarkLeadWon = this.onMarkLeadWon.bind(this)
+    this.onMarkLeadLost = this.onMarkLeadLost.bind(this)
   }
-  componentWillMount() {
-    this.getLeadDetail();
+  componentWillMount () {
+    this.getLeadDetail()
   }
-  componentDidMount() {
+  componentDidMount () {
     if (!this.state.reasonLost.id) {
-      this.props.getLostReasons();
+      this.props.getLostReasons()
     }
   }
-  getLeadDetail() {
-    const { leadId } = this.props.navigation.state.params;
+  getLeadDetail () {
+    const { leadId } = this.props.navigation.state.params
     getLead(leadId)
       .then((leadDetail) => {
-        this.setState({ leadDetail: leadDetail[0] });
-      });
+        this.setState({ leadDetail: leadDetail[0] })
+      })
   }
-  onCallPhone(phone) {
+  onCallPhone (phone) {
     Alert.alert(
       I18n.t('Confirm'),
       `${I18n.t('Do you want to call')} ${phone} ?`,
@@ -72,49 +75,49 @@ class LeadDetailScreen extends Component {
         {
           text: 'Cancel',
           onPress: () => true,
-          style: 'cancel',
+          style: 'cancel'
         },
         {
           text: 'OK',
           onPress: () => {
-            Communications.phonecall(phone, true);
-          },
-        },
-      ],
-    );
+            Communications.phonecall(phone, true)
+          }
+        }
+      ]
+    )
   }
-  getPartnerInformation() {
+  getPartnerInformation () {
     getLeadStatus(this.state.leadDetail.id)
       .then((res) => {
-        this.props.navigation.navigate('LeadCommissionStatusDetailScreen', { commissionDetail: res[0] });
-      });
+        this.props.navigation.navigate('LeadCommissionStatusDetailScreen', { commissionDetail: res[0] })
+      })
   }
-  onMarkLeadWon(lead) {
+  onMarkLeadWon (lead) {
     markLeadWon(lead)
       .then(() => {
-        this.toast.show(I18n.t('Mark lead won is success'), 1000);
-        this.setState({ isShowActions: false });
-      });
+        this.toast.show(I18n.t('Mark lead won is success'), 1000)
+        this.setState({ isShowActions: false })
+      })
   }
-  onMarkLeadLost() {
+  onMarkLeadLost () {
     const lead = {
       id: parseInt(this.state.leadDetail.id, 0),
-      lost_reason: this.state.reasonLost.id,
-    };
+      lost_reason: this.state.reasonLost.id
+    }
     markLeadLost(lead)
       .then(() => {
-        this.toast.show(I18n.t('Mark lead lost is success'), 1000);
-        this.setState({ isSelectLostReason: false, isShowActions: false });
-      });
+        this.toast.show(I18n.t('Mark lead lost is success'), 1000)
+        this.setState({ isSelectLostReason: false, isShowActions: false })
+      })
   }
-  renderCard(cardTitle, rowData) {
+  renderCard (cardTitle, rowData) {
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <KeyboardAvoidingView behavior='padding' enabled>
         {this.renderRows(rowData)}
       </KeyboardAvoidingView>
-    );
+    )
   }
-  renderRows(rowData) {
+  renderRows (rowData) {
     return (
       data.map(item => (
         <View key={item.name} style={styles.rowContainer}>
@@ -128,10 +131,9 @@ class LeadDetailScreen extends Component {
           </View>
 
         </View>))
-    );
+    )
   }
-  renderField(name, value) {
-    console.log(name, typeof (value) )
+  renderField (name, value) {
     switch (name) {
       case 'phone': return (
         <View style={styles.boxLeadPhone}>
@@ -142,11 +144,11 @@ class LeadDetailScreen extends Component {
               style={styles.buttonCallPhone}
               onPress={() => this.onCallPhone(value)}
             >
-              <Ionicons name="ios-call-outline" size={25} color={Colors.banner} />
+              <Ionicons name='ios-call-outline' size={25} color={Colors.banner} />
             </TouchableOpacity>
           }
         </View>
-      );
+      )
       case 'mobile': return (
         <View style={styles.boxLeadPhone}>
           <Text style={styles.rowInfo}>{value}</Text>
@@ -156,11 +158,11 @@ class LeadDetailScreen extends Component {
               style={styles.buttonCallPhone}
               onPress={() => this.onCallPhone(value)}
             >
-              <Ionicons name="ios-call-outline" size={25} color={Colors.banner} />
+              <Ionicons name='ios-call-outline' size={25} color={Colors.banner} />
             </TouchableOpacity>
           }
         </View>
-      );
+      )
       case 'external_status': return (
         <View style={styles.boxLeadPhone}>
           <Text style={styles.rowInfo}>{value}</Text>
@@ -170,32 +172,32 @@ class LeadDetailScreen extends Component {
               style={styles.buttonCallPhone}
               onPress={() => this.getPartnerInformation()}
             >
-              <Ionicons name="ios-information-circle-outline" size={25} color={Colors.banner} />
+              <Ionicons name='ios-information-circle-outline' size={25} color={Colors.banner} />
             </TouchableOpacity>
           }
         </View>
-      );
-      default: return (<Text style={styles.rowInfo}>{typeof (value) === 'object' ? value[1] : value} </Text>);
+      )
+      default: return (<Text style={styles.rowInfo}>{typeof (value) === 'object' ? value[1] : value} </Text>)
     }
   }
-  renderListActions() {
+  renderListActions () {
     return (
       <TouchableHighlight
         onPress={() => this.setState({ isShowActions: false })}
         activeOpacity={1}
-        underlayColor="#5f3e63b0"
+        underlayColor='#5f3e63b0'
         style={styles.boxActions}
       >
         <Animatable.View
-          animation="fadeInUpBig"
+          animation='fadeInUpBig'
           iterationCount={1}
           duration={300}
-          direction="normal"
+          direction='normal'
           style={styles.boxActionContent}
         >
 
           <FullButton text={I18n.t('New lead')} onPress={() => this.props.navigation.navigate('LeadAddScreen')} />
-          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail, reloadData: () => { this.getLeadDetail(); } })} />
+          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail, reloadData: () => { this.getLeadDetail() } })} />
           <FullButton
             text={I18n.t('Log activity')}
             disable
@@ -217,27 +219,34 @@ class LeadDetailScreen extends Component {
         </Animatable.View>
 
       </TouchableHighlight>
-    );
+    )
   }
-  renderSelectLostReason() {
+  renderSelectLostReason () {
     return (
-      <View
-        style={styles.boxPicker}
-      >
+      <View style={styles.boxPicker}>
         <View style={styles.boxPickerContent}>
-          <TextInput>The Lost Reason </TextInput>
-          <Picker
-            selectedValue={this.state.reasonLost}
-            style={{ height: 50, width: '100%' }}
-            mode="dropdown"
-            onValueChange={itemValue => this.setState({ reasonLost: itemValue })}
-          >
-            {
-              this.props.listReasonLost.map(item => (
-                <Picker.Item key={item.id} label={item.name} value={item.id} />
-              ))
-            }
-          </Picker>
+          <Text style={{ marginBottom: 20 }}>The Lost Reason </Text>
+          {
+              Platform.OS === 'ios'
+              ? <ModalSelector
+                data={this.props.listReasonLost}
+                keyExtractor={item => item.id}
+                labelExtractor={item => item.name}
+                onChange={(itemValue) => { this.setState({ reasonLost: itemValue }) }} />
+              : <Picker
+                selectedValue={this.state.reasonLost}
+                style={{ height: 50, width: '100%' }}
+                mode='dropdown'
+                onValueChange={itemValue => this.setState({ reasonLost: itemValue })}
+              >
+                {
+                  this.props.listReasonLost.map(item => (
+                    <Picker.Item key={item.id} label={item.name} value={item.id} />
+                  ))
+                }
+              </Picker>
+          }
+
           <View style={styles.boxButtons}>
             <RoundedButton
               onPress={() => this.setState({ isSelectLostReason: false })}
@@ -248,17 +257,19 @@ class LeadDetailScreen extends Component {
           </View>
         </View>
       </View>
-    );
+    )
   }
-  render() {
-    const { leadDetail, isShowActions, isSelectLostReason } = this.state;
+  render () {
+    const { leadDetail, isShowActions, isSelectLostReason } = this.state
+
     return (
       <View style={styles.container}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
+        <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
         <Header
           title={I18n.t('lead detail')}
-          onPress={() => { this.props.navigation.goBack(null); }}
+          onPress={() => { this.props.navigation.goBack(null) }}
         />
+
         <ScrollView style={[styles.mainContainerModal]}>
           {leadDetail.id && this.renderCard('Lead Information', leadDetail)}
         </ScrollView>
@@ -275,27 +286,27 @@ class LeadDetailScreen extends Component {
             onPress={() => this.setState({ isShowActions: true })}
           >
             <View style={styles.button}>
-              <Ionicons name="ios-more-outline" size={25} color={Colors.snow} />
+              <Ionicons name='ios-more-outline' size={25} color={Colors.snow} />
             </View>
           </TouchableOpacity>
         }
-        <Toast ref={(c) => { this.toast = c; }} />
+        <Toast ref={(c) => { this.toast = c }} />
       </View>
-    );
+    )
   }
 }
 
 LeadDetailScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   listReasonLost: PropTypes.array.isRequired,
-  getLostReasons: PropTypes.func.isRequired,
-};
+  getLostReasons: PropTypes.func.isRequired
+}
 
 const mapStateToProps = state => ({
-  listReasonLost: state.lead.listReasonLost,
-});
+  listReasonLost: state.lead.listReasonLost
+})
 const mapDispatchToProps = dispatch => ({
-  getLostReasons: () => dispatch(getLostReasons()),
-});
+  getLostReasons: () => dispatch(getLostReasons())
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(LeadDetailScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(LeadDetailScreen)

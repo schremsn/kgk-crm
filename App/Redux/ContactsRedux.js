@@ -27,7 +27,6 @@ export const createCustomer = data => new Promise((resolve, reject) => {
     dataprovider.createCustomer(data)
       .then((detail) => {
         resolve(detail);
-        console.log('crateCustomers', detail);
       })
       .catch((err) => {
         throw new Error(err);
@@ -79,7 +78,6 @@ export const searchCustomer = searchTerm => new Promise((resolve, reject) => {
       })
       .catch((err) => {
         reject(err);
-        console.log(`error user ${err}`);
       })
   );
   retryPromise(requestApi, 'searchCustomer');

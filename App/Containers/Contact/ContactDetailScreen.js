@@ -51,7 +51,6 @@ class ContactDetailScreen extends Component {
     const { contactId } = this.props.navigation.state.params;
     getCustomerDetail(contactId)
       .then((result) => {
-        console.log(result)
         this.setState({ contactDetail: result[0] });
       });
     if (isRefreshed) {
@@ -77,11 +76,7 @@ class ContactDetailScreen extends Component {
     );
   }
   renderCard(cardTitle, rowData) {
-    return (
-      <KeyboardAvoidingView behavior="padding" enabled>
-        {this.renderRows(rowData)}
-      </KeyboardAvoidingView>
-    );
+    return this.renderRows(rowData)
   }
   renderRows(rowData) {
     return (
@@ -148,7 +143,6 @@ class ContactDetailScreen extends Component {
   }
   render() {
     const { contactDetail, isShowActions, isRefreshing } = this.state;
-    console.log(contactDetail)
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />

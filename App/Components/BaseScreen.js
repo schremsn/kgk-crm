@@ -39,7 +39,7 @@ export default class BaseScreen extends Component {
         {
           isError && <GetDataFailed onRefresh={onRefresh} />
         }
-        <Toast ref={(c) => { this.toast = c; }} />
+        {/*<Toast ref={(c) => { this.toast = c; }} />*/}
       </View>
     );
   }

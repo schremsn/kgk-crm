@@ -763,8 +763,6 @@ export default class DataProvider {
       throw new Error('Invalid argument - no id');
     }
     const { id, lost_reason } = lead;
-
-    console.log('check', lead);
     const lostLead = {
       id,
       lost_reason,
@@ -1139,10 +1137,10 @@ export default class DataProvider {
 
   /**
    * upload a base64 encoded buffer as and attachment
-   * @param {number} leadId 
-   * @param {base64} data 
-   * @param {text} fileName 
-   * @param {text} description 
+   * @param {number} leadId
+   * @param {base64} data
+   * @param {text} fileName
+   * @param {text} description
    */
   createLeadAttachment(leadId, data, fileName, description = '') {
     if (isNaN(leadId)) {
@@ -1169,10 +1167,10 @@ export default class DataProvider {
 
     /**
    * upload a base64 encoded buffer as and attachment
-   * @param {number} contactId 
-   * @param {base64} data 
-   * @param {text} fileName 
-   * @param {text} description 
+   * @param {number} contactId
+   * @param {base64} data
+   * @param {text} fileName
+   * @param {text} description
    */
   createContactAttachment(contactId, data, fileName, description = '') {
     if (isNaN(contactId)) {
@@ -1196,5 +1194,5 @@ export default class DataProvider {
       });
     });
   }
-  
+
 }

@@ -26,5 +26,4 @@ FullButton.propTypes = {
 FullButton.defaultProps = {
   disable: false,
   styles: {},
-  onPress: () => { console.log('on press button'); },
 };

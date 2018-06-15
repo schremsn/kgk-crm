@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import t from 'tcomb-form-native';
 import _ from 'lodash';
 import { Fonts, Colors, Metrics, ApplicationStyles } from '../../Themes/';
@@ -7,12 +7,21 @@ import { Fonts, Colors, Metrics, ApplicationStyles } from '../../Themes/';
 export const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
 
 stylesheet.controlLabel.normal.color = Colors.silver;
+stylesheet.controlLabel.normal.backgroundColor = 'transparent';
+stylesheet.controlLabel.error.backgroundColor = 'transparent';
 stylesheet.textbox.normal.color = Colors.silver;
+stylesheet.textbox.normal.backgroundColor = 'transparent'
+stylesheet.textbox.error.backgroundColor = 'transparent'
 stylesheet.textbox.normal.height = 45;
 stylesheet.textboxView.normal.height = 45;
+stylesheet.textboxView.normal.backgroundColor = 'transparent'
+stylesheet.textboxView.error.backgroundColor = 'transparent'
 stylesheet.textbox.notEditable.height = 45;
 stylesheet.textbox.error.color = Colors.silver;
-stylesheet.select.normal.color = Colors.silver;
+if (Platform.OS !== 'ios') {
+  stylesheet.select.normal.color = Colors.silver;
+}
+stylesheet.select.normal.backgroundColor = 'transparent';
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
@@ -26,9 +35,10 @@ export default StyleSheet.create({
     lineHeight: Metrics.doubleBaseMargin + 5,
   },
   container: {
+    paddingTop: Platform.OS === 'ios' ? 40 : Metrics.doubleBaseMargin,
     padding: Metrics.doubleBaseMargin,
     height: Metrics.screenHeight,
-    backgroundColor: 'red'
+    backgroundColor: 'transparent'
   },
   containerHasForm: {
     padding: Metrics.doubleBaseMargin,
@@ -41,13 +51,13 @@ export default StyleSheet.create({
     borderRadius: 4,
   },
   mainContainer: {
-    marginBottom: 60,
+    marginBottom: Platform.OS === 'ios' ? 0 : 60,
     height: Metrics.screenHeight,
 
     // padding: Metrics.doubleBaseMargin,
   },
   mainContainerModal: {
-    marginBottom: 60,
+    marginBottom: Platform.OS === 'ios' ? 30 : 60,
   },
   mainContainerHasFormModal: {
     marginBottom: 120,
@@ -100,7 +110,7 @@ export default StyleSheet.create({
   progressBarLoading: {
     backgroundColor: 'transparent',
     position: 'absolute',
-    top: 0,
+    top: 70,
     bottom: 0,
     left: 0,
     right: 0,
@@ -118,7 +128,7 @@ export default StyleSheet.create({
   buttonBox: {
     position: 'absolute',
     right: 30,
-    bottom: 90,
+    bottom: Platform.OS === 'ios' ? 60 : 50,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -148,6 +158,7 @@ export default StyleSheet.create({
   text: {
     paddingRight: 20,
     color: 'white',
+    backgroundColor: 'transparent'
   },
   // Style Car
   cardTitle: {
@@ -174,7 +185,7 @@ export default StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     borderColor: Colors.windowTint,
-    borderWidth: 0.1,
+    borderWidth: 0.5,
   },
   rowLabelContainer: {
     flex: 1,
@@ -230,6 +241,7 @@ export default StyleSheet.create({
     backgroundColor: Colors.snow,
     borderRadius: 20,
     paddingLeft: 20,
+    height: 40
   },
   inputText: {
     backgroundColor: 'transparent',
@@ -239,10 +251,11 @@ export default StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
-    paddingTop: 12,
-    paddingBottom: 11,
-    paddingRight: 20,
-    paddingLeft: 25,
+    height: 40,
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
   },
   // style lead detail
   boxLeadPhone: {
@@ -272,7 +285,7 @@ export default StyleSheet.create({
   },
   boxActions: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 35,
     left: 0,
     right: 0,
     top: 0,
@@ -303,8 +316,9 @@ export default StyleSheet.create({
     fontSize: 17,
     borderRadius: 4,
     height: 'auto',
-    marginTop: 10,
-    marginBottom: 12,
+    minHeight: 45,
+    marginTop: 20,
+    marginBottom: 20,
   },
   inputFormDisable: {
     borderWidth: 1,
@@ -322,6 +336,8 @@ export default StyleSheet.create({
     fontSize: 17,
     color: 'white',
     fontWeight: '700',
+    backgroundColor: 'transparent',
+
   },
   iconInputFormCustom: {
     position: 'absolute',

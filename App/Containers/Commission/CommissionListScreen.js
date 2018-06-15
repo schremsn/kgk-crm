@@ -44,7 +44,6 @@ class CommissionListScreen extends Component {
     );
   }
   handleCheckNetwork(isConnected) {
-    console.log(isConnected)
     if(isConnected){
       this.getCommissionList();
     }
@@ -79,7 +78,6 @@ class CommissionListScreen extends Component {
   getCommissionList(isRefreshed) {
     getCommissionSummary()
       .then((list) => {
-        console.log(list)
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
         const dataSource = ds.cloneWithRows(list);
         this.setState({
