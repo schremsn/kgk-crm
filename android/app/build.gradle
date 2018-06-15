@@ -78,6 +78,7 @@ project.ext.react = [
 
 apply from: "../../node_modules/react-native/react.gradle"
 
+
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -142,8 +143,6 @@ android {
 
 dependencies {
     compile project(':react-native-keychain')
-    compile project(':react-native-text-gradient')
-    compile project(':react-native-linear-gradient')
     compile project(':react-native-i18n')
     compile project(':react-native-vector-icons')
     compile project(':react-native-device-info')
