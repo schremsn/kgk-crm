@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { RefreshControl, Text, Image, View, TouchableOpacity, ListView, Alert, BackHandler, NetInfo } from 'react-native';
+import { RefreshControl, Text, Platform, View, TouchableOpacity, ListView, Alert, BackHandler, NetInfo } from 'react-native';
 import I18n from 'react-native-i18n';
 import { connect } from 'react-redux';
 import numeral from 'numeral';
@@ -30,11 +30,19 @@ class CommissionListScreen extends Component {
     this.handleCheckNetwork();
   }
   componentDidMount() {
+    this.getCommissionList();
     BackHandler.addEventListener('backPress', this.handleBackAndroid);
-
-    NetInfo.isConnected.fetch().then().done(() => {
-      NetInfo.isConnected.addEventListener('connectionChange', this.handleCheckNetwork);
-    });
+    // android
+    if (Platform.OS === 'ios') {
+      NetInfo.isConnected.fetch().then().done(() => {
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleCheckNetwork);
+      });
+    } else {
+      NetInfo.isConnected.addEventListener(
+        'connectionChange',
+        this.handleConnectivityChange,
+      );
+    }
   }
   componentWillUnmount() {
     BackHandler.removeEventListener('backPress');
@@ -44,9 +52,36 @@ class CommissionListScreen extends Component {
     );
   }
   handleCheckNetwork(isConnected) {
-    if(isConnected){
+    if (isConnected) {
       this.getCommissionList();
     }
+  }
+  handleCheckNetworkAndroid() {
+    NetInfo.isConnected.fetch().then((isConnected) => {
+      if (isConnected) {
+        this.getCommissionList();
+      } else {
+        Alert.alert(
+          'Alert',
+          'Network is not connected!',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => true,
+              style: 'cancel',
+            },
+            {
+              text: 'RETRY',
+              onPress: () => {
+                setTimeout(() => {
+                  this.handleCheckNetwork();
+                }, 2000);
+              },
+            },
+          ],
+        );
+      }
+    });
   }
   handleBackAndroid() {
     this.props.navigation.goBack(null);
@@ -67,7 +102,7 @@ class CommissionListScreen extends Component {
             text: 'RETRY',
             onPress: () => {
               setTimeout(() => {
-                this.handleCheckNetwork();
+                this.handleCheckNetworkAndroid();
               }, 2000);
             },
           },
