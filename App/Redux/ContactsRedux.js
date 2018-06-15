@@ -32,7 +32,7 @@ export const createCustomer = data => new Promise((resolve, reject) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'createCustomer');
+  retryPromise(requestApi, reject, 'createCustomer');
 });
 export const updateCustomer = data => new Promise((resolve, reject) => {
   const requestApi = () => (
@@ -56,7 +56,7 @@ export const getCustomers = (offset = 0) => new Promise((resolve, reject) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'getCustomers');
+  retryPromise(requestApi, reject, 'getCustomers');
 });
 export const getCustomerDetail = id => new Promise((resolve, reject) => {
   const requestApi = () => (
@@ -68,7 +68,7 @@ export const getCustomerDetail = id => new Promise((resolve, reject) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'getCustomerDetail');
+  retryPromise(requestApi, reject, 'getCustomerDetail');
 });
 export const searchCustomer = searchTerm => new Promise((resolve, reject) => {
   const requestApi = () => (
@@ -80,7 +80,7 @@ export const searchCustomer = searchTerm => new Promise((resolve, reject) => {
         reject(err);
       })
   );
-  retryPromise(requestApi, 'searchCustomer');
+  retryPromise(requestApi, reject, 'searchCustomer');
 });
 
 /* ------------- Reducers ------------- */
