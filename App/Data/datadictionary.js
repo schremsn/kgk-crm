@@ -137,6 +137,7 @@ export default class DD {
       'zip',
       'state_id',
       'identification_id',
+      'category_id',
     ];
   }
 
