@@ -182,23 +182,21 @@ export default class DataProvider {
     customer.user_id = this.getUserId();
 
     // resolve many-to-many relationship for tags
-    for(const prop in customer) {
-      if(prop == 'category_id') {
-        let tags = lead[prop]
-        let value = []
+    for (const prop in customer) {
+      if (prop == 'category_id') {
+        const tags = lead[prop];
+        const value = [];
         if (Array.isArray(tags)) {
           tags.forEach((tag) => {
-            let temp = [4, tag, 0];
+            const temp = [4, tag, 0];
             value.push(temp);
           });
-        }
-        else if (Number.isInteger(tags)) {
+        } else if (Number.isInteger(tags)) {
           value.push([4, tag, 0]);
-        }
-        else {
+        } else {
           value.push([5, 0, 0]);
         }
-        customer.category_id = value
+        customer.category_id = value;
       }
     }
 
@@ -227,23 +225,21 @@ export default class DataProvider {
     const { id } = customer;
 
     // resolve many-to-many relationship for tags
-    for(const prop in customer) {
-      if(prop == 'category_id') {
-        let tags = lead[prop]
-        let value = []
+    for (const prop in customer) {
+      if (prop == 'category_id') {
+        const tags = lead[prop];
+        const value = [];
         if (Array.isArray(tags)) {
           tags.forEach((tag) => {
-            let temp = [4, tag, 0];
+            const temp = [4, tag, 0];
             value.push(temp);
           });
-        }
-        else if (Number.isInteger(tags)) {
+        } else if (Number.isInteger(tags)) {
           value.push([4, tag, 0]);
-        }
-        else {
+        } else {
           value.push([5, 0, 0]);
         }
-        customer.category_id = value
+        customer.category_id = value;
       }
     }
 
@@ -268,26 +264,24 @@ export default class DataProvider {
     }
 
     // resolve many-to-many relationship for tags
-    for(const prop in lead) {
-      if(prop == 'tag_ids') {
-        let tags = lead[prop]
-        let value = []
+    for (const prop in lead) {
+      if (prop == 'tag_ids') {
+        const tags = lead[prop];
+        const value = [];
         if (Array.isArray(tags)) {
           tags.forEach((tag) => {
-            let temp = [4, tag, 0];
+            const temp = [4, tag, 0];
             value.push(temp);
           });
-        }
-        else if (Number.isInteger(tags)) {
+        } else if (Number.isInteger(tags)) {
           value.push([4, tag, 0]);
-        }
-        else {
+        } else {
           value.push([5, 0, 0]);
         }
-        lead.tag_ids = value
+        lead.tag_ids = value;
       }
     }
-    */
+
 
     lead.user_id = this.getUserId();
     lead.type = 'opportunity';
@@ -317,23 +311,21 @@ export default class DataProvider {
     const { id } = lead;
 
     // resolve many-to-many relationship for tags
-    for(const prop in lead) {
-      if(prop == 'tag_ids') {
-        let tags = lead[prop]
-        let value = []
+    for (const prop in lead) {
+      if (prop == 'tag_ids') {
+        const tags = lead[prop];
+        const value = [];
         if (Array.isArray(tags)) {
           tags.forEach((tag) => {
-            let temp = [4, tag, 0];
+            const temp = [4, tag, 0];
             value.push(temp);
           });
-        }
-        else if (Number.isInteger(tags)) {
+        } else if (Number.isInteger(tags)) {
           value.push([4, tag, 0]);
-        }
-        else {
+        } else {
           value.push([5, 0, 0]);
         }
-        lead.tag_ids = value
+        lead.tag_ids = value;
       }
     }
 
