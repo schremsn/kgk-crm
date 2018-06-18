@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { View, ScrollView, Text, Image, TouchableOpacity, Alert, TouchableHighlight, KeyboardAvoidingView, RefreshControl } from 'react-native';
+import React, { Component } from 'react';
+import { Alert, Image, RefreshControl, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import Communications from 'react-native-communications';
+import Toast from 'react-native-easy-toast';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Communications from 'react-native-communications';
-import * as Animatable from 'react-native-animatable';
-import Toast from 'react-native-easy-toast';
-import styles from '../Styles/ContainerStyles';
-import { Images, Colors } from '../../Themes/index';
-import { getCustomerDetail } from '../../Redux/ContactsRedux';
-import Header from '../../Components/Header';
+import { connect } from 'react-redux';
 import FullButton from '../../Components/FullButton';
+import Header from '../../Components/Header';
+import { getCustomerDetail } from '../../Redux/ContactsRedux';
+import { Colors, Images } from '../../Themes/index';
+import styles from '../Styles/ContainerStyles';
 
 const data = [
   { name: 'id', value: I18n.t('id') },
@@ -27,8 +27,7 @@ const data = [
   { name: 'street2', value: I18n.t('Street2') },
   { name: 'website', value: I18n.t('Website') },
   { name: 'zip', value: I18n.t('Zip') },
-  { name: 'email_from', value: I18n.t('Email') },
-  { name: 'state', value: I18n.t('Province') },
+  { name: 'state_id', value: I18n.t('Province') },
   { name: 'identification_id', value: I18n.t('identification id') },
 ];
 class ContactDetailScreen extends Component {
@@ -47,11 +46,10 @@ class ContactDetailScreen extends Component {
   componentWillMount() {
     this.getContactDetail();
   }
-  getContactDetail(isRefreshed){
+  getContactDetail(isRefreshed) {
     const { contactId } = this.props.navigation.state.params;
     getCustomerDetail(contactId)
       .then((result) => {
-        console.log(result)
         this.setState({ contactDetail: result[0] });
       });
     if (isRefreshed) {
@@ -77,11 +75,7 @@ class ContactDetailScreen extends Component {
     );
   }
   renderCard(cardTitle, rowData) {
-    return (
-      <KeyboardAvoidingView behavior="padding" enabled>
-        {this.renderRows(rowData)}
-      </KeyboardAvoidingView>
-    );
+    return this.renderRows(rowData);
   }
   renderRows(rowData) {
     return (
@@ -106,7 +100,7 @@ class ContactDetailScreen extends Component {
                     </TouchableOpacity>
                   }
                   </View>
-                : <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
+                : <Text style={styles.rowInfo}>{typeof (rowData[item.name]) === 'object' ? rowData[item.name][1] : rowData[item.name]}</Text>
             }
           </View>
 
@@ -129,7 +123,7 @@ class ContactDetailScreen extends Component {
           style={styles.boxActionContent}
         >
           <FullButton text={I18n.t('Add Contact')} onPress={() => this.props.navigation.navigate('ContactsAddScreen')} />
-          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('ContactsEditScreen', { contactDetail: this.state.contactDetail, reloadData: () => { this.getContactDetail()} })} />
+          <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('ContactsEditScreen', { contactDetail: this.state.contactDetail, reloadData: () => { this.getContactDetail(); } })} />
           <FullButton
             text={I18n.t('Add Lead')}
             onPress={() => this.props.navigation.navigate('ContactsLeadAddScreen', { contactId: this.state.contactDetail.id, contactName: this.state.contactDetail.name })}
@@ -153,7 +147,7 @@ class ContactDetailScreen extends Component {
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title={I18n.t('Contact Detail')} onPress={() => this.props.navigation.goBack(null)} />
         <ScrollView
-          style={[styles.mainContainer]}
+          style={[styles.mainContainerModal]}
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}

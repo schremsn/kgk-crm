@@ -29,19 +29,18 @@ export const initState = () => (dispatch) => {
   dispatch(Creators.productRequest());
 };
 
-export const getProducts = (offset, cb) => (dispatch, getState) => {
+export const getProducts = (offset, cb) => new Promise((resolve, reject) => {
   const requestApi = () => (
     dataprovider.getProducts(offset)
       .then((list) => {
-        dispatch(Creators.productSuccess(list, offset));
-        if (cb) { cb(list); }
+        resolve(list, offset + 50);
       })
-      .catch(() => {
-        dispatch(Creators.productFailure());
+      .catch((error) => {
+        throw new Error(error);
       })
   );
-  retryPromise(requestApi, 'getProducts');
-};
+  retryPromise(requestApi, reject, 'getProducts');
+});
 export const getProductDetail = productId => new Promise((resolve, reject) => {
   const requestApi = () => (
     dataprovider.getProductDetail(productId)

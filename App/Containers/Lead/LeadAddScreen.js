@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, ActivityIndicator, Image, Platform, Modal } from 'react-native';
+// libraries
 import I18n from 'react-native-i18n';
 import t from 'tcomb-form-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
-import { Images, Colors } from '../../Themes/index';
-import styles, { stylesheet } from '../Styles/ContainerStyles';
-import ContactsAddModal from '../Contact/ContactsAddModal';
-import ContactsListModal from '../Contact/ContactsListModal';
-import ProductsListModal from '../Product/ProductsListModal';
-import Header from '../../Components/Header';
+// components
+import BaseScreen from '../../Components/BaseScreen';
 import RoundedButton from '../../Components/RoundedButton';
 import Input from '../../Components/Form/Input';
+import ProgressBar from '../../Components/ProgressBar';
+// actions
 import { createLead } from '../../Redux/LeadRedux';
+// styles
+import { Colors } from '../../Themes/index';
+import { stylesheet } from '../Styles/ContainerStyles';
 
 const { Form } = t.form;
 
@@ -31,9 +32,6 @@ class LeadAddScreen extends Component {
       customerName: this.props.navigation.state.params ? this.props.navigation.state.params.contactName : '',
       productName: '',
       isLoading: false,
-      isModalSearchContact: false,
-      isModalAddContact: false,
-      isModalSearchProduct: false,
     };
     this.onChangeForm = this.onChangeForm.bind(this);
     this.onPress = this.onPress.bind(this);
@@ -43,7 +41,6 @@ class LeadAddScreen extends Component {
     this.templateInputNotes = this.templateInputNotes.bind(this);
     this.onSelectContact = this.onSelectContact.bind(this);
     this.onSelectProduct = this.onSelectProduct.bind(this);
-    this.onShowAddContactModal = this.onShowAddContactModal.bind(this);
     this.options = {
       hasError: true,
       fields: {
@@ -58,6 +55,10 @@ class LeadAddScreen extends Component {
           label: I18n.t('Stage'),
           stylesheet,
           mode: 'dropdown',
+          itemStyle: {
+            color: Colors.snow,
+            backgroundColor: 'transparent',
+          },
         },
         product: {
           template: this.templateInputProduct,
@@ -117,46 +118,47 @@ class LeadAddScreen extends Component {
     }
   }
   onSelectContact(value) {
-    if (value === null) {
-      this.setState({
-        isModalSearchContact: false,
-      });
-    } else {
-      this.setState({
-        isModalSearchContact: false,
-        value: { ...this.state.value, partner_id: parseInt(value.id, 0) },
-        customerName: value.name,
-      });
-    }
+    this.setState({
+      value: { ...this.state.value, partner_id: parseInt(value.id, 0) },
+      customerName: value.name,
+    });
+    this.props.navigation.goBack(null);
   }
   onSelectProduct(value) {
-    if (value === null) {
-      this.setState({
-        isModalSearchProduct: false,
-      });
-    } else {
-      this.setState({
-        isModalSearchProduct: false,
-        value: { ...this.state.value, product: parseInt(value.id, 0) },
-        productName: value.name,
-      });
-    }
-  }
-  onShowAddContactModal(value) {
     this.setState({
-      isModalAddContact: value,
+      value: { ...this.state.value, product: parseInt(value.id, 0) },
+      productName: value.name,
     });
+    this.props.navigation.goBack(null);
   }
   templateInputCustomer() {
     const value = this.state.customerName;
     return (
-      <Input label={I18n.t('Customer')} value={value} press={() => { this.setState({ isModalSearchContact: true }); }} />
+      <Input
+        label={I18n.t('Customer')}
+        value={value}
+        press={() => {
+        if (this.props.navigation.state.params && this.props.navigation.state.params.contactId) {
+          this.props.navigation.navigate('ContactsListScreen', { onSelectContact: this.onSelectContact });
+        } else {
+          this.props.navigation.navigate('ContactListPipelineScreen', { onSelectContact: this.onSelectContact });
+        }
+      }}
+      />
     );
   }
   templateInputProduct() {
     const value = this.state.productName;
     return (
-      <Input label={I18n.t('product')} value={value} press={() => this.setState({ isModalSearchProduct: true })} />
+      <Input
+        label={I18n.t('product')}
+        value={value}
+        press={() => {
+        if (this.props.navigation.state.params && this.props.navigation.state.params.contactId) {
+          this.props.navigation.navigate('ProductsListScreen', { onSelectProduct: this.onSelectProduct });
+        } else { this.props.navigation.navigate('ProductsListPipelineScreen', { onSelectProduct: this.onSelectProduct }); }
+}}
+      />
     );
   }
   templateInputNotes() {
@@ -173,83 +175,15 @@ class LeadAddScreen extends Component {
       />
     );
   }
-  get renderSearchContactModal() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent
-        visible={this.state.isModalSearchContact}
-        onRequestClose={() => {
-          this.setState({ isModalSearchContact: false });
-        }}
-      >
-        <View>
-          <ContactsListModal
-            onSelectContact={value => this.onSelectContact(value)}
-            onShowAddContactModal={value => this.onShowAddContactModal(value)}
-          />
-        </View>
-      </Modal>
-    );
-  }
-  get renderSearchProductModal() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent
-        visible={this.state.isModalSearchProduct}
-        onRequestClose={() => {
-          this.setState({ isModalSearchProduct: false });
-        }}
-      >
-        <View style={{}}>
-          <ProductsListModal
-            navigation={this.props.navigation}
-            onSelectProduct={value => this.onSelectProduct(value)}
-          />
-        </View>
-      </Modal>
-    );
-  }
-  get renderAddContactModal() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent
-        visible={this.state.isModalAddContact}
-        onRequestClose={() => {
-          this.setState({ isModalAddContact: false });
-        }}
-      >
-        <View>
-          <ContactsAddModal
-            navigation={this.props.navigation}
-            onShowAddContactModal={value => this.onShowAddContactModal(value)}
-          />
-        </View>
-      </Modal>
-    );
-  }
   render() {
     const { value, isLoading, type } = this.state;
     return (
-      <View
-        style={[styles.containerHasForm]}
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps
+      <BaseScreen
+        title={I18n.t('Add Lead')}
+        onPress={() => { this.props.navigation.goBack(null); }}
       >
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header
-          title={I18n.t('Add Lead')}
-          onPress={() => { this.props.navigation.goBack(null); }}
-        />
+        {isLoading && <ProgressBar isSubmitLoading />}
         <Toast ref={(c) => { this.toast = c; }} />
-        {
-          isLoading &&
-          <View style={[styles.progressBarLoading]}>
-            <ActivityIndicator size="large" color={Platform.OS === 'ios' ? 'white' : Colors.fire} />
-          </View>
-        }
         <KeyboardAwareScrollView
           style={{ marginBottom: 60 }}
           innerRef={(ref) => { this.scrollView = ref; }}
@@ -266,10 +200,7 @@ class LeadAddScreen extends Component {
           }
           <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
-        { this.renderSearchContactModal }
-        { this.renderSearchProductModal }
-        { this.renderAddContactModal }
-      </View>
+      </BaseScreen>
     );
   }
 }
@@ -282,4 +213,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, null)(LeadAddScreen);
-

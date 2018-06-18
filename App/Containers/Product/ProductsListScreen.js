@@ -2,20 +2,27 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View, Text, Image, TouchableOpacity, RefreshControl, ListView } from 'react-native';
+// libraries
 import I18n from 'react-native-i18n';
-import styles from '../Styles/ContainerStyles';
-import { Images, Colors } from '../../Themes/index';
+// components
+import BaseScreen from '../../Components/BaseScreen';
+// reducers
 import { getProducts } from '../../Redux/ProductRedux';
-import ProgressBar from '../../Components/ProgressBar';
-import Header from '../../Components/Header';
-import { Metrics } from '../../Themes';
+// styles
+import { Images, Colors } from '../../Themes/index';
+import styles from '../Styles/ContainerStyles';
+
 
 class ProductsListScreen extends Component {
   constructor() {
     super();
+    const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
     this.state = {
-      isLoading: true,
+      offset: 0,
+      isFetching: true,
       isRefreshing: false,
+      isError: false,
+      dataSource: ds.cloneWithRows([]),
     };
     this.getProductList = this.getProductList.bind(this);
     this.getProductListNextPage = this.getProductListNextPage.bind(this);
@@ -26,36 +33,45 @@ class ProductsListScreen extends Component {
     this.getProductList();
   }
   getProductList(isRefreshed) {
-    this.props.getProducts(0, (list) => {
-      const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-      const dataSource = ds.cloneWithRows(list);
-      this.setState({
-        list,
-        dataSource,
-        isLoading: false,
+    getProducts(0)
+      .then((list, offset) => {
+        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
+        const dataSource = ds.cloneWithRows(list);
+        this.setState({
+          dataSource,
+          isFetching: false,
+          isRefreshing: false,
+          offset,
+        });
+      })
+      .catch((e) => {
+        this.setState({ isFetching: false, isError: true, isRefreshing: false });
       });
-    });
-    if (isRefreshed) {
-      this.setState({ isRefreshing: false });
-    }
   }
   getProductListNextPage() {
-    this.props.getProducts(this.props.offset, (list) => {
+    getProducts(this.state.offset, (list, offset) => {
       const data = this.state.list;
       list.map(item => data.push(item));
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(data),
+        offset,
       });
     });
   }
   onRefresh() {
-    this.setState({ isRefreshing: true });
+    this.setState({ isRefreshing: true, isError: false });
     this.getProductList('isRefreshed');
   }
   renderProduct(item) {
     return (
       <TouchableOpacity
-        onPress={() => { this.props.navigation.navigate('ProductDetailScreen', { productId: item.id });}}
+        onPress={() => {
+          if (this.props.navigation.state.params && this.props.navigation.state.params.onSelectProduct) {
+            this.props.navigation.state.params.onSelectProduct(item);
+          } else {
+            this.props.navigation.navigate('ProductDetailScreen', { productId: item.id });
+          }
+        }}
         style={styles.sectionHeaderContainer}
       >
         <Text style={styles.sectionHeader}>{item.name}</Text>
@@ -70,40 +86,39 @@ class ProductsListScreen extends Component {
     );
   }
   render() {
-    const { isLoading, isRefreshing, dataSource } = this.state;
+    const {
+      isFetching, isRefreshing, dataSource, isError,
+    } = this.state;
     return (
-      <View style={styles.container}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header
-          title={I18n.t('product list')}
-          onPress={() => { this.props.navigation.goBack(null); }}
-        />
-        {
-          isLoading
-            ? <ProgressBar isRefreshing={isRefreshing} onRefresh={this.onRefresh} style={{ height: Metrics.screenHeight - 240 }} />
-            : <ListView
-              style={styles.mainContainer}
-              enableEmptySections
-              onEndReached={() => this.getProductListNextPage()}
-              onEndReachedThreshold={1200}
-              dataSource={dataSource}
-              renderRow={item => this.renderProduct(item)}
-              renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-              // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
-              refreshControl={
-                <RefreshControl
-                  refreshing={isRefreshing}
-                  onRefresh={this.onRefresh}
-                  colors={[Colors.fire]}
-                  tintColor={Colors.snow}
-                  title={`${I18n.t('loading')}...`}
-                  titleColor={Colors.snow}
-                  progressBackgroundColor={Colors.snow}
-                />
-              }
+      <BaseScreen
+        onPress={() => { this.props.navigation.goBack(null); }}
+        fullLoading={isFetching}
+        isError={isError}
+        onRefresh={this.onRefresh}
+        title={I18n.t('product list')}
+      >
+        <ListView
+          style={styles.mainContainerModal}
+          enableEmptySections
+          onEndReached={() => this.getProductListNextPage()}
+          onEndReachedThreshold={1200}
+          dataSource={dataSource}
+          renderRow={item => this.renderProduct(item)}
+          renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
+          // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={this.onRefresh}
+              colors={[Colors.fire]}
+              tintColor={Colors.snow}
+              title={`${I18n.t('loading')}...`}
+              titleColor={Colors.snow}
+              progressBackgroundColor={Colors.snow}
             />
-        }
-      </View>
+          }
+        />
+      </BaseScreen>
     );
   }
 }
@@ -113,16 +128,12 @@ ProductsListScreen.navigationOptions = {
 };
 ProductsListScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  getProducts: PropTypes.func.isRequired,
-  offset: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
-  offset: state.product.offset,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getProducts: (offset, cb) => { dispatch(getProducts(offset, cb)); },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductsListScreen);

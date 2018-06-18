@@ -1,40 +1,50 @@
-import React, { Component } from 'react';
-import {
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  Image,
-  View,
-} from 'react-native';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { Alert, Image, KeyboardAvoidingView, TouchableOpacity, View } from 'react-native';
+import CheckBox from 'react-native-check-box';
+// libraries
 import I18n from 'react-native-i18n';
-import Wallpaper from '../Components/Wallpaper';
+import * as Keychain from 'react-native-keychain';
+import { connect } from 'react-redux';
 import ButtonSubmit from '../Components/ButtonSubmit';
-import { login } from '../Redux/AuthRedux';
 import styles from '../Components/Styles/ComponentStyles';
 import UserInput from '../Components/UserInput';
-import { Images, Colors } from '../Themes';
+// components
+import Wallpaper from '../Components/Wallpaper';
+import { login } from '../Redux/AuthRedux';
+import { Colors, Images } from '../Themes';
 
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'josef@kgk.vn',
-      password: 'zaq12wsx',
+      username: '',
+      password: '',
       showPass: true,
+      isRemember: false,
     };
     this.onSignIn = this.onSignIn.bind(this);
     this.showPass = this.showPass.bind(this);
   }
-  onSignIn() {
-    const { username, password } = this.state;
-    this.props.login({ username, password }, info => this.signInAsync(info));
+  componentDidMount() {
+    Keychain.resetGenericPassword();
   }
-  signInAsync = async (info) => {
-    console.log(info);
-    // await AsyncStorage.setItem('userToken', id)
-    this.props.navigation.navigate('App');
-  };
+  onSignIn() {
+    const { username, password, isRemember } = this.state;
+    this.props.login({ username, password, isRemember }, (res, error) => {
+      if (res) {
+        this.props.navigation.navigate('App');
+      } else {
+        Alert.alert(
+          'Login error',
+          `${error}`,
+          [
+            { text: 'Retry' },
+          ],
+        );
+      }
+    });
+  }
   showPass() {
     if (this.state.press === false) {
       this.setState({ showPass: false, press: true });
@@ -42,9 +52,12 @@ class LoginScreen extends Component {
       this.setState({ showPass: true, press: false });
     }
   }
+  onClick() {
+    this.setState({ isRemember: !this.state.isRemember });
+  }
   get renderForm() {
     return (
-      <KeyboardAvoidingView behavior="padding" style={[styles.container, { marginTop: 20 }]}>
+      <KeyboardAvoidingView behavior="padding" style={[{ marginTop: 20 }]}>
         <UserInput
           value={this.state.username}
           source={Images.username}
@@ -92,6 +105,14 @@ class LoginScreen extends Component {
         {
           this.renderForm
         }
+        <CheckBox
+          style={{ marginLeft: 35, marginBottom: 20 }}
+          onClick={() => this.onClick()}
+          isChecked={this.state.isRemember}
+          rightText="Remember me"
+          rightTextStyle={{ color: Colors.silver, fontSize: 16 }}
+          checkBoxColor={Colors.silver}
+        />
         <ButtonSubmit onSignIn={this.onSignIn} navigation={this.props.navigation} />
       </Wallpaper>
     );

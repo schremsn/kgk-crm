@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Image, Modal } from 'react-native';
 import I18n from 'react-native-i18n';
+// libraries
 import t from 'tcomb-form-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
-import { Images } from '../../Themes/index';
-import styles, { stylesheet } from '../Styles/ContainerStyles';
-import Header from '../../Components/Header';
-import { updateLead } from '../../Redux/LeadRedux';
+// components
 import RoundedButton from '../../Components/RoundedButton';
+import BaseScreen from '../../Components/BaseScreen';
 import ProgressBar from '../../Components/ProgressBar';
 import Input from '../../Components/Form/Input';
-import ProductsListModal from '../Product/ProductsListModal';
-
+// actions
+import { updateLead } from '../../Redux/LeadRedux';
+// styles
+import { Colors } from '../../Themes';
+import { stylesheet } from '../Styles/ContainerStyles';
 
 const { Form } = t.form;
 
@@ -36,12 +37,12 @@ class LeadEditScreen extends Component {
         product: leadDetail.product[0] ? parseInt(leadDetail.product[0], 0) : null,
         phone: leadDetail.phone ? leadDetail.phone : null,
         stage_id: leadDetail.stage_id[0] ? parseInt(leadDetail.stage_id[0], 0) : null,
+        state_id: leadDetail.state_id[0] ? parseInt(leadDetail.state_id[0], 0) : null,
         street: leadDetail.street ? leadDetail.street : null,
         street2: leadDetail.street2 ? leadDetail.street2 : null,
         zip: leadDetail.zip ? leadDetail.zip : null,
       },
       isLoading: false,
-      isModalSearchProduct: false,
       productName: leadDetail.product[1] ? leadDetail.product[1] : null,
     };
     this.onChange = this.onChange.bind(this);
@@ -99,10 +100,14 @@ class LeadEditScreen extends Component {
           label: I18n.t('City'),
           stylesheet,
         },
-        state: {
+        state_id: {
           label: I18n.t('Province'),
           stylesheet,
           mode: 'dropdown',
+          itemStyle: {
+            color: Colors.snow,
+            backgroundColor: 'transparent',
+          },
         },
         zip: {
           label: I18n.t('Zip'),
@@ -119,6 +124,10 @@ class LeadEditScreen extends Component {
           label: I18n.t('Stage'),
           stylesheet,
           mode: 'dropdown',
+          itemStyle: {
+            color: Colors.snow,
+            backgroundColor: 'transparent',
+          },
         },
       },
       i18n: {
@@ -143,7 +152,7 @@ class LeadEditScreen extends Component {
       const stateOptions = {};
       const stateLength = states.length;
       for (let i = 0; i < stateLength; i += 1) {
-        stateOptions[states[i].name] = states[i].name;
+        stateOptions[states[i].id] = states[i].name;
       }
       return stateOptions;
     };
@@ -159,7 +168,7 @@ class LeadEditScreen extends Component {
       street: t.maybe(t.String),
       street2: t.maybe(t.String),
       city: t.String,
-      state: t.enums(setStateOption(), 'province'),
+      state_id: t.enums(setStateOption(), 'province'),
       zip: t.maybe(t.String),
       email_from: t.maybe(t.String),
       description: t.maybe(t.String),
@@ -171,21 +180,15 @@ class LeadEditScreen extends Component {
     this.setState({ value });
   }
   onSelectProduct(value) {
-    if (value === null) {
-      this.setState({
-        isModalSearchProduct: false,
-      });
-    } else {
-      this.setState({
-        isModalSearchProduct: false,
-        value: { ...this.state.value, product: parseInt(value.id, 0) },
-        productName: value.name,
-      });
-    }
+    this.setState({
+      value: { ...this.state.value, product: parseInt(value.id, 0) },
+      productName: value.name,
+    });
+    this.props.navigation.goBack(null);
   }
   onPress() {
     if (this.form.getValue()) {
-      const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
+      const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0), state: parseInt(this.form.getValue().state_id, 0) };
       this.setState({ isLoading: true });
       updateLead(value)
         .then(() => {
@@ -215,34 +218,17 @@ class LeadEditScreen extends Component {
   templateInputProduct() {
     const value = this.state.productName;
     return (
-      <Input label={I18n.t('product')} value={value} press={() => this.setState({ isModalSearchProduct: true })} />
+      <Input label={I18n.t('product')} value={value} press={() => { this.props.navigation.navigate('ProductsListPipelineScreen', { onSelectProduct: this.onSelectProduct }); }} />
     );
   }
-  get renderSearchProductModal() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent
-        visible={this.state.isModalSearchProduct}
-        onRequestClose={() => {
-          this.setState({ isModalSearchProduct: false });
-        }}
-      >
-        <ProductsListModal
-          navigation={this.props.navigation}
-          isModal
-          onSelectProduct={value => this.onSelectProduct(value)}
-        />
-      </Modal>
-    );
-  }
-
   render() {
     const { value, isLoading, type } = this.state;
     return (
-      <View style={[styles.containerHasForm]}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('Edit Lead')} onPress={() => this.props.navigation.goBack(null)} />
+      <BaseScreen
+        title={I18n.t('Edit Lead')}
+        onPress={() => { this.props.navigation.goBack(null); }}
+      >
+        {isLoading && <ProgressBar isSubmitLoading />}
         <KeyboardAwareScrollView
           style={{ marginBottom: 60 }}
           innerRef={(ref) => { this.scrollView = ref; }}
@@ -259,13 +245,7 @@ class LeadEditScreen extends Component {
           }
           <RoundedButton onPress={this.onPress} text={I18n.t('Update')} />
         </KeyboardAwareScrollView>
-        {
-          isLoading && <ProgressBar isSubmitLoading />
-        }
-        {
-          this.renderSearchProductModal
-        }
-      </View>
+      </BaseScreen>
     );
   }
 }

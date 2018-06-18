@@ -3,8 +3,10 @@ package com.kgkcrm2;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import iyegoroff.RNTextGradient.RNTextGradientPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
+
+import com.oblador.keychain.KeychainPackage;
+
+
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -28,8 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNTextGradientPackage(),
-            new LinearGradientPackage(),
+            new KeychainPackage(),
             new ReactNativeI18n(),
             new VectorIconsPackage(),
             new RNDeviceInfo()

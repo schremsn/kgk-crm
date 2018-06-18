@@ -27,13 +27,12 @@ export const createCustomer = data => new Promise((resolve, reject) => {
     dataprovider.createCustomer(data)
       .then((detail) => {
         resolve(detail);
-        console.log('crateCustomers', detail);
       })
       .catch((err) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'createCustomer');
+  retryPromise(requestApi, reject, 'createCustomer');
 });
 export const updateCustomer = data => new Promise((resolve, reject) => {
   const requestApi = () => (
@@ -57,7 +56,7 @@ export const getCustomers = (offset = 0) => new Promise((resolve, reject) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'getCustomers');
+  retryPromise(requestApi, reject, 'getCustomers');
 });
 export const getCustomerDetail = id => new Promise((resolve, reject) => {
   const requestApi = () => (
@@ -69,7 +68,7 @@ export const getCustomerDetail = id => new Promise((resolve, reject) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'getCustomerDetail');
+  retryPromise(requestApi, reject, 'getCustomerDetail');
 });
 export const searchCustomer = searchTerm => new Promise((resolve, reject) => {
   const requestApi = () => (
@@ -79,10 +78,9 @@ export const searchCustomer = searchTerm => new Promise((resolve, reject) => {
       })
       .catch((err) => {
         reject(err);
-        console.log(`error user ${err}`);
       })
   );
-  retryPromise(requestApi, 'searchCustomer');
+  retryPromise(requestApi, reject, 'searchCustomer');
 });
 
 /* ------------- Reducers ------------- */

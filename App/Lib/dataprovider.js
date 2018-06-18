@@ -763,8 +763,6 @@ export default class DataProvider {
       throw new Error('Invalid argument - no id');
     }
     const { id, lost_reason } = lead;
-
-    console.log('check', lead);
     const lostLead = {
       id,
       lost_reason,
@@ -1127,6 +1125,67 @@ export default class DataProvider {
 
     return new Promise((resolve, reject) => {
       this.odoo.search_read('res.country.state', params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+
+  /**
+   * upload a base64 encoded buffer as and attachment
+   * @param {number} leadId
+   * @param {base64} data
+   * @param {text} fileName
+   * @param {text} description
+   */
+  createLeadAttachment(leadId, data, fileName, description = '') {
+    if (isNaN(leadId)) {
+      throw new Error('Invalid lead id');
+    }
+    const attachment = {
+      name: description,
+      datas_fname: fileName,
+      res_model: 'crm.lead',
+      res_id: leadId,
+      datas: data,
+    };
+
+    return new Promise((resolve, reject) => {
+      this.odoo.create('ir.attachment', attachment, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  /**
+   * upload a base64 encoded buffer as and attachment
+   * @param {number} contactId
+   * @param {base64} data
+   * @param {text} fileName
+   * @param {text} description
+   */
+  createContactAttachment(contactId, data, fileName, description = '') {
+    if (isNaN(contactId)) {
+      throw new Error('Invalid lead id');
+    }
+    const attachment = {
+      name: description,
+      datas_fname: fileName,
+      res_model: 'res.partner',
+      res_id: contactId,
+      datas: data,
+    };
+
+    return new Promise((resolve, reject) => {
+      this.odoo.create('ir.attachment', attachment, (err, data) => {
         if (err) {
           reject(err);
         } else {

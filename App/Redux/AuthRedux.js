@@ -1,6 +1,9 @@
 import { Alert } from 'react-native';
 import { createReducer, createActions } from 'reduxsauce';
 import Immutable from 'seamless-immutable';
+// libraries
+import * as Keychain from 'react-native-keychain';
+// services
 import DataProvider from '../Lib/dataprovider';
 import ReferenceData from '../Data/referencedata';
 import { getLostReasons } from './LeadRedux';
@@ -46,7 +49,7 @@ export const getUserInfo = () => (dispatch) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'getUserInfo');
+  retryPromise(requestApi, null, 'getUserInfo');
 };
 
 const getStates = (countryId, dispatch) => {
@@ -59,7 +62,7 @@ const getStates = (countryId, dispatch) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'getStates');
+  retryPromise(requestApi, null, 'getStates');
 };
 export const getCompanyInfo = id => (dispatch) => {
   const requestApi = () => (
@@ -71,23 +74,54 @@ export const getCompanyInfo = id => (dispatch) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'getCompanyInfo');
+  retryPromise(requestApi, null, 'getCompanyInfo');
 };
 export const getMailChannels = () => (dispatch) => {
   const requestApi = () => (
     dataprovider.getMailChannels()
       .then((mailChannels) => {
-      // console.log('mailChannels', mailChannels)
         dispatch(Creators.getMailChannelsSuccess(mailChannels));
       })
       .catch((err) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'getMailChannels');
+  retryPromise(requestApi, null, 'getMailChannels');
 };
 
-export const login = ({ username, password }, cb) => (dispatch) => {
+export const login = ({ username, password, isRemember }, cb) => async (dispatch) => {
+  if (isRemember) {
+    await Keychain.setGenericPassword(username, password);
+    dataprovider.login(username, password)
+      .then((info) => {
+        cb(info);
+        dispatch(getUserInfo());
+        dispatch(getCompanyInfo(info.company_id));
+        dispatch(getMailChannels(info));
+        dispatch(getLostReasons());
+        dispatch(Creators.loginSuccess(info));
+      })
+      .catch((error) => {
+        cb(false, error);
+        dispatch(Creators.loginFailure(error));
+      });
+  } else {
+    dataprovider.login(username, password)
+      .then((info) => {
+        cb(info);
+        dispatch(getUserInfo());
+        dispatch(getCompanyInfo(info.company_id));
+        dispatch(getMailChannels(info));
+        dispatch(getLostReasons());
+        dispatch(Creators.loginSuccess(info));
+      })
+      .catch((error) => {
+        dispatch(Creators.loginFailure(error));
+        cb(false, error);
+      });
+  }
+};
+export const checkLogin = ({ username, password }, cb) => (dispatch) => {
   dataprovider.login(username, password)
     .then((info) => {
       cb(info);
@@ -99,13 +133,7 @@ export const login = ({ username, password }, cb) => (dispatch) => {
     })
     .catch((error) => {
       dispatch(Creators.loginFailure(error));
-      Alert.alert(
-        `Login error ${error}`,
-        'Username or password are incorrect.',
-        [
-          { text: 'Retry' },
-        ],
-      );
+      cb(false, error);
     });
 };
 

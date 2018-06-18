@@ -8,24 +8,38 @@ import { Colors } from '../Themes';
 import TabBarBottom from '../Components/TabBarBottom';
 
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen';
-import CommissionStatusDetailScreen from '../Containers/Commission/CommissionStatusDetailScreen';
 import CommissionStatusListScreen from '../Containers/Commission/CommissionStatusListScreen';
 import LoginScreen from '../Containers/LoginScreen';
 import CommissionListScreen from '../Containers/Commission/CommissionListScreen';
-import ProductsListScreen from '../Containers/Product/ProductsListScreen';
-import ProductDetailScreen from '../Containers/Product/ProductDetailScreen';
 import MoreScreen from '../Containers/MoreScreen';
 import MessagesListScreen from '../Containers/Message/MessagesListScreen';
 import MessageDetailScreen from '../Containers/Message/MessageDetailScreen';
 import LeadStagesScreen from '../Containers/Lead/LeadStagesScreen';
-import LeadDetailScreen from '../Containers/Lead/LeadDetailScreen';
-import LeadListScreen from '../Containers/Lead/LeadListScreen';
-import LeadEditScreen from '../Containers/Lead/LeadEditScreen';
-import LeadAddScreen from '../Containers/Lead/LeadAddScreen';
+import ProductsListScreen from '../Containers/Product/ProductsListScreen';
+import ProductDetailScreen from '../Containers/Product/ProductDetailScreen';
 import ContactsListScreen from '../Containers/Contact/ContactsListScreen';
 import ContactsAddScreen from '../Containers/Contact/ContactsAddScreen';
 import ContactDetailScreen from '../Containers/Contact/ContactDetailScreen';
 import ContactsEditScreen from '../Containers/Contact/ContactsEditScreen';
+import LeadListScreen from '../Containers/Lead/LeadListScreen';
+import LeadEditScreen from '../Containers/Lead/LeadEditScreen';
+import LeadAddScreen from '../Containers/Lead/LeadAddScreen';
+import LeadDetailScreen from '../Containers/Lead/LeadDetailScreen';
+import CommissionStatusDetailScreen from '../Containers/Commission/CommissionStatusDetailScreen';
+
+import {
+  ProductsListModal,
+  ProductsDetailModal,
+  ContactsListModal,
+  ContactsAddModal,
+  ContactDetailModal,
+  ContactsEditModal,
+  LeadListModal,
+  LeadEditModal,
+  LeadAddModal,
+  LeadDetailModal,
+  CommissionStatusDetailModal,
+} from './ModalNavigation';
 
 const HomeStack = StackNavigator({
   CommissionListScreen: { screen: CommissionListScreen },
@@ -49,6 +63,9 @@ const PipelineStack = StackNavigator({
   LeadEditScreen: { screen: LeadEditScreen },
   LeadAddScreen: { screen: LeadAddScreen },
   LeadCommissionStatusDetailScreen: { screen: CommissionStatusDetailScreen },
+  ProductsListPipelineScreen: { screen: ProductsListScreen },
+  ContactListPipelineScreen: { screen: ContactsListScreen },
+  ContactsAddPipelineScreen: { screen: ContactsAddScreen },
 
 }, {
   headerMode: 'none',
@@ -143,6 +160,7 @@ const AppStack = TabNavigator(
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     lazy: false,
+    swipeEnabled: true,
   },
 );
 const AuthStack = StackNavigator(

@@ -31,5 +31,4 @@ CircleButton.propTypes = {
 CircleButton.defaultProps = {
   styles: {},
   icon: 'ios-add-outline',
-  onPress: () => { console.log('on press button'); },
 };

@@ -25,13 +25,15 @@ export const getCommissionSummary = (month = 2) => new Promise((resolve, reject)
   const requestApi = () => (
     dataprovider.getCommissionSummary(month)
       .then((data) => {
+        console.log(data);
         resolve(data);
       })
       .catch((err) => {
+        console.log(err);
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'getCommissionSummary');
+  retryPromise(requestApi, reject, 'getCommissionSummary');
 });
 
 export const getCommissionStatus = (offset = 0) => new Promise((resolve, reject) => {
@@ -45,7 +47,7 @@ export const getCommissionStatus = (offset = 0) => new Promise((resolve, reject)
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'getCommissionStatus');
+  retryPromise(requestApi, reject, 'getCommissionStatus');
 });
 
 export const getCommissionStatusDetail = commissionId => new Promise((resolve, reject) => {
@@ -58,7 +60,7 @@ export const getCommissionStatusDetail = commissionId => new Promise((resolve, r
         throw new Error(err);
       });
   };
-  retryPromise(requestApi, 'getCommissionStatusDetail');
+  retryPromise(requestApi, reject, 'getCommissionStatusDetail');
 });
 
 /* ------------- Reducers ------------- */

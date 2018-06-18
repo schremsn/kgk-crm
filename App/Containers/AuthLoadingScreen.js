@@ -1,25 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  ActivityIndicator,
+  ActivityIndicator, Alert,
   AsyncStorage,
   StatusBar,
   View,
 } from 'react-native';
+import { connect } from 'react-redux';
+
+// libraries
+import * as Keychain from 'react-native-keychain';
+// actions
+import { checkLogin } from '../Redux/AuthRedux';
+// styles
 import styles from './Styles/ContainerStyles';
 
 
-export default class AuthLoadingScreen extends React.Component {
-  componentWillMount() {
+class AuthLoadingScreen extends React.Component {
+  componentDidMount() {
     this.bootstrapAsync();
   }
-  // Fetch the token from storage then navigate to our appropriate place
   bootstrapAsync = async () => {
-    const userToken = await AsyncStorage.getItem('token1');
-    console.log(userToken);
-    // This will switch to the App screen or Auth screen and this loading
-    // screen will be unmounted and thrown away.
-    this.props.navigation.navigate(userToken ? 'App' : 'Auth');
+    try {
+      // Retreive the credentials
+      const credentials = await Keychain.getGenericPassword();
+      if (credentials) {
+        this.props.checkLogin({
+          username: credentials.username,
+          password: credentials.password,
+        }, (res, error) => {
+          if (res) {
+            this.props.navigation.navigate('App');
+          } else {
+            this.props.navigation.navigate('Auth');
+          }
+        });
+      } else {
+        console.log('No credentials stored');
+        this.props.navigation.navigate('Auth');
+      }
+    } catch (error) {
+      this.props.navigation.navigate('Auth');
+      console.log('Keychain couldn\'t be accessed!', error);
+    }
   };
 
   // Render any loading content that you like here
@@ -34,4 +57,10 @@ export default class AuthLoadingScreen extends React.Component {
 }
 AuthLoadingScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
+  checkLogin: PropTypes.func.isRequired,
+
 };
+const mapDispatchToProps = dispatch => ({
+  checkLogin: (info, cb) => dispatch(checkLogin(info, cb)),
+});
+export default connect(null, mapDispatchToProps)(AuthLoadingScreen);

@@ -105,7 +105,7 @@ class CommissionStatusDetailScreen extends Component {
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
         <Header title={I18n.t('status detail')} onPress={() => this.props.navigation.goBack(null)} />
-        <ScrollView style={styles.mainContainer}>
+        <ScrollView style={styles.mainContainerModal}>
           {this.renderCard(I18n.t('commission_information'), commissionDetail)}
           {
             this.state.isLoading

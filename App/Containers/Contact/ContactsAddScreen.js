@@ -1,28 +1,31 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, ActivityIndicator, Image, ToastAndroid, Platform } from 'react-native';
+import React, { Component } from 'react';
+import { ToastAndroid } from 'react-native';
+// libraries
 import I18n from 'react-native-i18n';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
+import { connect } from 'react-redux';
+// styles
 import t from 'tcomb-form-native';
-import { Images, Colors } from '../../Themes/index';
-import styles, { stylesheet } from '../Styles/ContainerStyles';
-import Header from '../../Components/Header';
-import { createCustomer } from '../../Redux/ContactsRedux';
-import RoundedButton from '../../Components/RoundedButton';
+import BaseScreen from '../../Components/BaseScreen';
 import Input from '../../Components/Form/Input';
+import ProgressBar from '../../Components/ProgressBar';
+// components
+import RoundedButton from '../../Components/RoundedButton';
+// actions
+import { createCustomer } from '../../Redux/ContactsRedux';
+import { Colors } from '../../Themes/index';
+import { stylesheet } from '../Styles/ContainerStyles';
 
 
 const { Form } = t.form;
-
 
 class ContactsAddScreen extends Component {
   constructor() {
     super();
     this.state = {
       value: {
-        is_company: true,
+        is_company: false,
       },
       isLoading: false,
     };
@@ -56,7 +59,7 @@ class ContactsAddScreen extends Component {
           label: `${I18n.t('city')} ( ${I18n.t('required')} )`,
           stylesheet,
         },
-        code_zip: {
+        zip: {
           label: I18n.t('Zip'),
           stylesheet,
         },
@@ -72,10 +75,14 @@ class ContactsAddScreen extends Component {
           label: I18n.t('Website'),
           stylesheet,
         },
-        state: {
-          label: I18n.t('Province'),
+        state_id: {
+          label: `${I18n.t('Province')} ( ${I18n.t('required')} )`,
           stylesheet,
           mode: 'dropdown',
+          itemStyle: {
+            color: Colors.snow,
+            backgroundColor: 'transparent',
+          },
         },
         comment: {
           template: this.templateInputNotes,
@@ -102,7 +109,7 @@ class ContactsAddScreen extends Component {
       const stateOptions = {};
       const stateLength = states.length;
       for (let i = 0; i < stateLength; i += 1) {
-        stateOptions[states[i].name] = states[i].name;
+        stateOptions[states[i].id] = states[i].name;
       }
       return stateOptions;
     };
@@ -113,8 +120,8 @@ class ContactsAddScreen extends Component {
       street: t.maybe(t.String),
       street2: t.maybe(t.String),
       city: t.maybe(t.String),
-      state: t.enums(setStateOption(), 'state'),
-      code_zip: t.maybe(t.Number),
+      state_id: t.enums(setStateOption(), 'state'),
+      zip: t.maybe(t.Number),
       phone: t.maybe(t.Number),
       mobile: t.maybe(t.Number),
       website: t.maybe(t.String),
@@ -141,8 +148,8 @@ class ContactsAddScreen extends Component {
     this.setState({ value });
   }
   onPress() {
-    const value = this.form.getValue();
-    if (value) {
+    if (this.form.getValue()) {
+      const value = { ...this.form.getValue(), state_id: parseInt(this.form.getValue().state, 0) };
       this.setState({ isLoading: true });
       createCustomer(value)
         .then(() => {
@@ -159,18 +166,8 @@ class ContactsAddScreen extends Component {
   render() {
     const { value, isLoading, type } = this.state;
     return (
-      <View style={[styles.containerHasForm]}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header
-          title={I18n.t('Add Contact')}
-          onPress={() => {this.props.navigation.goBack(null);}}
-        />
-        {
-          isLoading &&
-          <View style={[styles.progressBarLoading]}>
-            <ActivityIndicator size="large" color={Platform.OS === 'ios' ? 'white' : Colors.fire} />
-          </View>
-        }
+      <BaseScreen title={I18n.t('Add Contact')} onPress={() => { this.props.navigation.goBack(null); }}>
+        {isLoading && <ProgressBar isSubmitLoading />}
         <KeyboardAwareScrollView
           style={{ marginBottom: 70 }}
           innerRef={(ref) => { this.scrollView = ref; }}
@@ -184,10 +181,9 @@ class ContactsAddScreen extends Component {
               onChange={this.onChange}
             />
           }
-
           <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
-      </View>
+      </BaseScreen>
     );
   }
 }

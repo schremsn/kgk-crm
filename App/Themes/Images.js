@@ -20,8 +20,8 @@ const images = {
   hamburger: require('../Images/Icons/hamburger.png'),
   backButton: require('../Images/Icons/back-button.png'),
   closeButton: require('../Images/Icons/close-button.png'),
-  username: require('../Images/Icons/username.png') ,
-  password:require('../Images/Icons/password.png'),
+  username: require('../Images/Icons/username.png'),
+  password: require('../Images/Icons/password.png'),
   eye: require('../Images/Icons/eye_black.png'),
 };
 

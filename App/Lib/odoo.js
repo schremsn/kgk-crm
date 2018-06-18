@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 
 const Odoo = function (config) {
   config = config || {};
@@ -33,7 +34,6 @@ Odoo.prototype.connect = function (cb) {
   fetch(url, options)
     .then((res) => {
       this.sid = res.headers.map['set-cookie'][0].split(';')[0];
-      // console.log('sid:', this.sid);
       return res.json();
     })
     .then((data) => {
@@ -171,20 +171,23 @@ Odoo.prototype.rpc_call = function (endpoint, params, callback) {
 // Private functions
 Odoo.prototype._request = function (path, params, cb) {
   params = params || {};
-
   const url = `${this.host}:${this.port}${path || '/'}`;
   const options = {
     method: 'POST',
-    headers: {
+    headers: Platform.OS === 'ios' ? {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Set-Cookie': `${this.sid};`,
+    } : {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Cookie: `${this.sid};`,
     },
+    credentials: 'include',
     body: JSON.stringify({
       jsonrpc: '2.0', id: new Date().getUTCMilliseconds(), method: 'call', params,
     }),
   };
-
   fetch(url, options)
     .then(res => res.json())
     .then((data) => {
