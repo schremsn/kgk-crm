@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { ToastAndroid } from 'react-native';
 // libraries
 import I18n from 'react-native-i18n';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-// actions
-import { createCustomer } from '../../Redux/ContactsRedux';
-// components
-import RoundedButton from '../../Components/RoundedButton';
-import Input from '../../Components/Form/Input';
-import BaseScreen from '../../Components/BaseScreen';
-import ProgressBar from '../../Components/ProgressBar';
-
+import { connect } from 'react-redux';
 // styles
 import t from 'tcomb-form-native';
+import BaseScreen from '../../Components/BaseScreen';
+import Input from '../../Components/Form/Input';
+import ProgressBar from '../../Components/ProgressBar';
+// components
+import RoundedButton from '../../Components/RoundedButton';
+// actions
+import { createCustomer } from '../../Redux/ContactsRedux';
 import { Colors } from '../../Themes/index';
 import { stylesheet } from '../Styles/ContainerStyles';
+
 
 const { Form } = t.form;
 
@@ -25,7 +25,7 @@ class ContactsAddScreen extends Component {
     super();
     this.state = {
       value: {
-        is_company: true,
+        is_company: false,
       },
       isLoading: false,
     };
@@ -75,7 +75,7 @@ class ContactsAddScreen extends Component {
           label: I18n.t('Website'),
           stylesheet,
         },
-        state: {
+        state_id: {
           label: `${I18n.t('Province')} ( ${I18n.t('required')} )`,
           stylesheet,
           mode: 'dropdown',
@@ -120,7 +120,7 @@ class ContactsAddScreen extends Component {
       street: t.maybe(t.String),
       street2: t.maybe(t.String),
       city: t.maybe(t.String),
-      state: t.enums(setStateOption(), 'state'),
+      state_id: t.enums(setStateOption(), 'state'),
       code_zip: t.maybe(t.Number),
       phone: t.maybe(t.Number),
       mobile: t.maybe(t.Number),
