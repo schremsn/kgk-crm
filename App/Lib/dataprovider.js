@@ -7,7 +7,7 @@ import Odoo from './odoo';
  */
 let instance = null;
 
-const maxRecords = 50;
+const maxRecords = 200;
 
 export default class DataProvider {
   constructor() {
@@ -180,6 +180,8 @@ export default class DataProvider {
     }
     // assign current user as sales person
     customer.user_id = this.getUserId();
+
+    console.log(customer);
 
     return new Promise((resolve, reject) => {
       this.odoo.create('res.partner', customer, (err, data) => {
