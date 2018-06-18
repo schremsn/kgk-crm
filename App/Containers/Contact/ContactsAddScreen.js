@@ -59,7 +59,7 @@ class ContactsAddScreen extends Component {
           label: `${I18n.t('city')} ( ${I18n.t('required')} )`,
           stylesheet,
         },
-        code_zip: {
+        zip: {
           label: I18n.t('Zip'),
           stylesheet,
         },
@@ -121,7 +121,7 @@ class ContactsAddScreen extends Component {
       street2: t.maybe(t.String),
       city: t.maybe(t.String),
       state_id: t.enums(setStateOption(), 'state'),
-      code_zip: t.maybe(t.Number),
+      zip: t.maybe(t.Number),
       phone: t.maybe(t.Number),
       mobile: t.maybe(t.Number),
       website: t.maybe(t.String),
@@ -149,7 +149,7 @@ class ContactsAddScreen extends Component {
   }
   onPress() {
     if (this.form.getValue()) {
-      const value = { ...this.form.getValue(), state: parseInt(this.form.getValue().state, 0) };
+      const value = { ...this.form.getValue(), state_id: parseInt(this.form.getValue().state, 0) };
       this.setState({ isLoading: true });
       createCustomer(value)
         .then(() => {

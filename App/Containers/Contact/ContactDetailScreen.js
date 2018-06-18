@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { View, ScrollView, Text, Image, TouchableOpacity, Alert, TouchableHighlight, KeyboardAvoidingView, RefreshControl } from 'react-native';
+import React, { Component } from 'react';
+import { Alert, Image, RefreshControl, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import Communications from 'react-native-communications';
+import Toast from 'react-native-easy-toast';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Communications from 'react-native-communications';
-import * as Animatable from 'react-native-animatable';
-import Toast from 'react-native-easy-toast';
-import styles from '../Styles/ContainerStyles';
-import { Images, Colors } from '../../Themes/index';
-import { getCustomerDetail } from '../../Redux/ContactsRedux';
-import Header from '../../Components/Header';
+import { connect } from 'react-redux';
 import FullButton from '../../Components/FullButton';
+import Header from '../../Components/Header';
+import { getCustomerDetail } from '../../Redux/ContactsRedux';
+import { Colors, Images } from '../../Themes/index';
+import styles from '../Styles/ContainerStyles';
 
 const data = [
   { name: 'id', value: I18n.t('id') },
@@ -27,7 +27,6 @@ const data = [
   { name: 'street2', value: I18n.t('Street2') },
   { name: 'website', value: I18n.t('Website') },
   { name: 'zip', value: I18n.t('Zip') },
-  { name: 'email_from', value: I18n.t('Email') },
   { name: 'state_id', value: I18n.t('Province') },
   { name: 'identification_id', value: I18n.t('identification id') },
 ];
