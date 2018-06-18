@@ -182,9 +182,9 @@ export default class DataProvider {
     customer.user_id = this.getUserId();
 
     // resolve many-to-many relationship for tags
-    for (const prop in customer) {
+    Object.keys(customer).forEach((prop) => {
       if (prop == 'category_id') {
-        const tags = lead[prop];
+        const tags = customer[prop];
         const value = [];
         if (Array.isArray(tags)) {
           tags.forEach((tag) => {
@@ -192,13 +192,13 @@ export default class DataProvider {
             value.push(temp);
           });
         } else if (Number.isInteger(tags)) {
-          value.push([4, tag, 0]);
+          value.push([4, tags, 0]);
         } else {
           value.push([5, 0, 0]);
         }
         customer.category_id = value;
       }
-    }
+    });
 
     return new Promise((resolve, reject) => {
       this.odoo.create('res.partner', customer, (err, data) => {
@@ -225,9 +225,9 @@ export default class DataProvider {
     const { id } = customer;
 
     // resolve many-to-many relationship for tags
-    for (const prop in customer) {
-      if (prop == 'category_id') {
-        const tags = lead[prop];
+    Object.keys(customer).foreEach((prop) => {
+      if (prop === 'category_id') {
+        const tags = customer[prop];
         const value = [];
         if (Array.isArray(tags)) {
           tags.forEach((tag) => {
@@ -235,13 +235,13 @@ export default class DataProvider {
             value.push(temp);
           });
         } else if (Number.isInteger(tags)) {
-          value.push([4, tag, 0]);
+          value.push([4, tags, 0]);
         } else {
           value.push([5, 0, 0]);
         }
         customer.category_id = value;
       }
-    }
+    });
 
     return new Promise((resolve, reject) => {
       this.odoo.update('res.partner', id, customer, (err, data) => {
@@ -264,8 +264,8 @@ export default class DataProvider {
     }
 
     // resolve many-to-many relationship for tags
-    for (const prop in lead) {
-      if (prop == 'tag_ids') {
+    Object.keys(lead).forEach((prop) => {
+      if (prop === 'tag_ids') {
         const tags = lead[prop];
         const value = [];
         if (Array.isArray(tags)) {
@@ -274,13 +274,13 @@ export default class DataProvider {
             value.push(temp);
           });
         } else if (Number.isInteger(tags)) {
-          value.push([4, tag, 0]);
+          value.push([4, tags, 0]);
         } else {
           value.push([5, 0, 0]);
         }
         lead.tag_ids = value;
       }
-    }
+    });
 
 
     lead.user_id = this.getUserId();
@@ -311,8 +311,8 @@ export default class DataProvider {
     const { id } = lead;
 
     // resolve many-to-many relationship for tags
-    for (const prop in lead) {
-      if (prop == 'tag_ids') {
+    Object.keys(lead).forEach((prop) => {
+      if (prop === 'tag_ids') {
         const tags = lead[prop];
         const value = [];
         if (Array.isArray(tags)) {
@@ -321,13 +321,13 @@ export default class DataProvider {
             value.push(temp);
           });
         } else if (Number.isInteger(tags)) {
-          value.push([4, tag, 0]);
+          value.push([4, tags, 0]);
         } else {
           value.push([5, 0, 0]);
         }
         lead.tag_ids = value;
       }
-    }
+    });
 
     return new Promise((resolve, reject) => {
       this.odoo.update('crm.lead', id, lead, (err, data) => {
