@@ -1005,6 +1005,48 @@ export default class DataProvider {
     });
   }
 
+
+  /**
+   * create a new message
+   * @param {object} message
+   */
+  createMessage(message) {
+    // set message defaults
+    message.author_id = 6;
+    message.model = 'mail.channel';
+    message.message_type = 'comment';
+    message.subtype_id = 1;
+
+    // resolve many-to-many relationship for channels
+    Object.keys(message).forEach((prop) => {
+      if (prop === 'channel_ids') {
+        const ids = message[prop];
+        const value = [];
+        if (Array.isArray(ids)) {
+          ids.forEach((id) => {
+            const temp = [4, id, 0];
+            value.push(temp);
+          });
+        } else if (Number.isInteger(ids)) {
+          value.push([4, ids, 0]);
+        } else {
+          value.push([5, 0, 0]);
+        }
+        message.tag_ids = value;
+      }
+    });
+
+    return new Promise((resolve, reject) => {
+      this.odoo.create('mail.message', message, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
   /**
    * retrieve the commission summary for the user for the specified number of month
    * @param {number} months
