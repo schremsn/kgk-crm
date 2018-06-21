@@ -600,6 +600,27 @@ export default class DataProvider {
     });
   }
 
+
+  /**
+   * retrieve the names for the contact catgories
+   * @param {array} id
+   */
+  getContactCategories() {
+    const params = {
+      fields: DD.contactCategory,
+    };
+
+    return new Promise((resolve, reject) => {
+      this.odoo.search_read('res.partner.category', params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
   /**
    * get a list of activity types
    * @return {Promise}

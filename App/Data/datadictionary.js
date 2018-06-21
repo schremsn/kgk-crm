@@ -213,4 +213,11 @@ export default class DD {
       'name',
     ];
   }
+
+  static get contactCategory() {
+    return [
+      'id',
+      'name',
+    ];
+  }
 }
