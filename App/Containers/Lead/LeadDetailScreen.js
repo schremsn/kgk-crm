@@ -32,8 +32,8 @@ const data = [
   { name: 'state_id', value: I18n.t('Province') },
   { name: 'zip', value: I18n.t('Zip') },
   { name: 'email_from', value: I18n.t('Email') },
-  { name: 'description', value: I18n.t('Description') },
   { name: 'stage_id', value: I18n.t('Stage') },
+  { name: 'description', value: I18n.t('notes') },
 ];
 class LeadDetailScreen extends Component {
   constructor(props) {
@@ -43,7 +43,6 @@ class LeadDetailScreen extends Component {
       isShowActions: false,
       isSelectLostReason: false,
       reasonLost: props.listReasonLost[0],
-      textInputValue: '',
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);

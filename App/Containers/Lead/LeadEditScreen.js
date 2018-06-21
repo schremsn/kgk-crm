@@ -6,13 +6,15 @@ import I18n from 'react-native-i18n';
 import t from 'tcomb-form-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+
 // components
 import RoundedButton from '../../Components/RoundedButton';
 import BaseScreen from '../../Components/BaseScreen';
 import ProgressBar from '../../Components/ProgressBar';
 import Input from '../../Components/Form/Input';
 // actions
-import { updateLead } from '../../Redux/LeadRedux';
+import { updateLead, getLeadTags } from '../../Redux/LeadRedux';
 // styles
 import { Colors } from '../../Themes';
 import { stylesheet } from '../Styles/ContainerStyles';
@@ -42,6 +44,8 @@ class LeadEditScreen extends Component {
         street2: leadDetail.street2 ? leadDetail.street2 : null,
         zip: leadDetail.zip ? leadDetail.zip : null,
       },
+      selectedItems: [],
+      tags: [],
       isLoading: false,
       productName: leadDetail.product[1] ? leadDetail.product[1] : null,
     };
@@ -136,8 +140,13 @@ class LeadEditScreen extends Component {
       },
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.getTypeForm();
+    getLeadTags().then((tags) => {
+      this.setState({
+        tags,
+      });
+    });
   }
   async getTypeForm() {
     const { leadStages, states } = this.props;
@@ -171,10 +180,14 @@ class LeadEditScreen extends Component {
       state_id: t.enums(setStateOption(), 'province'),
       zip: t.maybe(t.String),
       email_from: t.maybe(t.String),
-      description: t.maybe(t.String),
       stage_id: t.enums(setStageOption(), 'stage_id'),
+      description: t.maybe(t.String),
     });
     this.setState({ type });
+  }
+  onSelectedItemsChange = (selectedItems) => {
+    console.log(selectedItems);
+    this.setState({ selectedItems });
   }
   onChange(value) {
     this.setState({ value });
@@ -188,7 +201,7 @@ class LeadEditScreen extends Component {
   }
   onPress() {
     if (this.form.getValue()) {
-      const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0), state: parseInt(this.form.getValue().state_id, 0) };
+      const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0), state: parseInt(this.form.getValue().state_id, 0), tag_ids: this.state.selectedItems };
       this.setState({ isLoading: true });
       updateLead(value)
         .then(() => {
@@ -222,7 +235,7 @@ class LeadEditScreen extends Component {
     );
   }
   render() {
-    const { value, isLoading, type } = this.state;
+    const { value, isLoading, type, tags } = this.state;
     return (
       <BaseScreen
         title={I18n.t('Edit Lead')}
@@ -243,6 +256,14 @@ class LeadEditScreen extends Component {
               onChange={this.onChange}
             />
           }
+          <SectionedMultiSelect
+            items={tags}
+            uniqueKey="id"
+            selectText="Choose some things..."
+            showDropDowns
+            onSelectedItemsChange={e => this.onSelectedItemsChange(e)}
+            selectedItems={this.state.selectedItems}
+          />
           <RoundedButton onPress={this.onPress} text={I18n.t('Update')} />
         </KeyboardAwareScrollView>
       </BaseScreen>
