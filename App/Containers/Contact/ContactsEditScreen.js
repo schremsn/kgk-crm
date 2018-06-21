@@ -177,7 +177,7 @@ class ContactsEditScreen extends Component {
   }
   onPress() {
     if (this.form.getValue()) {
-      const value = { ...this.form.getValue(), state: parseInt(this.form.getValue().state_id, 0) };
+      const value = { ...this.form.getValue(), state_id: parseInt(this.form.getValue().state_id, 0), category_id: this.state.selectedItems };
       this.setState({ isLoading: true });
       updateCustomer(value)
         .then(() => {
@@ -186,7 +186,8 @@ class ContactsEditScreen extends Component {
           this.props.navigation.goBack(null);
           this.props.navigation.state.params.reloadData();
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e)
           this.setState({ isLoading: false });
           this.toast.show(I18n.t('Update contacts is error'), 1000);
         });

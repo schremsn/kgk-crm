@@ -32,7 +32,7 @@ export const getContactCategories = () => new Promise((resolve, reject) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, reject, 'createCustomer');
+  retryPromise(requestApi, reject, 'getContactCategories');
 });
 export const createCustomer = data => new Promise((resolve, reject) => {
   const requestApi = () => (
@@ -49,14 +49,14 @@ export const createCustomer = data => new Promise((resolve, reject) => {
 export const updateCustomer = data => new Promise((resolve, reject) => {
   const requestApi = () => (
     dataprovider.updateCustomer(data)
-      .then((detail) => {
-        resolve(detail);
+      .then((res) => {
+        resolve(res);
       })
       .catch((err) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'createCustomer');
+  retryPromise(requestApi, reject, 'updateCustomer');
 });
 export const getCustomers = (offset = 0) => new Promise((resolve, reject) => {
   const requestApi = () => (
