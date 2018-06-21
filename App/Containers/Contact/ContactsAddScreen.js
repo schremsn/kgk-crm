@@ -1,21 +1,23 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { ToastAndroid } from 'react-native';
+import { connect } from 'react-redux';
 // libraries
 import I18n from 'react-native-i18n';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { connect } from 'react-redux';
-// styles
 import t from 'tcomb-form-native';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+// components
 import BaseScreen from '../../Components/BaseScreen';
 import Input from '../../Components/Form/Input';
 import ProgressBar from '../../Components/ProgressBar';
-// components
 import RoundedButton from '../../Components/RoundedButton';
 // actions
-import { createCustomer } from '../../Redux/ContactsRedux';
+import { createCustomer, getContactCategories } from '../../Redux/ContactsRedux';
+// styles
 import { Colors } from '../../Themes/index';
-import { stylesheet } from '../Styles/ContainerStyles';
+import styles, { stylesheet } from '../Styles/ContainerStyles';
 
 
 const { Form } = t.form;
@@ -27,11 +29,14 @@ class ContactsAddScreen extends Component {
       value: {
         is_company: false,
       },
+      tags: [],
+      selectedItems: [],
       isLoading: false,
     };
     this.templateInputNotes = this.templateInputNotes.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onPress = this.onPress.bind(this);
+    this.onSelectedItemsChange = this.onSelectedItemsChange.bind(this);
     this.options = {
       hasError: true,
       fields: {
@@ -100,8 +105,9 @@ class ContactsAddScreen extends Component {
       // auto: 'placeholders'
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.getTypeForm();
+    getContactCategories().then((tags) => { this.setState({ tags }); });
   }
   async getTypeForm() {
     const { states } = this.props;
@@ -109,7 +115,7 @@ class ContactsAddScreen extends Component {
       const stateOptions = {};
       const stateLength = states.length;
       for (let i = 0; i < stateLength; i += 1) {
-        stateOptions[states[i].id] = states[i].name;
+        stateOptions[states[i].name] = states[i].name;
       }
       return stateOptions;
     };
@@ -147,9 +153,13 @@ class ContactsAddScreen extends Component {
   onChange(value) {
     this.setState({ value });
   }
+  onSelectedItemsChange(selectedItems) {
+    this.setState({ selectedItems });
+  }
   onPress() {
+    const { states } = this.props;
     if (this.form.getValue()) {
-      const value = { ...this.form.getValue(), state_id: parseInt(this.form.getValue().state, 0) };
+      const value = { ...this.form.getValue(), state_id: states.filter(item => item.name === this.form.getValue().state_id)[0].id, category_id: this.state.selectedItems };
       this.setState({ isLoading: true });
       createCustomer(value)
         .then(() => {
@@ -164,7 +174,9 @@ class ContactsAddScreen extends Component {
     }
   }
   render() {
-    const { value, isLoading, type } = this.state;
+    const {
+      value, isLoading, type, tags,
+    } = this.state;
     return (
       <BaseScreen title={I18n.t('Add Contact')} onPress={() => { this.props.navigation.goBack(null); }}>
         {isLoading && <ProgressBar isSubmitLoading />}
@@ -181,6 +193,31 @@ class ContactsAddScreen extends Component {
               onChange={this.onChange}
             />
           }
+          <SectionedMultiSelect
+            items={tags}
+            uniqueKey="id"
+            selectText={I18n.t('Choose tags')}
+            confirmText={I18n.t('OK')}
+            selectedText={I18n.t('selected')}
+            searchPlaceholderText={I18n.t('Search tag')}
+            styles={{
+              selectToggleText: styles.selectToggleText,
+              toggleIcon: styles.selectToggleText,
+              chipText: styles.chipText,
+              selectToggle: styles.selectToggle,
+            }}
+            showDropDowns
+            showCancelButton
+            onSelectedItemsChange={e => this.onSelectedItemsChange(e)}
+            selectedItems={this.state.selectedItems}
+            selectToggleIconComponent={
+              <Ionicons
+                size={20}
+                name="ios-arrow-down-outline"
+                style={{ color: 'white' }}
+              />
+            }
+          />
           <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
       </BaseScreen>
@@ -190,6 +227,7 @@ class ContactsAddScreen extends Component {
 
 ContactsAddScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
+  states: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({

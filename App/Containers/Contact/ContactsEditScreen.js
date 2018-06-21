@@ -6,17 +6,18 @@ import I18n from 'react-native-i18n';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import t from 'tcomb-form-native';
 import Toast from 'react-native-easy-toast';
-
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 // components
 import RoundedButton from '../../Components/RoundedButton';
 import Input from '../../Components/Form/Input';
 import BaseScreen from '../../Components/BaseScreen';
 import ProgressBar from '../../Components/ProgressBar';
 // actions
-import { updateCustomer } from '../../Redux/ContactsRedux';
+import { updateCustomer, getContactCategories } from '../../Redux/ContactsRedux';
 // styles
 import { Colors } from '../../Themes/index';
-import { stylesheet } from '../Styles/ContainerStyles';
+import styles, { stylesheet } from '../Styles/ContainerStyles';
 
 const { Form } = t.form;
 
@@ -41,8 +42,11 @@ class ContactsEditScreen extends Component {
         email: contactDetail.email ? contactDetail.email : null,
         comment: contactDetail.comment ? contactDetail.comment : null,
       },
+      tags: [],
+      selectedItems: contactDetail.category_id || [],
       isLoading: false,
     };
+    this.onSelectedItemsChange = this.onSelectedItemsChange.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onPress = this.onPress.bind(this);
     this.templateInputNotes = this.templateInputNotes.bind(this);
@@ -119,8 +123,9 @@ class ContactsEditScreen extends Component {
       // auto: 'placeholders'
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.getTypeForm();
+    getContactCategories().then((tags) => { this.setState({ tags }); });
   }
   async getTypeForm() {
     const { states } = this.props;
@@ -164,6 +169,9 @@ class ContactsEditScreen extends Component {
       />
     );
   }
+  onSelectedItemsChange(selectedItems) {
+    this.setState({ selectedItems });
+  }
   onChange(value) {
     this.setState({ value });
   }
@@ -185,7 +193,7 @@ class ContactsEditScreen extends Component {
     }
   }
   render() {
-    const { value, isLoading, type } = this.state;
+    const { value, isLoading, type, tags, selectedItems } = this.state;
     return (
       <BaseScreen title={I18n.t('Edit Contact')} onPress={() => { this.props.navigation.goBack(null); }}>
         {isLoading && <ProgressBar isSubmitLoading />}
@@ -200,6 +208,31 @@ class ContactsEditScreen extends Component {
               onChange={this.onChange}
             />
           }
+          <SectionedMultiSelect
+            items={tags}
+            uniqueKey="id"
+            selectText={I18n.t('Choose tags')}
+            confirmText={I18n.t('OK')}
+            selectedText={I18n.t('selected')}
+            searchPlaceholderText={I18n.t('Search tag')}
+            styles={{
+              selectToggleText: styles.selectToggleText,
+              toggleIcon: styles.selectToggleText,
+              chipText: styles.chipText,
+              selectToggle: styles.selectToggle,
+            }}
+            showDropDowns
+            showCancelButton
+            onSelectedItemsChange={e => this.onSelectedItemsChange(e)}
+            selectedItems={selectedItems}
+            selectToggleIconComponent={
+              <Ionicons
+                size={20}
+                name="ios-arrow-down-outline"
+                style={{ color: 'white' }}
+              />
+            }
+          />
           <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
       </BaseScreen>

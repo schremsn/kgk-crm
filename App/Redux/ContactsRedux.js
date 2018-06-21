@@ -22,6 +22,18 @@ export const INITIAL_STATE = Immutable({
   offset: 0,
 });
 
+export const getContactCategories = () => new Promise((resolve, reject) => {
+  const requestApi = () => (
+    dataprovider.getContactCategories()
+      .then((detail) => {
+        resolve(detail);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+  );
+  retryPromise(requestApi, reject, 'createCustomer');
+});
 export const createCustomer = data => new Promise((resolve, reject) => {
   const requestApi = () => (
     dataprovider.createCustomer(data)

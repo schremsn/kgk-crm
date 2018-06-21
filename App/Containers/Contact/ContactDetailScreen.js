@@ -1,15 +1,20 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Alert, Image, RefreshControl, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import { connect } from 'react-redux';
+// libraries
 import * as Animatable from 'react-native-animatable';
 import Communications from 'react-native-communications';
 import Toast from 'react-native-easy-toast';
 import I18n from 'react-native-i18n';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { connect } from 'react-redux';
+// components
 import FullButton from '../../Components/FullButton';
 import Header from '../../Components/Header';
-import { getCustomerDetail } from '../../Redux/ContactsRedux';
+// actions
+import { getContactCategories, getCustomerDetail } from '../../Redux/ContactsRedux';
+// styles
 import { Colors, Images } from '../../Themes/index';
 import styles from '../Styles/ContainerStyles';
 
@@ -28,6 +33,7 @@ const data = [
   { name: 'website', value: I18n.t('Website') },
   { name: 'zip', value: I18n.t('Zip') },
   { name: 'state_id', value: I18n.t('Province') },
+  { name: 'category_id', value: I18n.t('Tag') },
   { name: 'identification_id', value: I18n.t('identification id') },
 ];
 class ContactDetailScreen extends Component {
@@ -37,14 +43,17 @@ class ContactDetailScreen extends Component {
       contactDetail: {},
       isShowActions: false,
       isRefreshing: false,
+      items: [],
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
     this.renderListActions = this.renderListActions.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
   }
-  componentWillMount() {
+  componentDidMount() {
     this.getContactDetail();
+    getContactCategories().then((items) => { this.setState({ items }); });
+
   }
   getContactDetail(isRefreshed) {
     const { contactId } = this.props.navigation.state.params;
@@ -86,26 +95,60 @@ class ContactDetailScreen extends Component {
           </View>
           <View style={styles.rowInfoContainer}>
             {
-              (item.name === 'phone' || item.name === 'mobile')
-                ?
-                  <View style={styles.boxLeadPhone}>
-                    <Text style={styles.rowInfo}>{rowData[item.name]}</Text>
-                    {
-                    rowData[item.name] &&
-                    <TouchableOpacity
-                      style={styles.buttonCallPhone}
-                      onPress={() => this.onCallPhone(rowData[item.name])}
-                    >
-                      <Ionicons name="ios-call-outline" size={25} color={Colors.banner} />
-                    </TouchableOpacity>
-                  }
-                  </View>
-                : <Text style={styles.rowInfo}>{typeof (rowData[item.name]) === 'object' ? rowData[item.name][1] : rowData[item.name]}</Text>
+              this.renderField(item.name, rowData[item.name])
             }
           </View>
 
         </View>))
     );
+  }
+  renderField(name, value) {
+    switch (name) {
+      case 'phone': return (
+        <View style={styles.boxLeadPhone}>
+          <Text style={styles.rowInfo}>{value}</Text>
+          {
+            value &&
+            <TouchableOpacity
+              style={styles.buttonCallPhone}
+              onPress={() => this.onCallPhone(value)}
+            >
+              <Ionicons name="ios-call-outline" size={25} color={Colors.banner} />
+            </TouchableOpacity>
+          }
+        </View>
+      );
+      case 'mobile': return (
+        <View style={styles.boxLeadPhone}>
+          <Text style={styles.rowInfo}>{value}</Text>
+          {
+            value &&
+            <TouchableOpacity
+              style={styles.buttonCallPhone}
+              onPress={() => this.onCallPhone(value)}
+            >
+              <Ionicons name="ios-call-outline" size={25} color={Colors.banner} />
+            </TouchableOpacity>
+          }
+        </View>
+      );
+      case 'category_id': return (
+        <View>
+          <SectionedMultiSelect
+            items={this.state.items}
+            uniqueKey="id"
+            hideSelect
+            onSelectedItemsChange={e => console.log(e)}
+            styles={{
+              chipText: { color: Colors.charcoal, paddingRight: 10 },
+              chipIcon: { display: 'none' },
+            }}
+            selectedItems={this.state.contactDetail.category_id}
+          />
+        </View>
+      );
+      default: return (<Text style={styles.rowInfo}>{typeof (value) === 'object' ? value[1] : value} </Text>);
+    }
   }
   renderListActions() {
     return (
