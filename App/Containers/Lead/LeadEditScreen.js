@@ -7,7 +7,7 @@ import t from 'tcomb-form-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 // components
 import RoundedButton from '../../Components/RoundedButton';
 import BaseScreen from '../../Components/BaseScreen';
@@ -17,7 +17,7 @@ import Input from '../../Components/Form/Input';
 import { updateLead, getLeadTags } from '../../Redux/LeadRedux';
 // styles
 import { Colors } from '../../Themes';
-import { stylesheet } from '../Styles/ContainerStyles';
+import styles, { stylesheet } from '../Styles/ContainerStyles';
 
 const { Form } = t.form;
 
@@ -44,7 +44,7 @@ class LeadEditScreen extends Component {
         street2: leadDetail.street2 ? leadDetail.street2 : null,
         zip: leadDetail.zip ? leadDetail.zip : null,
       },
-      selectedItems: [],
+      selectedItems: leadDetail.tag_ids || [],
       tags: [],
       isLoading: false,
       productName: leadDetail.product[1] ? leadDetail.product[1] : null,
@@ -257,12 +257,32 @@ class LeadEditScreen extends Component {
             />
           }
           <SectionedMultiSelect
+            ref={(node) => { this.sectionedMultiSelect = node; }}
             items={tags}
             uniqueKey="id"
-            selectText="Choose some things..."
+            selectText={I18n.t('Choose tags')}
+            confirmText={I18n.t('OK')}
+            selectedText={I18n.t('selected')}
+            searchPlaceholderText={I18n.t('Search tag')}
+            styles={{
+              selectToggleText: styles.selectToggleText,
+              toggleIcon: {
+                backgroundColor: 'white'
+              },
+              chipText: styles.chipText,
+              selectToggle: styles.selectToggle,
+            }}
             showDropDowns
+            showCancelButton
             onSelectedItemsChange={e => this.onSelectedItemsChange(e)}
             selectedItems={this.state.selectedItems}
+            selectToggleIconComponent={
+              <Ionicons
+                size={20}
+                name="ios-arrow-down-outline"
+                style={{ color: 'white' }}
+              />
+            }
           />
           <RoundedButton onPress={this.onPress} text={I18n.t('Update')} />
         </KeyboardAwareScrollView>

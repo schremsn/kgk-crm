@@ -357,4 +357,19 @@ export default StyleSheet.create({
     marginTop: 25,
     marginBottom: 60,
   },
+  // tag
+  selectToggle: {
+    borderWidth: 1,
+    borderColor: 'white',
+    padding: 10,
+    borderRadius: 50,
+    marginBottom: 20,
+  },
+  chipText: {
+    color: Colors.snow,
+  },
+  selectToggleText: {
+    color: Colors.snow,
+  },
+
 });
