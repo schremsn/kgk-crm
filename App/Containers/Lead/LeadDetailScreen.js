@@ -2,20 +2,24 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View, ScrollView, Text, Image, TouchableOpacity, Alert, TouchableHighlight, Platform, KeyboardAvoidingView, Picker } from 'react-native';
+// libraries
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
 import * as Animatable from 'react-native-animatable';
 import Toast from 'react-native-easy-toast';
 import ModalSelector from 'react-native-modal-selector';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
-import styles from '../Styles/ContainerStyles';
-import { Images, Colors } from '../../Themes/index';
-import { getLead, markLeadWon, markLeadLost, getLeadStatus, getLostReasons } from '../../Redux/LeadRedux';
+// components
 import Header from '../../Components/Header';
-
 import FullButton from '../../Components/FullButton';
 import RoundedButton from '../../Components/RoundedButton';
+// styles
+import { Images, Colors } from '../../Themes/index';
+import styles from '../Styles/ContainerStyles';
+// actions
+import { getLead, markLeadWon, markLeadLost, getLeadStatus, getLostReasons, getLeadTags } from '../../Redux/LeadRedux';
 
 const data = [
   { name: 'id', value: I18n.t('id') },
@@ -32,8 +36,9 @@ const data = [
   { name: 'state_id', value: I18n.t('Province') },
   { name: 'zip', value: I18n.t('Zip') },
   { name: 'email_from', value: I18n.t('Email') },
-  { name: 'description', value: I18n.t('Description') },
   { name: 'stage_id', value: I18n.t('Stage') },
+  { name: 'tag_ids', value: I18n.t('Tag') },
+  { name: 'description', value: I18n.t('notes') },
 ];
 class LeadDetailScreen extends Component {
   constructor(props) {
@@ -43,7 +48,8 @@ class LeadDetailScreen extends Component {
       isShowActions: false,
       isSelectLostReason: false,
       reasonLost: props.listReasonLost[0],
-      textInputValue: '',
+      selectedItems: [],
+      tags: [],
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
@@ -59,6 +65,11 @@ class LeadDetailScreen extends Component {
     if (!this.state.reasonLost.id) {
       this.props.getLostReasons();
     }
+    getLeadTags().then((tags) => {
+      this.setState({
+        tags,
+      });
+    });
   }
   getLeadDetail() {
     const { leadId } = this.props.navigation.state.params;
@@ -177,6 +188,20 @@ class LeadDetailScreen extends Component {
           }
         </View>
       );
+      case 'tag_ids': return (
+        <View>
+          <SectionedMultiSelect
+            items={this.state.tags}
+            uniqueKey="id"
+            hideSelect
+            styles={{
+              chipText: { color: Colors.charcoal, paddingRight: 10 },
+              chipIcon: { display: 'none' },
+            }}
+            selectedItems={this.state.leadDetail.tag_ids}
+          />
+        </View>
+      );
       default: return (<Text style={styles.rowInfo}>{typeof (value) === 'object' ? value[1] : value} </Text>);
     }
   }
@@ -262,7 +287,7 @@ class LeadDetailScreen extends Component {
   }
   render() {
     const { leadDetail, isShowActions, isSelectLostReason } = this.state;
-
+    console.log(leadDetail);
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />

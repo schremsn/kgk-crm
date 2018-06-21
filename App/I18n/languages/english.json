@@ -118,6 +118,10 @@
   "Add lead is error": "Add lead is error",
   "Mark lead won is success": "Mark lead won is success",
   "Mark lead lost is success": "Mark lead lost is success",
+  "Choose tags": "Choose tags...",
+  "selected": "selected",
+  "Search tag": "Search tag",
+  "Tag": "Tag",
   // error
   "Connection error, data download failed": "Connection error, data download failed."
 }

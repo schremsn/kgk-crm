@@ -6,16 +6,18 @@ import I18n from 'react-native-i18n';
 import t from 'tcomb-form-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-easy-toast';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 // components
 import BaseScreen from '../../Components/BaseScreen';
 import RoundedButton from '../../Components/RoundedButton';
 import Input from '../../Components/Form/Input';
 import ProgressBar from '../../Components/ProgressBar';
 // actions
-import { createLead } from '../../Redux/LeadRedux';
+import { createLead, getLeadTags } from '../../Redux/LeadRedux';
 // styles
 import { Colors } from '../../Themes/index';
-import { stylesheet } from '../Styles/ContainerStyles';
+import styles, { stylesheet } from '../Styles/ContainerStyles';
 
 const { Form } = t.form;
 
@@ -32,6 +34,8 @@ class LeadAddScreen extends Component {
       customerName: this.props.navigation.state.params ? this.props.navigation.state.params.contactName : '',
       productName: '',
       isLoading: false,
+      selectedItems: [],
+      tags: [],
     };
     this.onChangeForm = this.onChangeForm.bind(this);
     this.onPress = this.onPress.bind(this);
@@ -75,6 +79,11 @@ class LeadAddScreen extends Component {
   }
   componentDidMount() {
     this.getTypeForm();
+    getLeadTags().then((tags) => {
+      this.setState({
+        tags,
+      });
+    });
   }
   async getTypeForm() {
     const { leadStages } = this.props;
@@ -94,12 +103,15 @@ class LeadAddScreen extends Component {
     });
     this.setState({ type });
   }
+  onSelectedItemsChange = (selectedItems) => {
+    this.setState({ selectedItems });
+  }
   onChangeForm(value) {
     this.setState({ value });
   }
   onPress() {
     if (this.form.getValue()) {
-      const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0) };
+      const value = { ...this.form.getValue(), stage_id: parseInt(this.form.getValue().stage_id, 0), tag_ids: this.state.selectedItems };
       this.setState({ isLoading: true });
       createLead(value)
         .then(() => {
@@ -176,7 +188,9 @@ class LeadAddScreen extends Component {
     );
   }
   render() {
-    const { value, isLoading, type } = this.state;
+    const {
+      value, isLoading, type, tags,
+    } = this.state;
     return (
       <BaseScreen
         title={I18n.t('Add Lead')}
@@ -198,6 +212,33 @@ class LeadAddScreen extends Component {
               onChange={this.onChangeForm}
             />
           }
+
+          <SectionedMultiSelect
+            ref={(node) => { this.sectionedMultiSelect = node; }}
+            items={tags}
+            uniqueKey="id"
+            selectText={I18n.t('Choose tags')}
+            confirmText={I18n.t('OK')}
+            selectedText={I18n.t('selected')}
+            searchPlaceholderText={I18n.t('Search tag')}
+            styles={{
+              selectToggleText: styles.selectToggleText,
+              toggleIcon: styles.selectToggleText,
+              chipText: styles.chipText,
+              selectToggle: styles.selectToggle,
+            }}
+            showDropDowns
+            showCancelButton
+            onSelectedItemsChange={e => this.onSelectedItemsChange(e)}
+            selectedItems={this.state.selectedItems}
+            selectToggleIconComponent={
+              <Ionicons
+                size={20}
+                name="ios-arrow-down-outline"
+                style={{ color: 'white' }}
+              />
+            }
+          />
           <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
         </KeyboardAwareScrollView>
       </BaseScreen>
