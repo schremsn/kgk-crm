@@ -225,7 +225,7 @@ export default class DataProvider {
     const { id } = customer;
 
     // resolve many-to-many relationship for tags
-    Object.keys(customer).foreEach((prop) => {
+    Object.keys(customer).forEach((prop) => {
       if (prop === 'category_id') {
         const tags = customer[prop];
         const value = [];
