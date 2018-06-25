@@ -160,7 +160,7 @@ class ContactDetailScreen extends Component {
         <Input
           baseInput
           label={I18n.t('Lead Id')}
-          value={contactDetail.id.toString()}
+          value={contactDetail.id ? contactDetail.id.toString() : ''}
           editable={false}
           press={(fileName) => {
             this.setState({ fileName });

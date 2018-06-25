@@ -231,7 +231,7 @@ class LeadEditScreen extends Component {
   templateInputProduct() {
     const value = this.state.productName;
     return (
-      <Input label={I18n.t('product')} value={value} press={() => { this.props.navigation.navigate('ProductsListPipelineScreen', { onSelectProduct: this.onSelectProduct }); }} />
+      <Input selectInput label={I18n.t('product')} value={value} press={() => { this.props.navigation.navigate('ProductsListPipelineScreen', { onSelectProduct: this.onSelectProduct }); }} />
     );
   }
   render() {

@@ -147,6 +147,7 @@ class LeadAddScreen extends Component {
     const value = this.state.customerName;
     return (
       <Input
+        selectInput
         label={I18n.t('Customer')}
         value={value}
         press={() => {
@@ -163,6 +164,7 @@ class LeadAddScreen extends Component {
     const value = this.state.productName;
     return (
       <Input
+        selectInput
         label={I18n.t('product')}
         value={value}
         press={() => {

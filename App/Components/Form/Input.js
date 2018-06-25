@@ -10,7 +10,7 @@ import CircleButton from '../CircleButton';
 export default class Input extends Component {
   render() {
     const {
-      value, label, press, multiline, baseInput, editable
+      value, label, press, multiline, baseInput, editable, selectInput
     } = this.props;
     return (
       <View >
@@ -26,14 +26,17 @@ export default class Input extends Component {
             />
         }
         {
-          baseInput ? <View>
+          baseInput && <View>
             <TextInput
               style={styles.inputFormMulti}
               value={value}
               editable={editable}
               onChangeText={text => press(text)}
             />
-          </View> : <View>
+          </View>
+        }
+        {
+          selectInput && <View>
             <TextInput
               style={styles.inputFormDisable}
               value={value}
