@@ -111,7 +111,7 @@ class MessageReplayScreen extends Component {
               onChange={this.onChange}
             />
           }
-          <RoundedButton onPress={this.onPress} text={I18n.t('Save')} />
+          <RoundedButton onPress={this.onPress} text={I18n.t('Send')} />
         </KeyboardAwareScrollView>
       </BaseScreen>
     );

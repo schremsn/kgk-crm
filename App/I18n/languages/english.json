@@ -133,6 +133,7 @@
   // messages
   "Replay Message": "Replay Message",
   "body": "Message content",
+  "Send": "Send",
   "Create message is success": "Create message is success",
   // error
   "Connection error, data download failed": "Connection error, data download failed."

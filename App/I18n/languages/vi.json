@@ -131,6 +131,7 @@
   // messages
   "Replay Message": "Trả lời tin nhắn",
   "body": "Nội dung tin nhắn",
+  "Send": "Gửi tin nhắn",
   "Create message is success": "Tạo tin nhắn thành công",
   // error
   "Connection error, data download failed": "Lỗi kết nối, tải dữ liệu không thành công."

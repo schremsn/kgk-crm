@@ -10,7 +10,7 @@ import CircleButton from '../CircleButton';
 export default class Input extends Component {
   render() {
     const {
-      value, label, press, multiline, baseInput, editable, selectInput
+      value, label, press, multiline, baseInput, editable, selectInput,
     } = this.props;
     return (
       <View >
@@ -60,13 +60,16 @@ export default class Input extends Component {
 Input.propTypes = {
   value: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  press: PropTypes.func.isRequired,
+  press: PropTypes.func,
   multiline: PropTypes.bool,
   baseInput: PropTypes.bool,
   editable: PropTypes.bool,
+  selectInput: PropTypes.bool,
 };
 Input.defaultProps = {
   multiline: false,
   baseInput: false,
   editable: true,
+  selectInput: true,
+  press: (e) => { console.log(e); },
 };

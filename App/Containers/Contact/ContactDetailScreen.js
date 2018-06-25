@@ -112,7 +112,7 @@ class ContactDetailScreen extends Component {
       DocumentPicker.show({
         filetype: [DocumentPickerUtil.allFiles()],
       }, (error, file) => {
-        this.setState({ file });
+        this.setState({ file, fileName: file.fileName });
       });
     } else {
       const { pageX, pageY } = event.nativeEvent;
@@ -143,11 +143,12 @@ class ContactDetailScreen extends Component {
           });
       })
       .catch((err) => {
+        this.setState({ isLoading: false });
         this.toast.show(I18n.t(err), 1000);
       });
   }
   renderModalUpFile() {
-    const { contactDetail, file, isLoading } = this.state;
+    const { contactDetail, fileName, isLoading } = this.state;
     return (
       <KeyboardAwareScrollView
         style={styles.boxAttachmentContent}
@@ -162,13 +163,10 @@ class ContactDetailScreen extends Component {
           label={I18n.t('Lead Id')}
           value={contactDetail.id ? contactDetail.id.toString() : ''}
           editable={false}
-          press={(fileName) => {
-            this.setState({ fileName });
-          }}
         />
         <View>
           <Text style={styles.labelForm}>{I18n.t('Document')}</Text>
-          <Text style={styles.text}>{file.fileName ? file.fileName : ''}</Text>
+          <Text style={styles.text}>{fileName}</Text>
           <View style={styles.center}>
             <RoundedButton
               onPress={e => this.upDocument(e)}
@@ -177,14 +175,6 @@ class ContactDetailScreen extends Component {
             />
           </View>
         </View>
-        <Input
-          baseInput
-          label={I18n.t('File Name')}
-          value={this.state.fileName}
-          press={(fileName) => {
-            this.setState({ fileName });
-          }}
-        />
         <Input
           baseInput
           label={I18n.t('description')}

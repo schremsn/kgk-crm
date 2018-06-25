@@ -224,7 +224,7 @@ class LeadDetailScreen extends Component {
       DocumentPicker.show({
         filetype: [DocumentPickerUtil.allFiles()],
       }, (error, file) => {
-        this.setState({ file });
+        this.setState({ file, fileName: file.fileName });
       });
     } else {
       const { pageX, pageY } = event.nativeEvent;
@@ -238,10 +238,11 @@ class LeadDetailScreen extends Component {
     }
   }
   createAttachment() {
+    this.setState({ isLoading: true });
+
     const {
       leadDetail, file, fileName, description,
     } = this.state;
-    this.setState({ isLoading: true });
     RNFS.readFile(file.uri, 'base64')
       .then((dataBase64) => {
         createLeadAttachment(leadDetail.id, dataBase64, fileName, description)
@@ -257,6 +258,7 @@ class LeadDetailScreen extends Component {
           });
       })
       .catch((err) => {
+        this.setState({ isLoading: false });
         this.toast.show(I18n.t(err), 1000);
       });
   }
@@ -275,9 +277,6 @@ class LeadDetailScreen extends Component {
           label={I18n.t('Lead Id')}
           value={leadDetail.id ? leadDetail.id.toString() : ''}
           editable={false}
-          press={(fileName) => {
-              this.setState({ fileName });
-            }}
         />
         <View>
           <Text style={styles.labelForm}>{I18n.t('Document')}</Text>
@@ -290,14 +289,6 @@ class LeadDetailScreen extends Component {
             />
           </View>
         </View>
-        <Input
-          baseInput
-          label={I18n.t('File Name')}
-          value={this.state.fileName}
-          press={(fileName) => {
-              this.setState({ fileName });
-            }}
-        />
         <Input
           baseInput
           label={I18n.t('description')}
