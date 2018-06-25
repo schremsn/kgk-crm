@@ -34,6 +34,18 @@ export const getContactCategories = () => new Promise((resolve, reject) => {
   );
   retryPromise(requestApi, reject, 'getContactCategories');
 });
+export const createContactAttachment = (contactId, data, fileName, description) => new Promise((resolve, reject) => {
+  const requestApi = () => (
+    dataprovider.createContactAttachment(contactId, data, fileName, description)
+      .then((detail) => {
+        resolve(detail);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+  );
+  retryPromise(requestApi, reject, 'getContactCategories');
+});
 export const createCustomer = data => new Promise((resolve, reject) => {
   const requestApi = () => (
     dataprovider.createCustomer(data)

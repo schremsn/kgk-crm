@@ -297,8 +297,11 @@ export default StyleSheet.create({
   },
   boxAttachmentContent: {
     backgroundColor: Colors.banner,
-    width: '90%',
-    padding: 10,
+    width: Metrics.screenWidth * 0.9,
+    height: Metrics.screenHeight * 0.9,
+    padding: Metrics.doubleBaseMargin,
+    marginLeft: Metrics.screenWidth * 0.05,
+    marginVertical: Metrics.screenWidth * 0.05,
     borderRadius: 10,
   },
   boxActions: {
