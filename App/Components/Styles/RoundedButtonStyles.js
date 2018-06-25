@@ -5,7 +5,6 @@ export default StyleSheet.create({
   button: {
     height: 45,
     borderRadius: 30,
-    marginHorizontal: Metrics.section,
     paddingHorizontal: Metrics.section,
     marginVertical: Metrics.baseMargin,
     backgroundColor: Colors.fire,

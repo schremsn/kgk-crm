@@ -10,16 +10,21 @@ import * as Animatable from 'react-native-animatable';
 import Toast from 'react-native-easy-toast';
 import ModalSelector from 'react-native-modal-selector';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+import RNFS from 'react-native-fs';
 
 // components
 import Header from '../../Components/Header';
 import FullButton from '../../Components/FullButton';
 import RoundedButton from '../../Components/RoundedButton';
+import Input from '../../Components/Form/Input';
+import ProgressBar from '../../Components/ProgressBar';
+
 // styles
 import { Images, Colors } from '../../Themes/index';
 import styles from '../Styles/ContainerStyles';
 // actions
-import { getLead, markLeadWon, markLeadLost, getLeadStatus, getLostReasons, getLeadTags } from '../../Redux/LeadRedux';
+import { getLead, markLeadWon, markLeadLost, getLeadStatus, getLostReasons, getLeadTags, createLeadAttachment } from '../../Redux/LeadRedux';
 
 const data = [
   { name: 'id', value: I18n.t('id') },
@@ -45,18 +50,25 @@ class LeadDetailScreen extends Component {
     super(props);
     this.state = {
       leadDetail: {},
+      isLoading: false,
       isShowActions: false,
       isSelectLostReason: false,
+      isModalUpFile: false,
       reasonLost: props.listReasonLost[0],
-      selectedItems: [],
       tags: [],
+      fileName: 'test file',
+      file: {},
+      description: 'this is description',
     };
     this.renderCard = this.renderCard.bind(this);
     this.renderRows = this.renderRows.bind(this);
     this.renderListActions = this.renderListActions.bind(this);
     this.renderSelectLostReason = this.renderSelectLostReason.bind(this);
+    this.renderModalUpFile = this.renderModalUpFile.bind(this);
     this.onMarkLeadWon = this.onMarkLeadWon.bind(this);
     this.onMarkLeadLost = this.onMarkLeadLost.bind(this);
+    this.createAttachment = this.createAttachment.bind(this);
+    this.upDocument = this.upDocument.bind(this);
   }
   componentWillMount() {
     this.getLeadDetail();
@@ -194,6 +206,7 @@ class LeadDetailScreen extends Component {
             items={this.state.tags}
             uniqueKey="id"
             hideSelect
+            onSelectedItemsChange={(e) => {}}
             styles={{
               chipText: { color: Colors.charcoal, paddingRight: 10 },
               chipIcon: { display: 'none' },
@@ -204,6 +217,47 @@ class LeadDetailScreen extends Component {
       );
       default: return (<Text style={styles.rowInfo}>{typeof (value) === 'object' ? value[1] : value} </Text>);
     }
+  }
+  upDocument(event) {
+    if (Platform.OS !== 'ios') {
+      DocumentPicker.show({
+        filetype: [DocumentPickerUtil.allFiles()],
+      }, (error, file) => {
+        console.log(file);
+        this.setState({ file });
+      });
+    } else {
+      const { pageX, pageY } = event.nativeEvent;
+
+      DocumentPicker.show({
+        top: pageY,
+        left: pageX,
+        filetype: [DocumentPickerUtil.allFiles()],
+      }, (error, url) => {
+        console.log(url);
+      });
+    }
+  }
+  createAttachment() {
+    const {
+      leadDetail, file, fileName, description,
+    } = this.state;
+    this.setState({ isLoading: true });
+    RNFS.readFile(file.uri, 'base64')
+      .then((dataBase64) => {
+        createLeadAttachment(leadDetail.id, dataBase64, fileName, description)
+          .then((fileRes) => {
+            this.setState({ isModalUpFile: false, isLoading: false });
+            this.toast.show(I18n.t('Create attachment is success'), 1000);
+          })
+          .catch((e) => {
+            this.setState({ isModalUpFile: false, isLoading: false });
+            this.toast.show(I18n.t(e.message), 1000);
+          });
+      })
+      .catch((err) => {
+        this.toast.show(I18n.t(err), 1000);
+      });
   }
   renderListActions() {
     return (
@@ -223,6 +277,7 @@ class LeadDetailScreen extends Component {
 
           <FullButton text={I18n.t('New lead')} onPress={() => this.props.navigation.navigate('LeadAddScreen')} />
           <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail, reloadData: () => { this.getLeadDetail(); } })} />
+          <FullButton text={I18n.t('Up File')} onPress={e => this.setState({ isModalUpFile: true })} />
           <FullButton
             text={I18n.t('Log activity')}
             disable
@@ -244,6 +299,66 @@ class LeadDetailScreen extends Component {
         </Animatable.View>
 
       </TouchableHighlight>
+    );
+  }
+  renderModalUpFile() {
+    const { leadDetail, file } = this.state;
+    return (
+      <View style={styles.boxPicker}>
+        <View style={styles.boxAttachmentContent}>
+          <View style={styles.center}>
+            <Text style={styles.labelForm}>{'Create Attachment'.toUpperCase()}</Text>
+          </View>
+          <Input
+            baseInput
+            label={I18n.t('Lead Id')}
+            value={leadDetail.id.toString()}
+            editable={false}
+            press={(fileName) => {
+              this.setState({ fileName });
+            }}
+          />
+          <View>
+            <Text style={styles.labelForm}>{I18n.t('Up File')}</Text>
+            <Text style={styles.text}>{file.fileName ? file.fileName : ''}</Text>
+            <View style={styles.center}>
+              <RoundedButton
+                onPress={e => this.upDocument(e)}
+                text={I18n.t('Choose file')}
+                styles={{ width: '49%', marginVertical: 20, backgroundColor: Colors.facebook }}
+              />
+            </View>
+          </View>
+          <Input
+            baseInput
+            label={I18n.t('File Name')}
+            value={this.state.fileName}
+            press={(fileName) => {
+              this.setState({ fileName });
+            }}
+          />
+          <Input
+            baseInput
+            label={I18n.t('description')}
+            value={this.state.description}
+            press={(description) => {
+              this.setState({ description });
+            }}
+          />
+          <View style={styles.boxButtons}>
+            <RoundedButton
+              onPress={() => this.setState({ isModalUpFile: false })}
+              text={I18n.t('cancel')}
+              styles={{ width: '49%', backgroundColor: Colors.frost }}
+            />
+            <RoundedButton
+              onPress={this.createAttachment}
+              text={I18n.t('Up File')}
+              styles={{ width: '49%', backgroundColor: Colors.facebook }}
+            />
+          </View>
+        </View>
+      </View>
     );
   }
   renderSelectLostReason() {
@@ -286,7 +401,9 @@ class LeadDetailScreen extends Component {
     );
   }
   render() {
-    const { leadDetail, isShowActions, isSelectLostReason } = this.state;
+    const {
+      leadDetail, isShowActions, isSelectLostReason, isModalUpFile, isLoading,
+    } = this.state;
     return (
       <View style={styles.container}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
@@ -294,6 +411,9 @@ class LeadDetailScreen extends Component {
           title={I18n.t('lead detail')}
           onPress={() => { this.props.navigation.goBack(null); }}
         />
+
+        {isLoading && <ProgressBar isSubmitLoading />}
+        <Toast ref={(c) => { this.toast = c; }} />
 
         <ScrollView style={[styles.mainContainerModal]}>
           {leadDetail.id && this.renderCard('Lead Information', leadDetail)}
@@ -303,6 +423,9 @@ class LeadDetailScreen extends Component {
         }
         {
           isSelectLostReason && this.renderSelectLostReason()
+        }
+        {
+          isModalUpFile && this.renderModalUpFile()
         }
         {
           (!isShowActions) &&

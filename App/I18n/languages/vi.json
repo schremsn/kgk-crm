@@ -81,6 +81,13 @@
   "Log activity": "Nhật ký hoạt động",
   "Add note": "Thêm lưu ý",
   "New lead": "Thêm chỉ dẫn",
+  "Lead Id": "Mã chỉ dẫn",
+  "Choose file": "Chọn tệp",
+  "Up File": "Tải tệp",
+  "File Name": "Tên tệp",
+  "Create attachment is success": "Tải tài liệu thành công",
+  "Create attachment is fail": "Tải tài liệu thất bại",
+
   // alert
   "Alert": "Thông báo",
   "Confirm": "Xác nhận",

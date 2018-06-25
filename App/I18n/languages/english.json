@@ -83,6 +83,12 @@
   "Log activity": "Log activity",
   "Add note": "Add note",
   "New lead": "New lead",
+  "Lead Id": "Lead Id",
+  "Choose file": "Choose file",
+  "Up File": "Up File",
+  "File Name": "File Name",
+  "Create attachment is success": "Create attachment is success",
+  "Create attachment is fail": "Create attachment is fail",
 
   // alert
   "Alert": "Alert",
