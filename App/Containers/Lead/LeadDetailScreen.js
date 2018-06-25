@@ -277,7 +277,7 @@ class LeadDetailScreen extends Component {
 
           <FullButton text={I18n.t('New lead')} onPress={() => this.props.navigation.navigate('LeadAddScreen')} />
           <FullButton text={I18n.t('Edit')} onPress={() => this.props.navigation.navigate('LeadEditScreen', { leadDetail: this.state.leadDetail, reloadData: () => { this.getLeadDetail(); } })} />
-          <FullButton text={I18n.t('Up File')} onPress={e => this.setState({ isModalUpFile: true })} />
+          <FullButton text={I18n.t('Upload document')} onPress={e => this.setState({ isModalUpFile: true })} />
           <FullButton
             text={I18n.t('Log activity')}
             disable
@@ -307,7 +307,7 @@ class LeadDetailScreen extends Component {
       <View style={styles.boxPicker}>
         <View style={styles.boxAttachmentContent}>
           <View style={styles.center}>
-            <Text style={styles.labelForm}>{'Create Attachment'.toUpperCase()}</Text>
+            <Text style={styles.labelForm}>{I18n.t('Upload document').toUpperCase()}</Text>
           </View>
           <Input
             baseInput
@@ -319,12 +319,12 @@ class LeadDetailScreen extends Component {
             }}
           />
           <View>
-            <Text style={styles.labelForm}>{I18n.t('Up File')}</Text>
+            <Text style={styles.labelForm}>{I18n.t('Document')}</Text>
             <Text style={styles.text}>{file.fileName ? file.fileName : ''}</Text>
             <View style={styles.center}>
               <RoundedButton
                 onPress={e => this.upDocument(e)}
-                text={I18n.t('Choose file')}
+                text={I18n.t('Choose document')}
                 styles={{ width: '49%', marginVertical: 20, backgroundColor: Colors.facebook }}
               />
             </View>
@@ -353,7 +353,7 @@ class LeadDetailScreen extends Component {
             />
             <RoundedButton
               onPress={this.createAttachment}
-              text={I18n.t('Up File')}
+              text={I18n.t('Upload')}
               styles={{ width: '49%', backgroundColor: Colors.facebook }}
             />
           </View>

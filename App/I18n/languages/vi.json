@@ -82,9 +82,11 @@
   "Add note": "Thêm lưu ý",
   "New lead": "Thêm chỉ dẫn",
   "Lead Id": "Mã chỉ dẫn",
-  "Choose file": "Chọn tệp",
-  "Up File": "Tải tệp",
+  "Choose document": "Chọn tài liệu",
+  "Upload": "Đăng tải",
+  "Document": "Tài liệu",
   "File Name": "Tên tệp",
+  "Upload document": "Đăng tải tài liệu",
   "Create attachment is success": "Tải tài liệu thành công",
   "Create attachment is fail": "Tải tài liệu thất bại",
 
