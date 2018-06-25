@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView, Text, Image, Linking } from 'react-native';
+import { View, ScrollView, Text, Linking } from 'react-native';
 import I18n from 'react-native-i18n';
+// libraries
 import MyWebView from 'react-native-webview-autoheight';
+// components
+import RoundedButton from '../../Components/RoundedButton';
+import BaseScreen from '../../Components/BaseScreen';
+// styles
 import styles from '../Styles/ContainerStyles';
-import { Images, Metrics } from '../../Themes/index';
-import Header from '../../Components/Header';
+import { Metrics, Colors } from '../../Themes/index';
 
 const customStyle = '<style>* {max-width: 100% } body {font-family: sans-serif;} h1 {color: red;}</style>';
 
@@ -39,10 +43,14 @@ export default class MessageDetailScreen extends Component {
   }
   render() {
     const { messageDetail } = this.state;
+    console.log(messageDetail)
     return (
-      <View style={styles.container}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        <Header title={I18n.t('message detail')} onPress={() => this.props.navigation.goBack(null)} />
+      <BaseScreen
+        title={I18n.t('message detail')}
+        onPress={() => { this.props.navigation.goBack(null); }}
+        circleButton={() => { this.props.navigation.navigate('MessageReplayScreen', {channel_ids: messageDetail.channel_ids, res_id: messageDetail.res_id}); }}
+        circleIcon={'ios-redo-outline'}
+      >
         <ScrollView style={styles.mainContainer}>
           {this.renderCard(messageDetail)}
           <View style={{ paddingVertical: Metrics.doubleBaseMargin }}>
@@ -60,7 +68,7 @@ export default class MessageDetailScreen extends Component {
             />
           </View>
         </ScrollView>
-      </View>
+      </BaseScreen>
     );
   }
 }
