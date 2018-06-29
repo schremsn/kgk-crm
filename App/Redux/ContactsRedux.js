@@ -71,10 +71,14 @@ export const updateCustomer = data => new Promise((resolve, reject) => {
   retryPromise(requestApi, reject, 'updateCustomer');
 });
 export const getCustomers = (offset = 0) => new Promise((resolve, reject) => {
+  const newOffset = offset + 10;
   const requestApi = () => (
     dataprovider.getCustomers(offset)
-      .then((data) => {
-        resolve(data);
+      .then(async (data) => {
+        const resolveData = await {
+          data, newOffset,
+        };
+        resolve(resolveData);
       })
       .catch((err) => {
         throw new Error(err);
