@@ -17,13 +17,13 @@ export default class Input extends Component {
         <Text style={styles.labelForm}>{label}</Text>
         {
           multiline &&
-            <TextInput
-              style={styles.inputFormMulti}
-              value={value}
-              multiline
-              numberOfLines={3}
-              onChangeText={text => press(text)}
-            />
+          <TextInput
+            style={styles.inputFormMulti}
+            value={value}
+            multiline
+            numberOfLines={3}
+            onChangeText={text => press(text)}
+          />
         }
         {
           baseInput && <View>
@@ -36,7 +36,8 @@ export default class Input extends Component {
           </View>
         }
         {
-          selectInput && <View>
+          selectInput &&
+          <View>
             <TextInput
               style={styles.inputFormDisable}
               value={value}
@@ -70,6 +71,6 @@ Input.defaultProps = {
   multiline: false,
   baseInput: false,
   editable: true,
-  selectInput: true,
+  selectInput: false,
   press: (e) => { console.log(e); },
 };
