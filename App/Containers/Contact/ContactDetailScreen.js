@@ -112,7 +112,9 @@ class ContactDetailScreen extends Component {
       DocumentPicker.show({
         filetype: [DocumentPickerUtil.allFiles()],
       }, (error, file) => {
-        this.setState({ file, fileName: file.fileName });
+        if (file) {
+          this.setState({ file, fileName: file.fileName });
+        }
       });
     } else {
       const { pageX, pageY } = event.nativeEvent;
@@ -134,7 +136,9 @@ class ContactDetailScreen extends Component {
       .then((dataBase64) => {
         createContactAttachment(contactDetail.id, dataBase64, fileName, description)
           .then(() => {
-            this.setState({ isModalUpFile: false, isLoading: false, fileName: '', description: '', file: {} });
+            this.setState({
+ isModalUpFile: false, isLoading: false, fileName: '', description: '', file: {} 
+});
             this.toast.show(I18n.t('Create attachment is success'), 1000);
           })
           .catch((e) => {

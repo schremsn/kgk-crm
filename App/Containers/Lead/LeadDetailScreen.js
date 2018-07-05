@@ -224,7 +224,9 @@ class LeadDetailScreen extends Component {
       DocumentPicker.show({
         filetype: [DocumentPickerUtil.allFiles()],
       }, (error, file) => {
-        this.setState({ file, fileName: file.fileName });
+        if (file) {
+          this.setState({ file, fileName: file.fileName });
+        }
       });
     } else {
       const { pageX, pageY } = event.nativeEvent;
@@ -379,7 +381,7 @@ class LeadDetailScreen extends Component {
                     <Picker.Item key={item.id} label={item.name} value={item.id} />
                   ))
                 }
-              </Picker>
+                </Picker>
           }
 
           <View style={styles.boxButtons}>
