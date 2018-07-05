@@ -81,6 +81,15 @@
   "Log activity": "Nhật ký hoạt động",
   "Add note": "Thêm lưu ý",
   "New lead": "Thêm chỉ dẫn",
+  "Lead Id": "Mã chỉ dẫn",
+  "Choose document": "Chọn tài liệu",
+  "Upload": "Đăng tải",
+  "Document": "Tài liệu",
+  "File Name": "Tên tệp",
+  "Upload document": "Đăng tải tài liệu",
+  "Create attachment is success": "Tải tài liệu thành công",
+  "Create attachment is fail": "Tải tài liệu thất bại",
+
   // alert
   "Alert": "Thông báo",
   "Confirm": "Xác nhận",
@@ -115,7 +124,15 @@
   "Add lead is error": "Tạo chỉ dẫn thất bại",
   "Mark lead won is success": "Đánh dấu chỉ dẫn thắng thành công",
   "Mark lead lost is success": "Đánh dấu chỉ dẫn thất bị thành công",
-
+  "Choose tags": "Chọn nhãn...",
+  "selected": "nhãn được chọn",
+  "Search tag": "Tìm kiếm nhãn",
+  "Tag": "Nhãn",
+  // messages
+  "Replay Message": "Trả lời tin nhắn",
+  "body": "Nội dung tin nhắn",
+  "Send": "Gửi tin nhắn",
+  "Create message is success": "Tạo tin nhắn thành công",
   // error
   "Connection error, data download failed": "Lỗi kết nối, tải dữ liệu không thành công."
 }

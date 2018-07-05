@@ -137,6 +137,7 @@ export default class DD {
       'zip',
       'state_id',
       'identification_id',
+      'category_id',
     ];
   }
 
@@ -207,6 +208,13 @@ export default class DD {
   }
 
   static get state() {
+    return [
+      'id',
+      'name',
+    ];
+  }
+
+  static get contactCategory() {
     return [
       'id',
       'name',

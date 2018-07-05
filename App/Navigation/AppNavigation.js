@@ -14,6 +14,7 @@ import CommissionListScreen from '../Containers/Commission/CommissionListScreen'
 import MoreScreen from '../Containers/MoreScreen';
 import MessagesListScreen from '../Containers/Message/MessagesListScreen';
 import MessageDetailScreen from '../Containers/Message/MessageDetailScreen';
+import MessageReplayScreen from '../Containers/Message/MessageReplayScreen';
 import LeadStagesScreen from '../Containers/Lead/LeadStagesScreen';
 import ProductsListScreen from '../Containers/Product/ProductsListScreen';
 import ProductDetailScreen from '../Containers/Product/ProductDetailScreen';
@@ -108,6 +109,7 @@ const MoreStack = StackNavigator({
 const MessagesStack = StackNavigator({
   MessagesListScreen: { screen: MessagesListScreen },
   MessageDetailScreen: { screen: MessageDetailScreen },
+  MessageReplayScreen: { screen: MessageReplayScreen },
 }, {
   headerMode: 'none',
   initialRouteName: 'MessagesListScreen',

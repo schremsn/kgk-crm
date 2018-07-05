@@ -28,7 +28,24 @@ export const INITIAL_STATE = Immutable({
   error: null,
 });
 
-
+export const getLeadTags = () => new Promise((resolve, reject) => {
+  retryPromise(dataprovider.getLeadTags()
+    .then((list) => {
+      resolve(list);
+    })
+    .catch((error) => {
+      throw new Error(error);
+    }), reject, 'getLeadTags');
+});
+export const createLeadAttachment = (leadId, data, fileName, description)=> new Promise((resolve, reject) => {
+  retryPromise(dataprovider.createLeadAttachment(leadId, data, fileName, description)
+    .then((list) => {
+      resolve(list);
+    })
+    .catch((error) => {
+      throw new Error(error);
+    }), reject, 'getLeadTags');
+});
 export const getLeadStatus = leadId => new Promise((resolve, reject) => {
   const api = () => (
     dataprovider.getLeadStatus(leadId)

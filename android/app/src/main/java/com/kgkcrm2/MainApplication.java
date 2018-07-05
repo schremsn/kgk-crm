@@ -3,6 +3,8 @@ package com.kgkcrm2;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
+import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 
 import com.oblador.keychain.KeychainPackage;
 
@@ -30,6 +32,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFSPackage(),
+            new ReactNativeDocumentPicker(),
             new KeychainPackage(),
             new ReactNativeI18n(),
             new VectorIconsPackage(),

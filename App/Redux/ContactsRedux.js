@@ -22,6 +22,30 @@ export const INITIAL_STATE = Immutable({
   offset: 0,
 });
 
+export const getContactCategories = () => new Promise((resolve, reject) => {
+  const requestApi = () => (
+    dataprovider.getContactCategories()
+      .then((detail) => {
+        resolve(detail);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+  );
+  retryPromise(requestApi, reject, 'getContactCategories');
+});
+export const createContactAttachment = (contactId, data, fileName, description) => new Promise((resolve, reject) => {
+  const requestApi = () => (
+    dataprovider.createContactAttachment(contactId, data, fileName, description)
+      .then((detail) => {
+        resolve(detail);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+  );
+  retryPromise(requestApi, reject, 'getContactCategories');
+});
 export const createCustomer = data => new Promise((resolve, reject) => {
   const requestApi = () => (
     dataprovider.createCustomer(data)
@@ -37,20 +61,24 @@ export const createCustomer = data => new Promise((resolve, reject) => {
 export const updateCustomer = data => new Promise((resolve, reject) => {
   const requestApi = () => (
     dataprovider.updateCustomer(data)
-      .then((detail) => {
-        resolve(detail);
+      .then((res) => {
+        resolve(res);
       })
       .catch((err) => {
         throw new Error(err);
       })
   );
-  retryPromise(requestApi, 'createCustomer');
+  retryPromise(requestApi, reject, 'updateCustomer');
 });
 export const getCustomers = (offset = 0) => new Promise((resolve, reject) => {
+  const newOffset = offset + 10;
   const requestApi = () => (
     dataprovider.getCustomers(offset)
-      .then((data) => {
-        resolve(data);
+      .then(async (data) => {
+        const resolveData = await {
+          data, newOffset,
+        };
+        resolve(resolveData);
       })
       .catch((err) => {
         throw new Error(err);

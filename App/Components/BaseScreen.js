@@ -21,6 +21,7 @@ export default class BaseScreen extends Component {
       onPress,
       onRefresh,
       circleButton,
+      circleIcon= 'ios-add-outline'
     } = this.props;
     return (
       <View style={[styles.container]}>
@@ -33,7 +34,7 @@ export default class BaseScreen extends Component {
         }
         {(!fullLoading && !isError) && children}
         {
-          circleButton && <CircleButton onPress={circleButton} icon="ios-add-outline" />
+          circleButton && <CircleButton onPress={circleButton} icon={circleIcon} />
         }
         {fullLoading && <ProgressBar style={{ height: Metrics.screenHeight - 240 }} />}
         {

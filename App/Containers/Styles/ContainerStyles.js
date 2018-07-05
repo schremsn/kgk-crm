@@ -262,6 +262,9 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  center: {
+    alignItems: 'center',
+  },
   buttonCallPhone: {
     padding: 5,
     marginLeft: 30,
@@ -275,12 +278,30 @@ export default StyleSheet.create({
     backgroundColor: '#5f3e63b0',
     justifyContent: 'center',
     alignItems: 'center',
-
+  },
+  boxAttachment: {
+    position: 'absolute',
+    bottom: 70,
+    left: 0,
+    right: 0,
+    top: 0,
+    backgroundColor: '#5f3e63b0',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   boxPickerContent: {
     backgroundColor: 'white',
     width: '90%',
     padding: 10,
+    borderRadius: 10,
+  },
+  boxAttachmentContent: {
+    backgroundColor: Colors.banner,
+    width: Metrics.screenWidth * 0.9,
+    height: Metrics.screenHeight * 0.9,
+    padding: Metrics.doubleBaseMargin,
+    marginLeft: Metrics.screenWidth * 0.05,
+    marginVertical: Metrics.screenWidth * 0.05,
     borderRadius: 10,
   },
   boxActions: {
@@ -357,4 +378,19 @@ export default StyleSheet.create({
     marginTop: 25,
     marginBottom: 60,
   },
+  // tag
+  selectToggle: {
+    borderWidth: 1,
+    borderColor: 'white',
+    padding: 10,
+    borderRadius: 50,
+    marginBottom: 20,
+  },
+  chipText: {
+    color: Colors.snow,
+  },
+  selectToggleText: {
+    color: Colors.snow,
+  },
+
 });

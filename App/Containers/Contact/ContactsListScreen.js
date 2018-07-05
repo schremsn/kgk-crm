@@ -18,10 +18,9 @@ class ContactListScreen extends Component {
       isRefreshing: false,
       searchContent: '',
       list: [],
+      offset: 0,
       dataSource: ds.cloneWithRows([]),
     };
-    this.getCustomersList = this.getCustomersList.bind(this);
-    this.getCustomersListNextPage = this.getCustomersListNextPage.bind(this);
     this.handleSearchLead = this.handleSearchLead.bind(this);
     this.renderContact = this.renderContact.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
@@ -30,29 +29,33 @@ class ContactListScreen extends Component {
   componentWillMount() {
     this.getCustomersList();
   }
-  getCustomersList(isRefreshed) {
-    getCustomers(0)
-      .then((list) => {
+  getCustomersList = async (isRefreshed) => {
+    await getCustomers(0)
+      .then((resolveData) => {
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-        const dataSource = ds.cloneWithRows(list);
+        const dataSource = ds.cloneWithRows(resolveData.data);
         this.setState({
-          list,
+          list: resolveData.data,
           dataSource,
           isLoading: false,
+          offset: resolveData.newOffset,
         });
       });
     if (isRefreshed) {
       this.setState({ isRefreshing: false });
     }
   }
-  getCustomersListNextPage() {
-    getCustomers(0, (list) => {
-      const data = this.state.list;
-      list.map(item => data.push(item));
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(data),
+  getCustomersListNextPage = () => {
+    const { offset } = this.state;
+    getCustomers(offset)
+      .then((resolveData) => {
+        const data = this.state.list;
+        resolveData.data.map(item => data.push(item));
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(data),
+          offset: resolveData.newOffset,
+        });
       });
-    });
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
@@ -123,8 +126,8 @@ class ContactListScreen extends Component {
         <ListView
           style={[styles.mainContainerModal]}
           enableEmptySections
-          // onEndReached={() => this.getCustomersListNextPage()}
-          onEndReachedThreshold={1200}
+          onEndReached={() => this.getCustomersListNextPage()}
+          onEndReachedThreshold={200}
           dataSource={dataSource}
           renderRow={item => this.renderContact(item)}
           renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}

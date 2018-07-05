@@ -25,6 +25,18 @@ export const INITIAL_STATE = Immutable({
   fetching: true,
 });
 
+export const createMessage = data => new Promise((resolve, reject) => {
+  const api = () => (
+    dataprovider.createMessage(data)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((error) => {
+        throw new Error(error);
+      })
+  );
+  retryPromise(api, reject, 'getMessages');
+});
 export const getMessages = offset => new Promise((resolve, reject) => {
   const api = () => (
     dataprovider.getMessages(offset)
