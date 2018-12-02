@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, Image, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, ScrollView, ActivityIndicator } from 'react-native';
 import I18n from 'react-native-i18n';
 import styles from '../Styles/ContainerStyles';
 import { Images, Colors } from '../../Themes/index';
@@ -69,32 +69,44 @@ class LeadStagesScreen extends Component {
     const {
       isFetching, isRefreshing, leadStages, isError,
     } = this.state;
+    console.log(1, this.state)
     return (
       <BaseScreen
-        fullLoading={isFetching}
         isError={isError}
         onRefresh={this.onRefresh}
       >
-        <ScrollView
+        <View
           style={styles.mainContainer}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={this.onRefresh}
-              colors={[Colors.fire]}
-              tintColor={Colors.snow}
-              title={`${I18n.t('loading')}...`}
-              titleColor={Colors.snow}
-              progressBackgroundColor={Colors.snow}
-            />
-          }
         >
-          {
-            leadStages.map(item => (
-              this.renderLeadStage(item)
-            ))
-          }
-        </ScrollView>
+          <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={this.onRefresh}
+                colors={[Colors.fire]}
+                tintColor={Colors.snow}
+                title={`${I18n.t('loading')}...`}
+                titleColor={Colors.snow}
+                progressBackgroundColor={Colors.snow}
+              />
+            }
+            data={leadStages}
+            style={{ }}
+            contentContainerStyle={{}}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => this.renderLeadStage(item)}
+            ListFooterComponent={(
+              isFetching ? (
+                <View style={{
+                  height: 100, alignItems: 'center', justifyContent: 'center', width: '100%',
+                }}
+                >
+                  <ActivityIndicator size="small" color={Colors.primary} />
+                </View>
+              ) : <View />)}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       </BaseScreen>
     );
   }

@@ -31,7 +31,7 @@ import Input from '../../Components/Form/Input';
 import ProgressBar from '../../Components/ProgressBar';
 import RoundedButton from '../../Components/RoundedButton';
 // actions
-import { getContactCategories, getCustomerDetail, createContactAttachment } from '../../Redux/ContactsRedux';
+import { getContactCategories, getCustomerDetail, createContactAttachment } from './ContactsRedux';
 // styles
 import { Colors, Images } from '../../Themes/index';
 import styles from '../Styles/ContainerStyles';
@@ -137,7 +137,7 @@ class ContactDetailScreen extends Component {
         createContactAttachment(contactDetail.id, dataBase64, fileName, description)
           .then(() => {
             this.setState({
- isModalUpFile: false, isLoading: false, fileName: '', description: '', file: {} 
+ isModalUpFile: false, isLoading: false, fileName: '', description: '', file: {}
 });
             this.toast.show(I18n.t('Create attachment is success'), 1000);
           })

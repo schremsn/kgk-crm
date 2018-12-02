@@ -17,21 +17,16 @@ export default class BaseScreen extends Component {
       children,
       fullLoading = false,
       isError = false,
-      title,
-      onPress,
       onRefresh,
       circleButton,
-      circleIcon= 'ios-add-outline'
+      circleIcon = 'ios-add-outline',
     } = this.props;
+
     return (
       <View style={[styles.container]}>
         <Image source={Images.background} style={styles.backgroundImage} resizeMode="stretch" />
-        {
-          title && <Header
-            title={title}
-            onPress={onPress}
-          />
-        }
+        <Header {...this.props} />
+
         {(!fullLoading && !isError) && children}
         {
           circleButton && <CircleButton onPress={circleButton} icon={circleIcon} />
@@ -46,7 +41,5 @@ export default class BaseScreen extends Component {
   }
 }
 BaseScreen.propTypes = {
-  onPress: PropTypes.func,
-  title: PropTypes.string,
   fullLoading: PropTypes.bool,
 };

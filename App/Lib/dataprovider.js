@@ -7,7 +7,7 @@ import Odoo from './odoo';
  */
 let instance = null;
 
-const maxRecords = 200;
+const maxRecords = 15;
 
 export default class DataProvider {
   constructor() {
@@ -51,6 +51,7 @@ export default class DataProvider {
 
     return new Promise((reject, resolve) => {
       this.odoo.connect((data, err) => {
+        console.log(data, err)
         if (err) {
           reject(err);
         }

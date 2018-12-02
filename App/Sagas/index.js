@@ -6,7 +6,7 @@ import DebugConfig from '../Config/DebugConfig';
 /* ------------- Types ------------- */
 
 import { StartupTypes } from '../Redux/StartupRedux';
-// import { ProductTypes } from '../Redux/ProductRedux'
+import { ContactTypes, ContactSagas } from '../Containers/Contact'
 
 /* ------------- Sagas ------------- */
 
@@ -27,6 +27,12 @@ export default function* root() {
     takeLatest(StartupTypes.STARTUP, startup),
 
     // some sagas receive extra parameters in addition to an action
-    // takeLatest(ProductTypes.PRODUCT_REQUEST, getUserAvatar, api)
+    takeLatest(ContactTypes.GET_CUSTOMER_REQUEST, ContactSagas.getCustomers),
+    takeLatest(ContactTypes.SEARCH_CUSTOMER_REQUEST, ContactSagas.searchCustomer),
+    takeLatest(ContactTypes.GET_CUSTOMER_DETAIL_REQUEST, ContactSagas.getCustomerDetail),
+    takeLatest(ContactTypes.CREATE_CUSTOMER_REQUEST, ContactSagas.createCustomer),
+    takeLatest(ContactTypes.UPDATE_CUSTOMER_REQUEST, ContactSagas.updateCustomer),
+    takeLatest(ContactTypes.GET_CONTACT_CATEGORIES_REQUEST, ContactSagas.getContactCategories),
+    takeLatest(ContactTypes.CREATE_CONTACT_ATTACHMENT_REQUEST, ContactSagas.createContactAttachment),
   ]);
 }

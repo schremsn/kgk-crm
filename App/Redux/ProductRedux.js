@@ -45,6 +45,7 @@ export const getProductDetail = productId => new Promise((resolve, reject) => {
   const requestApi = () => (
     dataprovider.getProductDetail(productId)
       .then((detail) => {
+        console.log(detail)
         resolve(detail[0]);
       })
       .catch((err) => {

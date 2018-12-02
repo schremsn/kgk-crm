@@ -177,17 +177,18 @@ Odoo.prototype._request = function (path, params, cb) {
     headers: Platform.OS === 'ios' ? {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'Set-Cookie': `${this.sid};`,
+      'Set-Cookie': `${this.sid}`,
     } : {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Cookie: `${this.sid};`,
+      Cookie: `${this.sid}`,
     },
     credentials: 'include',
     body: JSON.stringify({
       jsonrpc: '2.0', id: new Date().getUTCMilliseconds(), method: 'call', params,
     }),
   };
+
   fetch(url, options)
     .then(res => res.json())
     .then((data) => {

@@ -14,7 +14,7 @@ import Input from '../../Components/Form/Input';
 import BaseScreen from '../../Components/BaseScreen';
 import ProgressBar from '../../Components/ProgressBar';
 // actions
-import { updateCustomer, getContactCategories } from '../../Redux/ContactsRedux';
+import { updateCustomer, getContactCategories } from './ContactsRedux';
 // styles
 import { Colors } from '../../Themes/index';
 import styles, { stylesheet } from '../Styles/ContainerStyles';

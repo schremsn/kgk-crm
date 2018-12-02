@@ -50,6 +50,7 @@ export const getLeadStatus = leadId => new Promise((resolve, reject) => {
   const api = () => (
     dataprovider.getLeadStatus(leadId)
       .then((list) => {
+        console.log(list)
         resolve(list);
       })
       .catch((error) => {

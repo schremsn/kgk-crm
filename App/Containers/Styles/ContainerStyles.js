@@ -35,29 +35,30 @@ export default StyleSheet.create({
     lineHeight: Metrics.doubleBaseMargin + 5,
   },
   container: {
-    paddingTop: Platform.OS === 'ios' ? 40 : Metrics.doubleBaseMargin,
-    padding: Metrics.doubleBaseMargin,
-    height: Metrics.screenHeight,
+    // paddingTop: Platform.OS === 'ios' ? 40 : Metrics.doubleBaseMargin,
+    // padding: Metrics.doubleBaseMargin,
+    // height: Metrics.screenHeight,
+    flex: 1,
     backgroundColor: 'transparent',
   },
   containerHasForm: {
     padding: Metrics.doubleBaseMargin,
   },
   containerModal: {
-    paddingHorizontal: Metrics.doubleBaseMargin,
+    paddingHorizontal: Metrics.baseMargin,
     // marginHorizontal: Metrics.doubleBaseMargin,
     backgroundColor: Colors.banner,
     opacity: 0.9,
     borderRadius: 4,
   },
   mainContainer: {
-    marginBottom: Platform.OS === 'ios' ? 0 : 60,
-    height: Metrics.screenHeight,
-
-    // padding: Metrics.doubleBaseMargin,
+    // marginBottom: Platform.OS === 'ios' ? 0 : 60,
+    // height: Metrics.screenHeight,
+    flex: 1,
+    padding: Metrics.baseMargin,
   },
   mainContainerModal: {
-    marginBottom: Platform.OS === 'ios' ? 30 : 60,
+
   },
   mainContainerHasFormModal: {
     marginBottom: 120,
@@ -128,7 +129,7 @@ export default StyleSheet.create({
   buttonBox: {
     position: 'absolute',
     right: 30,
-    bottom: Platform.OS === 'ios' ? 60 : 100,
+    bottom: 30,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -235,7 +236,7 @@ export default StyleSheet.create({
   },
   // style lead list
   boxSearch: {
-    paddingBottom: 20,
+    paddingBottom: Metrics.baseMargin,
   },
   inputSearch: {
     backgroundColor: Colors.snow,

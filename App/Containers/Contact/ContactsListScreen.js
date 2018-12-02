@@ -1,25 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, Text, TouchableOpacity, RefreshControl, ListView, TextInput, KeyboardAvoidingView, Keyboard } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  RefreshControl,
+  ListView,
+  TextInput,
+  KeyboardAvoidingView,
+  Keyboard,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Colors } from '../../Themes/index';
 import styles from '../Styles/ContainerStyles';
 import BaseScreen from '../../Components/BaseScreen';
-import { getCustomers, searchCustomer } from '../../Redux/ContactsRedux';
+import { getCustomers, searchCustomer } from './ContactsRedux';
 
 class ContactListScreen extends Component {
   constructor() {
     super();
-    const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
     this.state = {
       isLoading: true,
       isRefreshing: false,
       searchContent: '',
-      list: [],
+      data: [],
       offset: 0,
-      dataSource: ds.cloneWithRows([]),
     };
     this.handleSearchLead = this.handleSearchLead.bind(this);
     this.renderContact = this.renderContact.bind(this);
@@ -29,14 +38,13 @@ class ContactListScreen extends Component {
   componentWillMount() {
     this.getCustomersList();
   }
+
   getCustomersList = async (isRefreshed) => {
     await getCustomers(0)
       .then((resolveData) => {
-        const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-        const dataSource = ds.cloneWithRows(resolveData.data);
+        console.log(resolveData);
         this.setState({
-          list: resolveData.data,
-          dataSource,
+          data: resolveData.data,
           isLoading: false,
           offset: resolveData.newOffset,
         });
@@ -45,17 +53,19 @@ class ContactListScreen extends Component {
       this.setState({ isRefreshing: false });
     }
   }
+
   getCustomersListNextPage = () => {
-    const { offset } = this.state;
-    getCustomers(offset)
-      .then((resolveData) => {
-        const data = this.state.list;
-        resolveData.data.map(item => data.push(item));
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(data),
-          offset: resolveData.newOffset,
+    const { offset, data, isLoading } = this.state;
+    if (!isLoading) {
+      getCustomers(offset)
+        .then((resolveData) => {
+          const newData = [...data, ...resolveData.data];
+          this.setState({
+            data: newData,
+            offset: resolveData.newOffset,
+          });
         });
-      });
+    }
   }
   onRefresh() {
     this.setState({ isRefreshing: true });
@@ -69,12 +79,9 @@ class ContactListScreen extends Component {
     const { searchContent } = this.state;
     if (searchContent.length > 0) {
       searchCustomer(searchContent)
-        .then((list) => {
-          const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-          const dataSource = ds.cloneWithRows(list);
+        .then((data) => {
           this.setState({
-            list,
-            dataSource,
+            data,
           });
         });
     }
@@ -102,56 +109,74 @@ class ContactListScreen extends Component {
   }
   render() {
     const {
-      isLoading, isRefreshing, dataSource,
+      isLoading, isRefreshing, data,
     } = this.state;
+    const { navigation } = this.props;
+
+    const header = {
+      title: I18n.t('Contacts'),
+    };
     return (
       <BaseScreen
-        title={I18n.t('Contacts')}
-        onPress={() => { this.props.navigation.goBack(null); }}
         fullLoading={isLoading}
+        header={header}
+        navigation={navigation}
       >
-        <KeyboardAvoidingView behavior="height" style={styles.boxSearch}>
-          <TextInput
-            style={styles.inputSearch}
-            underlineColorAndroid="transparent"
-            placeholder={I18n.t('search for name, city')}
-            onChangeText={value => this.onChangeSearchLead(value)}
-            returnKeyType="search"
-            onEndEditing={this.handleSearchLead}
-          />
-          <TouchableOpacity style={styles.buttonSearch} onPress={() => this.handleSearchLead()}>
-            <Ionicons name="ios-search-outline" size={25} color={Colors.banner} />
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
-        <ListView
-          style={[styles.mainContainerModal]}
-          enableEmptySections
-          onEndReached={() => this.getCustomersListNextPage()}
-          onEndReachedThreshold={200}
-          dataSource={dataSource}
-          renderRow={item => this.renderContact(item)}
-          renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
-          // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={this.onRefresh}
-              colors={[Colors.fire]}
-              tintColor={Colors.snow}
-              title={`${I18n.t('loading')}...`}
-              titleColor={Colors.snow}
-              progressBackgroundColor={Colors.snow}
+        <View behavior="height" style={styles.mainContainer}>
+          <View style={styles.boxSearch}>
+            <TextInput
+              style={styles.inputSearch}
+              underlineColorAndroid="transparent"
+              placeholder={I18n.t('search for name, city')}
+              onChangeText={value => this.onChangeSearchLead(value)}
+              returnKeyType="search"
+              onEndEditing={this.handleSearchLead}
             />
-          }
-        />
-        <TouchableOpacity
-          style={[styles.buttonBox]}
-          onPress={() => { this.props.navigation.navigate('ContactsAddScreen'); }}
-        >
-          <View style={styles.button}>
-            <Ionicons name="ios-add-outline" size={25} color={Colors.snow} />
+            <TouchableOpacity style={styles.buttonSearch} onPress={() => this.handleSearchLead()}>
+              <Ionicons name="ios-search-outline" size={25} color={Colors.banner} />
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+          <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={this.onRefresh}
+                colors={[Colors.fire]}
+                tintColor={Colors.snow}
+                title={`${I18n.t('loading')}...`}
+                titleColor={Colors.snow}
+                progressBackgroundColor={Colors.snow}
+              />
+            }
+            style={[styles.mainContainerModal]}
+            onEndReached={this.getCustomersListNextPage}
+            onEndReachedThreshold={0.2}
+            data={data}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => this.renderContact(item)}
+            renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.seperator} />}
+            // renderFooter={() => <View style={{ height: 50 }}><ProgressBar /></View>}
+            ListFooterComponent={(
+              isLoading ? (
+                <View style={{
+                  height: 100, alignItems: 'center', justifyContent: 'center', width: '100%',
+                }}
+                >
+                  <ActivityIndicator size="large" color={Colors.primary} />
+                </View>
+              ) : <View />)}
+            showsVerticalScrollIndicator={false}
+          />
+          <TouchableOpacity
+            style={[styles.buttonBox]}
+            onPress={() => { this.props.navigation.navigate('ContactsAddScreen'); }}
+          >
+            <View style={styles.button}>
+              <Ionicons name="ios-add-outline" size={25} color={Colors.snow} />
+            </View>
+          </TouchableOpacity>
+        </View>
+
       </BaseScreen>
     );
   }

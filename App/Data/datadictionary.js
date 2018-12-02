@@ -10,6 +10,7 @@ export default class DD {
       'description',
       'image_small',
       'name',
+      'document_ids',
     ];
   }
 
@@ -22,6 +23,7 @@ export default class DD {
       'image_small',
       'name',
       'information',
+      'document_ids',
     ];
   }
 

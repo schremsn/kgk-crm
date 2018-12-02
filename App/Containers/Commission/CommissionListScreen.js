@@ -7,6 +7,7 @@ import numeral from 'numeral';
 import styles from '../Styles/ContainerStyles';
 import { Colors } from '../../Themes/index';
 import { getCommissionSummary } from '../../Redux/CommissionRedux';
+import { getLeadStatus } from '../../Redux/LeadRedux';
 import BaseScreen from '../../Components/BaseScreen';
 
 class CommissionListScreen extends Component {
@@ -113,6 +114,7 @@ class CommissionListScreen extends Component {
   getCommissionList(isRefreshed) {
     getCommissionSummary()
       .then((list) => {
+        console.log('getCommissionSummary', list)
         const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
         const dataSource = ds.cloneWithRows(list);
         this.setState({

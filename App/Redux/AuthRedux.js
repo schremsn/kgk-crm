@@ -94,6 +94,7 @@ export const login = ({ username, password, isRemember }, cb) => async (dispatch
     await Keychain.setGenericPassword(username, password);
     dataprovider.login(username, password)
       .then((info) => {
+        console.log(0, info)
         cb(info);
         dispatch(getUserInfo());
         dispatch(getCompanyInfo(info.company_id));
@@ -102,12 +103,15 @@ export const login = ({ username, password, isRemember }, cb) => async (dispatch
         dispatch(Creators.loginSuccess(info));
       })
       .catch((error) => {
+        console.log(0, error)
         cb(false, error);
+        console.log(error)
         dispatch(Creators.loginFailure(error));
       });
   } else {
     dataprovider.login(username, password)
       .then((info) => {
+        console.log(0, info)
         cb(info);
         dispatch(getUserInfo());
         dispatch(getCompanyInfo(info.company_id));
@@ -116,6 +120,7 @@ export const login = ({ username, password, isRemember }, cb) => async (dispatch
         dispatch(Creators.loginSuccess(info));
       })
       .catch((error) => {
+        console.log(0, error)
         dispatch(Creators.loginFailure(error));
         cb(false, error);
       });

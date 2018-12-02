@@ -13,22 +13,17 @@ const ApplicationStyles = {
     },
     backgroundImage: {
       position: 'absolute',
-      top: -5,
+      top: 0,
       left: 0,
       bottom: 0,
       right: 0,
     },
     backgroundImageModal: {
       position: 'absolute',
-      top: -5,
+      top: 0,
       left: 10,
       bottom: 0,
       right: 20,
-    },
-    container: {
-      flex: 1,
-      paddingTop: Metrics.baseMargin,
-      backgroundColor: Colors.transparent,
     },
     section: {
       margin: Metrics.section,

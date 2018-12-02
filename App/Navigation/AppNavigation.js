@@ -1,11 +1,11 @@
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { TabNavigator, StackNavigator, SwitchNavigator } from 'react-navigation';
+import { TabNavigator, StackNavigator, TabBarBottom } from 'react-navigation';
 import I18n from 'react-native-i18n';
 
 import { Colors } from '../Themes';
 
-import TabBarBottom from '../Components/TabBarBottom';
+// import TabBarBottom from '../Components/TabBarBottom';
 
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen';
 import CommissionStatusListScreen from '../Containers/Commission/CommissionStatusListScreen';
@@ -174,7 +174,7 @@ const AuthStack = StackNavigator(
   },
 );
 
-export default SwitchNavigator(
+export default StackNavigator(
   {
     AuthLoading: AuthLoadingScreen,
     App: AppStack,
@@ -182,5 +182,28 @@ export default SwitchNavigator(
   },
   {
     initialRouteName: 'AuthLoading',
+    headerMode: 'float',
+    cardStyle: { shadowColor: 'transparent' },
+    navigationOptions: {
+      header: null,
+      headerStyle: {
+        backgroundColor: Colors.primary,
+        shadowOpacity: 0,
+        shadowOffset: {
+          height: 0,
+        },
+        shadowRadius: 0,
+        elevation: 0,
+
+      },
+      headerTintColor: Colors.snow,
+      headerTitleStyle: {
+        alignSelf: 'center',
+        textAlign: 'center',
+        flexGrow: 1,
+        fontSize: 16,
+        fontWeight: 'normal',
+      },
+    },
   },
 );

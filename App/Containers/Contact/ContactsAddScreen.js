@@ -14,7 +14,7 @@ import Input from '../../Components/Form/Input';
 import ProgressBar from '../../Components/ProgressBar';
 import RoundedButton from '../../Components/RoundedButton';
 // actions
-import { createCustomer, getContactCategories } from '../../Redux/ContactsRedux';
+import { createCustomer, getContactCategories } from './ContactsRedux';
 // styles
 import { Colors } from '../../Themes/index';
 import styles, { stylesheet } from '../Styles/ContainerStyles';
